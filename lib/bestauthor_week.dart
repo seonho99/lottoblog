@@ -9,7 +9,7 @@ class BestAuthorWeek extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(10),
       width: 200,
-      height: 200,
+      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: Colors.grey.shade500,

@@ -8,6 +8,7 @@ class MainhomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -21,17 +22,30 @@ class MainhomePage extends StatelessWidget {
                     Container(
                       child: Text(
                         'Lotto Blog',
-                        style:
-                            TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 27, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 30),
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.yellow,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 30),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.yellow,
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 30),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.yellow,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -56,6 +70,15 @@ class MainhomePage extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '주간 Best',
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
@@ -112,11 +135,31 @@ class MainhomePage extends StatelessWidget {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Text('최신순',
+                                style: Theme.of(context).textTheme.titleMedium),
+                            SizedBox(width: 16),
+                            Text('좋아요',
+                                style: Theme.of(context).textTheme.titleMedium),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 author_day(),
                 author_day(),
                 author_day(),
                 author_day(),
                 author_day(),
+
               ],
             ),
           ),
