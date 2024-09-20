@@ -7,8 +7,7 @@ class ReaderCanUse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -43,7 +42,6 @@ class ReaderCanUse extends StatelessWidget {
             ),
           ),
         ],
-      ),
     );
   }
 }

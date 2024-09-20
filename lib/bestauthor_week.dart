@@ -7,8 +7,7 @@ class BestAuthorWeek extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return Column(
         children: [
           Container(
             margin: EdgeInsets.only(top: 10, left: 10),
@@ -52,7 +51,7 @@ class BestAuthorWeek extends StatelessWidget {
             ],
           ),
         ],
-      ),
+
     );
   }
 }
