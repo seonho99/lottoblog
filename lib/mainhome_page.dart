@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bestauthor_week.dart';
-import 'author_day.dart';
+import 'reader_can_use.dart';
 
 class MainhomePage extends StatelessWidget {
   const MainhomePage({super.key});
@@ -154,11 +154,11 @@ class MainhomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                author_day(),
-                author_day(),
-                author_day(),
-                author_day(),
-                author_day(),
+                ReaderCanUse(),
+                ReaderCanUse(),
+                ReaderCanUse(),
+                ReaderCanUse(),
+                ReaderCanUse(),
 
               ],
             ),
