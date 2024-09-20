@@ -50,6 +50,10 @@ class MainhomePage extends StatelessWidget {
                   ],
                 ),
                 Container(
+                  child: Divider(color: Colors.grey, thickness: 1.0),
+                  padding: EdgeInsets.only(bottom: 10),
+                ),
+                Container(
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: 60,
                   margin: EdgeInsets.only(bottom: 20),
@@ -71,12 +75,16 @@ class MainhomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                Container(
+                  child: Divider(color: Colors.grey, thickness: 1.0),
+                  padding: EdgeInsets.only(bottom: 10),
+                ),
                 Row(
                   children: [
                     Text(
                       '주간 Best',
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -94,6 +102,10 @@ class MainhomePage extends StatelessWidget {
                       ],
                     ),
                   ),
+                ),
+                Container(
+                  child: Divider(color: Colors.grey, thickness: 1.0),
+                  padding: EdgeInsets.only(bottom: 10),
                 ),
                 Column(
                   children: [
@@ -159,7 +171,6 @@ class MainhomePage extends StatelessWidget {
                 ReaderCanUse(),
                 ReaderCanUse(),
                 ReaderCanUse(),
-
               ],
             ),
           ),
@@ -168,4 +179,3 @@ class MainhomePage extends StatelessWidget {
     );
   }
 }
-
