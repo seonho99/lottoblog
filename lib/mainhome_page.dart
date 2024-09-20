@@ -29,7 +29,7 @@ class MainhomePage extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 30),
+                          // margin: EdgeInsets.only(bottom: 30),
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
@@ -38,7 +38,7 @@ class MainhomePage extends StatelessWidget {
                         ),
                         SizedBox(width: 20),
                         Container(
-                          margin: EdgeInsets.only(bottom: 30),
+                          // margin: EdgeInsets.only(bottom: 30),
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
@@ -51,12 +51,16 @@ class MainhomePage extends StatelessWidget {
                 ),
                 Container(
                   child: Divider(color: Colors.grey, thickness: 1.0),
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(top: 15, bottom: 15),
+                ),
+                Text(
+                  '- 현재 회차 -',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Container(
+                  margin: EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: 60,
-                  margin: EdgeInsets.only(bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List.generate(
@@ -77,73 +81,70 @@ class MainhomePage extends StatelessWidget {
                 ),
                 Container(
                   child: Divider(color: Colors.grey, thickness: 1.0),
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(top: 15, bottom: 15),
                 ),
                 Row(
                   children: [
                     Text(
                       '주간 Best',
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        BestAuthorWeek(),
-                        BestAuthorWeek(),
-                        BestAuthorWeek(),
-                        BestAuthorWeek(),
-                        BestAuthorWeek(),
-                      ],
-                    ),
+                  padding: EdgeInsets.only(bottom: 20),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      BestAuthorWeek(),
+                      BestAuthorWeek(),
+                      BestAuthorWeek(),
+                      BestAuthorWeek(),
+                      BestAuthorWeek(),
+                    ],
                   ),
                 ),
                 Container(
                   child: Divider(color: Colors.grey, thickness: 1.0),
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(top: 15, bottom: 15),
                 ),
                 Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '월',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            '화',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            '수',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            '목',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            '금',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            '토',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            '일',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '월',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          '화',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          '수',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          '목',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          '금',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          '토',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          '일',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -151,7 +152,7 @@ class MainhomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(top: 15, bottom: 15),
                       child: Container(
                         child: Row(
                           children: [

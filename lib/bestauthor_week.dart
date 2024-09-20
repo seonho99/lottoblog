@@ -14,7 +14,6 @@ class BestAuthorWeek extends StatelessWidget {
             width: 300,
             height: 250,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
               color: Colors.grey.shade500,
             ),
           ),
