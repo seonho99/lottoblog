@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lottoblog/author_day_page.dart';
-import 'package:lottoblog/bottomnavigationbar_example.dart';
-import 'package:lottoblog/login_page.dart';
-import 'package:lottoblog/mypage_page.dart';
-import 'package:lottoblog/personalized_page.dart';
+import 'userwriting_page.dart';
 import 'mainhome_page.dart';
+import 'author_day_page.dart';
 import 'personalized_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Lotto blog',
-      home: LoginPage(),
+      home:PersonalizedPage(),
     );
   }
 }
