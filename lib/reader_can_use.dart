@@ -13,38 +13,57 @@ class ReaderCanUse extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              // margin: EdgeInsxets.only(bottom: 30),
               width: 100,
               height: 100,
-              color: Colors.yellow,
+              decoration: BoxDecoration(
+                color: Colors.pinkAccent,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(width: 1, color: Colors.grey.shade50),
+              ),
             ),
             SizedBox(width: 16),
             Expanded(
               child: Container(
                 height: 100,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        '제목',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'qwkfewklfa',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        Icon(Icons.more_vert,size: 30),
+                      ],
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        '아이디',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '아이디',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.favorite,size:18),
+                            SizedBox(width: 5),
+                            Text('1',
+                              style: Theme.of(context).textTheme.titleMedium,),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
           ],
-        ),Container(
+        ),
+        Container(
           child: Divider(color: Colors.grey, thickness: 1.0),
           padding: EdgeInsets.only(top: 15, bottom: 15),
         ),

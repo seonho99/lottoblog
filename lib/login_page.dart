@@ -6,95 +6,104 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '로또 커뮤니티',
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      Text(
-                        'Lotto Blog',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Center(
+            child: Column(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 300,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.0
+                    ),
                   ),
-                ],
-              ),
-              Container(
-                child: Row(
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Login',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 15),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          '로그인',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          height: 300,
-                          width: MediaQuery.of(context).size.width * 0.88,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
+                    Container(
+                      width: 300,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.red[600],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.g_mobiledata,
+                            color: Colors.white,
                           ),
-                          child: Column(
-                            children: [
-                              Padding(padding: EdgeInsets.only(top: 25)),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.70,
-                                height: 55,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              Padding(padding: EdgeInsets.only(top: 20)),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.70,
-                                height: 55,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.70,
-                                height: 55,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          Text(
+                            'Google로 회원가입',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 300,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.apple,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            'Apple로 회원가입',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+// _buildSocialLoginButton(
+// onPressed: () {},
+// text: 'Google로 회원가입',
+// icon: Icons.g_mobiledata,
+// color: Colors.red,
+// ),
+// const SizedBox(height: 16),
+// _buildSocialLoginButton(
+// onPressed: () {},
+// text: 'Apple로 회원가입',
+// icon: Icons.apple,
+// color: Colors.black,
+// ),

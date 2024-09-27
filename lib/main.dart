@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lottoblog/login_page.dart';
+import 'package:lottoblog/mypage_page.dart';
 import 'userwriting_page.dart';
 import 'mainhome_page.dart';
 import 'author_day_page.dart';
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Lotto blog',
-      home:PersonalizedPage(),
+      home:UserwritingPage(),
     );
   }
 }
