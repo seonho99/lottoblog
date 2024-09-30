@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'bestauthor_week.dart';
-import 'reader_can_use.dart';
+import 'blogload_widget.dart';
 
-class MainhomePage extends StatelessWidget {
-  const MainhomePage({super.key});
+class MainHomeScreen extends StatelessWidget {
+  const MainHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class MainhomePage extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 80,
+                  width: 150,
                   height: 50,
                   decoration: BoxDecoration(
                     color: Colors.grey,
@@ -42,11 +42,11 @@ class MainhomePage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 10),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
               ],
             ),
           ),

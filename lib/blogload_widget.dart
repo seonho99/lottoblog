@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ReaderCanUse extends StatelessWidget {
-  const ReaderCanUse({
+class BlogLoadWidget extends StatelessWidget {
+  const BlogLoadWidget({
     super.key,
   });
 

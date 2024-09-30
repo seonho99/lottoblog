@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'reader_can_use.dart';
+import 'blogload_widget.dart';
 import 'bestauthor_week.dart';
 
-class AuthorDay extends StatelessWidget {
-  AuthorDay({super.key});
+class DayOfWeekScreen extends StatelessWidget {
+  DayOfWeekScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -233,13 +233,13 @@ class AuthorDay extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 15),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
-                ReaderCanUse(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
+                BlogLoadWidget(),
               ],
             ),
           ),

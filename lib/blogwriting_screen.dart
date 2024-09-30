@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class UserwritingPage extends StatelessWidget {
-  const UserwritingPage({super.key});
+class BlogWritingScreen extends StatelessWidget {
+  const BlogWritingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -310,8 +310,8 @@ class UserwritingPage extends StatelessWidget {
 //       ),
 //     );
 //   }
-//
-//
+
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
