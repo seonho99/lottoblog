@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MypagePage extends StatelessWidget {
-  const MypagePage({super.key});
+class PersonalScreen extends StatelessWidget {
+  const PersonalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class MypagePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(16),
             child: Column(
               children: [
                 Row(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bestauthor_week.dart';
+import 'bestlike_widget.dart';
 import 'blogload_widget.dart';
 
 class MainHomeScreen extends StatelessWidget {
@@ -11,34 +11,34 @@ class MainHomeScreen extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
         title: Column(
           children: [
-            Row(mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: 150,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.grey,
+                    border: Border.all(width: 1, color: Colors.grey),
                   ),
                 ),
               ],
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Divider(height: 1, color: Colors.grey),
           ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey,
-            height: 1.0,
-          ),
         ),
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(16),
             child: Column(
               children: [
                 SizedBox(height: 10),

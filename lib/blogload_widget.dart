@@ -14,27 +14,26 @@ class BlogLoadWidget extends StatelessWidget {
           children: [
             Container(
               width: 100,
-              height: 100,
+              height: 130,
               decoration: BoxDecoration(
-                color: Colors.pinkAccent,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 1, color: Colors.grey.shade50),
+                border: Border.all(width: 1, color: Colors.grey),
               ),
             ),
-            SizedBox(width: 16),
+            SizedBox(width: 10),
             Expanded(
               child: Container(
-                height: 100,
+                height: 130,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         Expanded(
                           child: Text(
-                            'qwkfewklfa',
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            '제목 30글자 까지',
+                            //
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         ),
                         Icon(Icons.more_vert,size: 30),
@@ -44,7 +43,7 @@ class BlogLoadWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '아이디',
+                          '닉네임 10글자까지 ',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Row(
@@ -63,10 +62,9 @@ class BlogLoadWidget extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          child: Divider(color: Colors.grey, thickness: 1.0),
-          padding: EdgeInsets.only(top: 15, bottom: 15),
-        ),
+        SizedBox(height: 15),
+        Divider(color: Colors.grey, thickness: 1.0),
+        SizedBox(height: 15),
       ],
     );
   }

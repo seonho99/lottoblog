@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BestAuthorWeek extends StatelessWidget {
-  const BestAuthorWeek({
+class BestLike_Widget extends StatelessWidget {
+  const BestLike_Widget({
     super.key,
   });
 
@@ -36,7 +36,6 @@ class BestAuthorWeek extends StatelessWidget {
                     CircleAvatar(radius: 35),
                     SizedBox(width: 10),
                     Expanded(
-                      // Column이 전체 Row의 남은 공간을 차지하도록 설정
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
