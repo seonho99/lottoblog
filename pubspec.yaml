@@ -38,6 +38,7 @@ dependencies:
   go_router: ^14.2.8
   audioplayers: ^6.1.0
   image_picker: ^1.1.2
+  firebase_core: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,19 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/image_dummy/
+    - assets/profile_dummy/
+    - assets/logo/
+
+  fonts:
+    - family: NanumSquareNeo
+      fonts:
+        - asset: assets/fonts/NanumSquareNeo-aLt.ttf
+        - asset: assets/fonts/NanumSquareNeo-bRg.ttf
+        - asset: assets/fonts/NanumSquareNeo-cBd.ttf
+        - asset: assets/fonts/NanumSquareNeo-dEb.ttf
+        - asset: assets/fonts/NanumSquareNeo-eHv.ttf
 
   # To add assets to your application, add an assets section, like this:
 #  assets:

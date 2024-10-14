@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "308992706081",
+    "project_id": "lottoblog-e4927",
+    "storage_bucket": "lottoblog-e4927.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308992706081:android:db1dea23a754cb92cf0560",
+        "android_client_info": {
+          "package_name": "com.seonho.lottoblog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC0enJc60WuY8VHSyYMAW7W_oOD2CMVSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
