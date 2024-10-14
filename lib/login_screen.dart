@@ -16,16 +16,12 @@ class LoginScreen extends StatelessWidget {
               children: [
                 Container(
                   width: 300,
-                  height: 200,
+                  height: 300,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1.0),
+                    image: DecorationImage(
+                      image: AssetImage('assets/logo/lottoblog_300_300.jpeg'),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Login',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 15),
                 Row(
@@ -33,19 +29,27 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Container(
                       width: 300,
-                      height: 50,
+                      height: 49,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 1, color: Colors.grey)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(width: 10),  // 텍스트와 이미지 사이의 간격
+                          Container(
+                            width: 18,
+                            height: 18,
+                            child: Image(
+                              image:
+                              AssetImage('assets/logo/google_logo.png'),
+                              fit: BoxFit.cover,
+                            ),),
+                          SizedBox(width: 10),
                           Text(
                             'Google로 회원가입',
                             style: TextStyle(
-                              color: Colors.black,  // 글자 색상 수정 (흰색이 보이지 않음)
+                              color: Colors.black,
                               fontSize: 16,
                             ),
                           ),
@@ -72,6 +76,7 @@ class LoginScreen extends StatelessWidget {
                             Icons.apple,
                             color: Colors.white,
                           ),
+                          SizedBox(width: 10),
                           Text(
                             'Apple로 회원가입',
                             style: TextStyle(color: Colors.white, fontSize: 16),
@@ -89,17 +94,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-// _buildSocialLoginButton(
-// onPressed: () {},
-// text: 'Google로 회원가입',
-// icon: Icons.g_mobiledata,
-// color: Colors.red,
-// ),
-// const SizedBox(height: 16),
-// _buildSocialLoginButton(
-// onPressed: () {},
-// text: 'Apple로 회원가입',
-// icon: Icons.apple,
-// color: Colors.black,
-// ),

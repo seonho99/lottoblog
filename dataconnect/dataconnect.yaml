@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "LottoBlog"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "LottoBlog-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

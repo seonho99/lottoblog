@@ -1,25 +1,63 @@
+import 'package:LottoBlog/router.dart';
 import 'package:flutter/material.dart';
-import 'package:lottoblog/bestlike_widget.dart';
-import 'package:lottoblog/blogpost_screen.dart';
-import 'package:lottoblog/login_screen.dart';
-import 'package:lottoblog/personal_screen.dart';
-import 'blogwriting_screen.dart';
-import 'mainhome_screen.dart';
-import 'dayofweek_screen.dart';
-import 'editprofile_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Lotto blog',
-      home:DayOfWeekScreen(),
+    return MaterialApp.router(
+      title: 'Lotto Blog',
+      routerConfig: router,
+      theme: ThemeData(
+        fontFamily: 'NanumSquareNeo',
+        textTheme: const TextTheme(
+          titleSmall: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.normal,
+          ),
+          headlineSmall: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.normal,
+          ),
+          headlineMedium: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.normal,
+          ),
+          headlineLarge: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.normal,
+          ),
+          displaySmall: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.normal,
+          ),
+          displayMedium: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.normal,
+          ),
+          displayLarge: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ),
     );
   }
 }

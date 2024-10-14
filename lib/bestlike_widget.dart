@@ -1,66 +1,76 @@
 import 'package:flutter/material.dart';
 
-class BestLike_Widget extends StatelessWidget {
-  const BestLike_Widget({
-    super.key,
-  });
+const TextStyle headlineMediumBold = TextStyle(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+);
+
+class BestLikeWidget extends StatelessWidget {
+  const BestLikeWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(left: 10),
-          width: 300,
+          width: 210,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 35,
+                height: 35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 1, color: Colors.grey),
+                  image: DecorationImage(
+                    image: AssetImage('assets/profile_dummy/profile_01.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const Spacer(),
+              const Icon(Icons.more_vert, size: 25),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          width: 210,
           height: 250,
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.grey.shade200, width: 1.0),
+            image: DecorationImage(
+              image: AssetImage('assets/image_dummy/image_dummy_01.png'),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        SizedBox(height: 10),
-        Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(left: 10),
-              width: 300,
-              height: 80,
-              // decoration: BoxDecoration(
-              //   border: Border.all(width: 1,
-              //   color: Colors.black),
-              // ),
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Row(
-                  children: [
-                    CircleAvatar(radius: 35),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
-                        children: [
-                          Text(
-                            'qwkfewklfa',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Row(
-                            children: [
-                              Spacer(), // 오른쪽 정렬을 위해 Spacer 사용
-                              Text(
-                                '아이디',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+        const SizedBox(height: 10),
+        Container(
+          width: 210,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Text(
+                  '',
+                  style: headlineMediumBold,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
-          ],
+              const Icon(Icons.favorite),
+              const SizedBox(width: 5),
+              Text('100', style: Theme.of(context).textTheme.titleLarge),
+            ],
+          ),
         ),
       ],
     );

@@ -1,9 +1,16 @@
+import 'package:LottoBlog/blogpost_screen/blogpost_dummy.dart';
+import 'package:LottoBlog/landing_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+const TextStyle headlineMediumBold = TextStyle(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+);
 
 class BlogLoadWidget extends StatelessWidget {
-  const BlogLoadWidget({
-    super.key,
-  });
+  BlogLoadWidget({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,42 +23,47 @@ class BlogLoadWidget extends StatelessWidget {
               width: 100,
               height: 130,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 1, color: Colors.grey),
+                image: DecorationImage(
+                  image: AssetImage('assets/image_dummy'),
+                  fit: BoxFit.cover,
+                ),
+                border: Border.all(width: 1, color: Colors.grey.shade300),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: 130,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: Text(
-                            '제목 30글자 까지',
-                            //
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            '',
+                            style: headlineMediumBold,
                           ),
                         ),
-                        Icon(Icons.more_vert,size: 30),
+                        const Icon(Icons.more_vert, size: 30),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '닉네임 10글자까지 ',
+                          '',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
+                        const Spacer(),
                         Row(
-                          children: [
-                            Icon(Icons.favorite,size:18),
+                          children: const [
+                            Icon(Icons.favorite, size: 18),
                             SizedBox(width: 5),
-                            Text('1',
-                              style: Theme.of(context).textTheme.titleMedium,),
+                            Text(
+                              '1,000,000',
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ],
                         ),
                       ],
@@ -62,9 +74,9 @@ class BlogLoadWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 15),
-        Divider(color: Colors.grey, thickness: 1.0),
-        SizedBox(height: 15),
+        const SizedBox(height: 10),
+        Divider(color: Colors.grey.shade300, thickness: 1.0),
+        const SizedBox(height: 15),
       ],
     );
   }
