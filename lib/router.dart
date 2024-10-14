@@ -1,11 +1,11 @@
-import 'package:LottoBlog/blogwriting_screen.dart';
-import 'package:LottoBlog/editprofile_screen.dart';
-import 'package:LottoBlog/fram_screen.dart';
-import 'package:LottoBlog/listofposts_screen.dart';
-import 'package:LottoBlog/login_screen.dart';
-import 'package:LottoBlog/personal_screen.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/blogwriting_screen.dart';
+import 'package:lottoblog/editprofile_screen.dart';
+import 'package:lottoblog/fram_screen.dart';
+import 'package:lottoblog/listofposts_screen.dart';
+import 'package:lottoblog/personal_screen.dart';
 import 'landing_screen.dart';
 import 'mainhome_screen.dart';
 import 'blogpost_screen/blogpost_screen01.dart';

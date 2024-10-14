@@ -1,5 +1,4 @@
-import 'package:LottoBlog/blogpost_screen/blogpost_dummy.dart';
-import 'package:LottoBlog/landing_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

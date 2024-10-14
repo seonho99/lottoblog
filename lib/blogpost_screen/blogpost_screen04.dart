@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:LottoBlog/blogpost_screen/blogpost_dummy.dart';
 
 const TextStyle headlineMedium = TextStyle(
   fontSize: 22,

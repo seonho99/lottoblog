@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:LottoBlog/popupmenubotton_widget.dart';
+import 'package:lottoblog/popupmenubotton_widget.dart';
 
 class BlogPostScreen01 extends StatelessWidget {
   const BlogPostScreen01({super.key});
