@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/show_snackbar.dart';
+import 'firebase_aut_service.dart';
 
 class PersonalScreen extends StatelessWidget {
-  const PersonalScreen({super.key});
+  PersonalScreen({super.key});
+  final auth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class PersonalScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 30,
                     backgroundImage:
-                    AssetImage('assets/profile_dummy/profile_01.png'),
+                        AssetImage('assets/profile_dummy/profile_01.png'),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -43,51 +46,149 @@ class PersonalScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       foregroundColor:
-                      Theme.of(context).colorScheme.onSecondary,
+                          Theme.of(context).colorScheme.onSecondary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding:
-                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 30),
-              Divider(height: 1,color: Colors.grey.shade400),
+              Divider(height: 1, color: Colors.grey.shade400),
               SizedBox(height: 30),
-              Text('블로그',style: Theme.of(context).textTheme.titleLarge),
+              Text('블로그', style: Theme.of(context).textTheme.titleLarge),
               SizedBox(height: 30),
-              GestureDetector(onTap: (){
-                context.go('/personal_screen/blogwriting_screen');
-              },
+              GestureDetector(
+                onTap: () {
+                  context.go('/personal_screen/blogwriting_screen');
+                },
                 child: Container(
-                  child: Row(children: [
-                    Icon(Icons.edit_document,size: 30, color: Theme.of(context).colorScheme.secondary),
-                    SizedBox(width: 15),
-                    Text('글 작성', style: Theme.of(context).textTheme.headlineSmall)
-                  ],
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit_document,
+                          size: 30,
+                          color: Theme.of(context).colorScheme.secondary),
+                      SizedBox(width: 15),
+                      Text('글 작성',
+                          style: Theme.of(context).textTheme.headlineSmall)
+                    ],
                   ),
                 ),
               ),
               SizedBox(height: 20),
-              Divider(height: 1,color: Colors.grey.shade200),
+              Divider(height: 1, color: Colors.grey.shade200),
               SizedBox(height: 20),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   context.go('/personal_screen/listofposts_screen');
                 },
                 child: Container(
-                  child: Row(children: [
-                    Icon(Icons.auto_stories,size: 30, color: Theme.of(context).colorScheme.secondary),
-                    SizedBox(width: 15),
-                    Text('글 목록', style: Theme.of(context).textTheme.headlineSmall),
-                  ],
+                  child: Row(
+                    children: [
+                      Icon(Icons.auto_stories,
+                          size: 30,
+                          color: Theme.of(context).colorScheme.secondary),
+                      SizedBox(width: 15),
+                      Text('글 목록',
+                          style: Theme.of(context).textTheme.headlineSmall),
+                    ],
                   ),
                 ),
               ),
               SizedBox(height: 20),
-              Divider(height: 1,color: Colors.grey.shade200),
+              Divider(height: 1, color: Colors.grey.shade200),
+              SizedBox(height: 30),
+              Text('내정보', style: Theme.of(context).textTheme.titleLarge),
+              SizedBox(height: 30),
+              Container(
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (auth.isLoggedIn()) {
+                          auth.signOut().then((_) {
+                            showSnackBar(context, '로그아웃되었습니다.');
+                          }).catchError((error) {
+                            showSnackBar(context, error.toString());
+                          });
+                        } else {
+                          context.go('/login_screen');
+                        }
+                        ;
+                      },
+                      child: Container(
+                        child: Row(
+                          children: [
+                            Text(
+                              auth.isLoggedIn() ? '로그아웃' : '로그인',
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // ItemCard(
+                    // title: auth.isLoggedIn()?'로그아웃':'로그인',
+                    // color: (brightness == Brightness.light)
+                    //     ? Colors.white
+                    //     : Theme.of(context).scaffoldBackgroundColor,
+                    // rightWidget: null,
+                    // callback: () {
+                    //   if(auth.isLoggedIn()){
+                    //     auth.signOut().then((_) {
+                    //       showSnackBar(context, '로그아웃되었습니다.');
+                    //     }).catchError((error) {
+                    //       showSnackBar(context, error.toString());
+                    //     });
+                    //   }else{
+                    //     context.go('/login_screen');
+                    //   }
+                    // },
+                    // ),
+                    //   Icon(Icons.login,
+                    //       size: 30,
+                    //       color: Theme.of(context).colorScheme.secondary),
+                    //   SizedBox(width: 15),
+                    //   Text('로그인',
+                    //       style: Theme.of(context).textTheme.headlineSmall),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Divider(height: 1, color: Colors.grey.shade200),
+              SizedBox(height: 20),
+              Container(
+                child: Row(
+                  children: [
+                    Icon(Icons.campaign,
+                        size: 30,
+                        color: Theme.of(context).colorScheme.secondary),
+                    SizedBox(width: 15),
+                    Text('공지사항',
+                        style: Theme.of(context).textTheme.headlineSmall),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Divider(height: 1, color: Colors.grey.shade200),
+              SizedBox(height: 20),
+              Container(
+                child: Row(
+                  children: [
+                    Icon(Icons.help_outline,
+                        size: 30,
+                        color: Theme.of(context).colorScheme.secondary),
+                    SizedBox(width: 15),
+                    Text('고객센터/도움말',
+                        style: Theme.of(context).textTheme.headlineSmall),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Divider(height: 1, color: Colors.grey.shade200),
             ],
           ),
         ),

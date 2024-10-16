@@ -1,10 +1,12 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/blogwriting_screen.dart';
 import 'package:lottoblog/editprofile_screen.dart';
+import 'package:lottoblog/emaillogin_screen.dart';
+import 'package:lottoblog/emailregister_screen.dart';
 import 'package:lottoblog/fram_screen.dart';
 import 'package:lottoblog/listofposts_screen.dart';
+import 'package:lottoblog/login_screen.dart';
 import 'package:lottoblog/personal_screen.dart';
 import 'landing_screen.dart';
 import 'mainhome_screen.dart';
@@ -17,13 +19,13 @@ import 'dayofweek_screen.dart';
 // final GlobalObjectKey<NavigatorState> _settingsTabNavigatorKey = GlobalKey(NavigatorState)(debugLabel: 'settingTab');
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
-GlobalKey<NavigatorState>(debugLabel: 'root');
+    GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _articleNavigatorKey =
-GlobalKey<NavigatorState>(debugLabel: 'articleTab');
+    GlobalKey<NavigatorState>(debugLabel: 'articleTab');
 final GlobalKey<NavigatorState> _homeNavigatorKey =
-GlobalKey<NavigatorState>(debugLabel: 'homeTab');
+    GlobalKey<NavigatorState>(debugLabel: 'homeTab');
 final GlobalKey<NavigatorState> _settingsTabNavigatorKey =
-GlobalKey<NavigatorState>(debugLabel: 'settingTab');
+    GlobalKey<NavigatorState>(debugLabel: 'settingTab');
 
 final GoRouter router = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -104,6 +106,27 @@ final GoRouter router = GoRouter(
                   },
                 ),
               ],
+            // GoRoute(
+            //   path: '/login_screen',
+            //   builder: (context, state) {
+            //     return LoginScreen();
+            //   },
+            //   routes: <RouteBase>[
+            //     GoRoute(
+            //       path: 'emaillogin_screen',
+            //       builder: (BuildContext context, GoRouterState state) {
+            //         return EmailloginScreen();
+            //       },
+            //       routes: <RouteBase>[
+            //         GoRoute(
+            //           path: 'emailregister_screen',
+            //           builder: (BuildContext context, GoRouterState state) {
+            //             return Emailregister_Screen();
+            //           },
+            //         ),
+            //       ],
+            //     ),
+            //   ],
             ),
           ],
         )
