@@ -1,9 +1,11 @@
-import 'dart:io';
+class MainhomeClass {
+  String postImage;
+  String postTitle;
+  String postName;
 
-class MainhomepageClass {
-
-
-
-
+  MainhomeClass({
+    required this.postImage,
+    required this.postTitle,
+    required this.postName,
+  });
 }
-

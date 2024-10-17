@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../popupmenubotton_widget.dart';
 
 
-class BlogpostDummy extends StatelessWidget {
-  BlogpostDummy({super.key});
+class PostDummy extends StatelessWidget {
+  PostDummy({super.key});
 
   @override
   Widget build(BuildContext context) {

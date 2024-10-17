@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lottoblog/blogpost_screen/post_dummy.dart';
+import 'package:lottoblog/mainhome_screen.dart';
 import 'package:lottoblog/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -21,8 +23,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp
+        .router
+      (
       title: 'Lotto Blog',
+      // home: MainHomeScreen(),
       routerConfig: router,
       theme: ThemeData(
         fontFamily: 'NanumSquareNeo',
