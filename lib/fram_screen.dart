@@ -30,6 +30,7 @@ class FramScreen extends StatelessWidget {
               icon: Icon(Icons.person_outline),
               label: '프로필'),
         ],
+        backgroundColor: Colors.white,
       ),
     );
   }

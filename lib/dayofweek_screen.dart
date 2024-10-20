@@ -1,8 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/dayofweek_class.dart';
 
 class DayOfWeekScreen extends StatelessWidget {
-  const DayOfWeekScreen({super.key});
+  DayOfWeekScreen({super.key});
+
+  List<DayofweekClass> dayofweeks =[
+
+    DayofweekClass(
+        postImage: 'image_dummy_01.png',
+        postTitle: '2024 10 02 로또 5,000원 샀습니다.'),
+
+    DayofweekClass(
+        postImage: 'image_dummy_02.png',
+        postTitle: '왜 핑이 들어갈까?'),
+
+    DayofweekClass(
+        postImage: 'image_dummy_03.png',
+        postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty'),
+
+    DayofweekClass(
+        postImage: 'image_dummy_04.png',
+        postTitle: '세계 최고 부자가 일런머스크가 말하는 6가지 성공 비결'),
+
+    DayofweekClass(
+        postImage: 'image_dummy_05.png',
+        postTitle: 'He is Not Korean'),
+  ];
+
+  List<Widget> getDayofweeks(BuildContext context){
+    List<Widget> dayofweekList = [];
+
+    for (var i = 0; i<dayofweeks.length; i++){
+      var image = dayofweeks[i].postImage;
+      var title = dayofweeks[i].postTitle;
+
+      dayofweekList.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                context.go('/dayofweek_screen/blogpost_screen01');
+              },
+              child: Container(
+                width: 210,
+                height: 335,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 250,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                            color: Colors.grey.shade200, width: 1.0),
+                        image: DecorationImage(
+                          image: AssetImage(
+                              'assets/image_dummy/$image'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      '$title',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w700),
+                      maxLines: 2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.favorite_outline, size: 16),
+                        SizedBox(width: 4),
+                        Text('1,000,000',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),SizedBox(width: 15),
+          ],
+        ),
+      );
+    }
+    return dayofweekList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,61 +117,13 @@ class DayOfWeekScreen extends StatelessWidget {
               children: [
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          context.go('/dayofweek_screen/blogpost_screen01');
-                        },
-                        child: Container(
-                          width: 210,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 250,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: Colors.grey.shade200, width: 1.0),
-                                  image: const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/image_dummy/image_dummy_01.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Text(
-                                '2024 10 02 로또 5,000원 샀습니다.',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(fontWeight: FontWeight.w700),
-                                maxLines: 2,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.favorite_outline, size: 16),
-                                  SizedBox(width: 4),
-                                  Text('1,000,000',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  child:Row(
+                  children: getDayofweeks(context),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Divider(color: Colors.grey.shade300, thickness: 1.0),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(

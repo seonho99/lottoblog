@@ -57,12 +57,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Colors.grey.shade200,
             ),
             child: Icon(
               Icons.person,
               size: 80,
-              color: Theme.of(context).colorScheme.primary,
+              color: Colors.black,
             ),
           ),
           Positioned(
@@ -100,7 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             filled: true,
-            fillColor: Theme.of(context).colorScheme.surfaceVariant,
+            fillColor: Colors.white,
             suffixText: '${_nicknameController.text.length}/20',
             suffixStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),

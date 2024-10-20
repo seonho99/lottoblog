@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:lottoblog/blogload_widget.dart';
+import 'package:lottoblog/firebasePractice.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

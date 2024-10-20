@@ -88,7 +88,7 @@ class PersonalScreen extends StatelessWidget {
                 child: Container(
                   child: Row(
                     children: [
-                      Icon(Icons.auto_stories,
+                      Icon(Icons.subject,
                           size: 30,
                           color: Theme.of(context).colorScheme.secondary),
                       SizedBox(width: 15),

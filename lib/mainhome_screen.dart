@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/mainhome_class.dart';
+import 'mainhome_class.dart';
 import 'popupmenubotton_widget.dart';
 
 class MainHomeScreen extends StatelessWidget {

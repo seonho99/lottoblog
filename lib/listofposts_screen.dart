@@ -33,8 +33,8 @@ class ListofpostsScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF9F3E3), // 베이지색
                   borderRadius: BorderRadius.circular(12),
+                    border: Border.all(width: 1,color: Colors.grey.shade300),
                 ),
                 child: Row(
                   children: [

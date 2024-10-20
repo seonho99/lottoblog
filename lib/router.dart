@@ -82,49 +82,50 @@ final GoRouter router = GoRouter(
           navigatorKey: _settingsTabNavigatorKey,
           routes: [
             GoRoute(
-              path: '/personal_screen',
+              path: '/login_screen',
               builder: (context, state) {
-                return PersonalScreen();
+                return LoginScreen();
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'editprofile_screen',
+                  path: 'emaillogin_screen',
                   builder: (BuildContext context, GoRouterState state) {
-                    return EditProfileScreen();
+                    return EmailloginScreen();
                   },
-                ),
-                GoRoute(
-                  path: 'blogwriting_screen',
-                  builder: (BuildContext context, GoRouterState state) {
-                    return BlogWritingScreen();
-                  },
-                ),
-                GoRoute(
-                  path: 'listofposts_screen',
-                  builder: (BuildContext context, GoRouterState state) {
-                    return ListofpostsScreen();
-                  },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: 'emailregister_screen',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return Emailregister_Screen();
+                      },
+                    ),
+                  ],
                 ),
               ],
+
             // GoRoute(
-            //   path: '/login_screen',
+            //   path: '/personal_screen',
             //   builder: (context, state) {
-            //     return LoginScreen();
+            //     return PersonalScreen();
             //   },
             //   routes: <RouteBase>[
             //     GoRoute(
-            //       path: 'emaillogin_screen',
+            //       path: 'editprofile_screen',
             //       builder: (BuildContext context, GoRouterState state) {
-            //         return EmailloginScreen();
+            //         return EditProfileScreen();
             //       },
-            //       routes: <RouteBase>[
-            //         GoRoute(
-            //           path: 'emailregister_screen',
-            //           builder: (BuildContext context, GoRouterState state) {
-            //             return Emailregister_Screen();
-            //           },
-            //         ),
-            //       ],
+            //     ),
+            //     GoRoute(
+            //       path: 'blogwriting_screen',
+            //       builder: (BuildContext context, GoRouterState state) {
+            //         return BlogWritingScreen();
+            //       },
+            //     ),
+            //     GoRoute(
+            //       path: 'listofposts_screen',
+            //       builder: (BuildContext context, GoRouterState state) {
+            //         return ListofpostsScreen();
+            //       },
             //     ),
             //   ],
             ),

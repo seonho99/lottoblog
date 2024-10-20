@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/blogload_widget.dart';
+import 'package:lottoblog/firebasePractice.dart';
 import 'package:lottoblog/firebase_aut_service.dart';
 import 'show_snackbar.dart';
 
