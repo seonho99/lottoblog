@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/show_snackbar.dart';
-import 'firebase_aut_service.dart';
+import 'firebase/firebase_auth_service.dart';
 
 class PersonalScreen extends StatelessWidget {
   PersonalScreen({super.key});

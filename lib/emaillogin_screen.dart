@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/show_snackbar.dart';
-import 'firebase_aut_service.dart';
+import 'firebase/firebase_auth_service.dart';
 
 class EmailloginScreen extends StatelessWidget {
   EmailloginScreen({super.key});
@@ -24,13 +24,15 @@ class EmailloginScreen extends StatelessWidget {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Flexible(
                     child: FractionallySizedBox(
                         child:
-                            Image.asset('assets/logo/lottoblog_300_300.jpeg'),
-                    widthFactor: 0.8,),),
+                            Image.asset('assets/logo/lottoblog_300_300.jpeg',
+                            // fit: BoxFit.cover
+                            ),
+                    widthFactor: 0.7,),),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   validator: (value){
@@ -49,9 +51,9 @@ class EmailloginScreen extends StatelessWidget {
                     labelText: '이메일',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
+
                   ),
                 ),
-                SizedBox(height: 15),
                 TextFormField(
                   validator: (value){
                     if(value==null || value.isEmpty){
@@ -77,11 +79,11 @@ class EmailloginScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {},
-                      child: Text('아이디 찾기'),
+                      child: Text('이메일 찾기',style: Theme.of(context).textTheme.titleSmall,),
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Text('비밀번호 찾기'),
+                      child: Text('비밀번호 찾기',style: Theme.of(context).textTheme.titleSmall,),
                     ),
                   ],
                 ),
@@ -117,7 +119,7 @@ class EmailloginScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("계정이 없으신가요?"),
+                    Text("계정이 없으신가요?",style: Theme.of(context).textTheme.titleSmall,),
                     SizedBox(width: 15),
                     TextButton(
                       style: ButtonStyle(
@@ -127,7 +129,7 @@ class EmailloginScreen extends StatelessWidget {
                       onPressed: () {
                         context.go('/login_screen/emaillogin_screen/emailregister_screen');
                       },
-                      child: Text('회원가입하기'),
+                      child: Text('회원가입 하기',style: Theme.of(context).textTheme.titleSmall,),
                     ),
                   ],
                 ),

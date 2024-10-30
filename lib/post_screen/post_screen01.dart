@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottoblog/popupmenubotton_widget.dart';
 
-class BlogPostScreen01 extends StatelessWidget {
-  BlogPostScreen01({super.key});
+class PostScreen01 extends StatelessWidget {
+  PostScreen01({super.key});
 
   @override
   Widget build(BuildContext context) {

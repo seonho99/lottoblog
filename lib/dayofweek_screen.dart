@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottoblog/dayofweek_class.dart';
 
 class DayOfWeekScreen extends StatelessWidget {
@@ -39,11 +38,7 @@ class DayOfWeekScreen extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: () {
-                context.go('/dayofweek_screen/blogpost_screen01');
-              },
-              child: Container(
+             Container(
                 width: 210,
                 height: 335,
                 child: Column(
@@ -86,7 +81,7 @@ class DayOfWeekScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ),SizedBox(width: 15),
+            SizedBox(width: 15),
           ],
         ),
       );

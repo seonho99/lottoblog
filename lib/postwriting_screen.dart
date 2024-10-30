@@ -1,17 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottoblog/firebase/post_service.dart';
+import 'package:lottoblog/models/post_model.dart';
 import 'imagepicker_widget.dart';
 
-class BlogWritingScreen extends StatefulWidget {
-  BlogWritingScreen({super.key});
+class PostwritingScreen extends StatefulWidget {
+  PostwritingScreen({super.key});
 
   @override
-  State<BlogWritingScreen> createState() => _BlogWritingScreenState();
+  State<PostwritingScreen> createState() => _PostwritingScreenState();
 }
 
-class _BlogWritingScreenState extends State<BlogWritingScreen> {
+class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
+  final PostService postService = PostService(); // PostService 인스턴스 생성
 
   int _totalLengthTitle = 0;
   int _totalLengthContents = 0;
@@ -30,13 +34,43 @@ class _BlogWritingScreenState extends State<BlogWritingScreen> {
     });
   }
 
+  Future<void> _submitPost() async {
+    // postId와 작성 시간 생성
+    String postId = FirebaseFirestore.instance.collection('posts').doc().id;
+    DateTime createdAt = DateTime.now();
+
+    // PostModel 객체 생성
+    final post = PostModel(
+      postId: postId,
+      title: _textControllerTitle.text,
+      content: _textControllerContents.text,
+      likeCount: 0,
+      imageUrls: [], // 이미지 URL 리스트 설정
+      createdAt: createdAt,
+      authorId: 'sampleUserId',
+      blockedUserIds: [],
+      reportCount: 0,
+    );
+
+    // Firestore에 데이터 저장
+    await postService.addPost(post);
+
+    // 등록 후 피드백 제공 또는 화면 이동
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('게시물이 등록되었습니다!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
-        title: Text('글 작성', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),),
+        title: Text(
+          '글 작성',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -75,9 +109,9 @@ class _BlogWritingScreenState extends State<BlogWritingScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('${_totalLengthTitle}/${_maxLengthTitle}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey)
-                      // style: TextStyle(color: Colors.grey,fontSize: 16),
+                    Text(
+                      '${_totalLengthTitle}/${_maxLengthTitle}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -112,8 +146,10 @@ class _BlogWritingScreenState extends State<BlogWritingScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('${_totalLengthContents}/${_maxLengthContents}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey)),
+                    Text(
+                      '${_totalLengthContents}/${_maxLengthContents}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
+                    ),
                   ],
                 ),
                 SizedBox(height: 15),
@@ -121,7 +157,7 @@ class _BlogWritingScreenState extends State<BlogWritingScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _submitPost,
                       child: Text('등록'),
                     ),
                   ],

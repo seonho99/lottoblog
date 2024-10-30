@@ -1,33 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'mainhome_class.dart';
+import 'models/post_model.dart';
 import 'popupmenubotton_widget.dart';
 
 class MainHomeScreen extends StatelessWidget {
   MainHomeScreen({super.key});
+  Future<void> fetchPost() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .get();
 
-  List<MainhomeClass> mainhomes = [
-    MainhomeClass(
-        postImage: 'image_dummy_01.png',
-        postTitle: '2024 10 02 로또 5,000원 샀습니다.',
-        postName: '함께 분석해봐요'),
-    MainhomeClass(
-        postImage: 'image_dummy_02.png',
-        postTitle: '왜 핑이 들어갈까?',
-        postName: '하츄핑 로얄핑'),
-    MainhomeClass(
-        postImage: 'image_dummy_03.png',
-        postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty',
-        postName: '수수수 수퍼노바'),
-    MainhomeClass(
-        postImage: 'image_dummy_04.png',
-        postTitle: '세계 최고 부자가 일런머스크가 말하는 6가지 성공 비결',
-        postName: 'thisis멜론머스크'),
-    MainhomeClass(
-        postImage: 'image_dummy_05.png',
-        postTitle: 'He is Not Korean',
-        postName: '슈카형필립스광고'),
-  ];
+
+
+
+    // MainhomeClass(
+    //     postImage: 'image_dummy_01.png',
+    //     postTitle: '2024 10 02 로또 5,000원 샀습니다.',
+    //     postName: '함께 분석해봐요'),
+    // MainhomeClass(
+    //     postImage: 'image_dummy_02.png',
+    //     postTitle: '왜 핑이 들어갈까?',
+    //     postName: '하츄핑 로얄핑'),
+    // MainhomeClass(
+    //     postImage: 'image_dummy_03.png',
+    //     postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty',
+    //     postName: '수수수 수퍼노바'),
+    // MainhomeClass(
+    //     postImage: 'image_dummy_04.png',
+    //     postTitle: '세계 최고 부자가 일런머스크가 말하는 6가지 성공 비결',
+    //     postName: 'thisis멜론머스크'),
+    // MainhomeClass(
+    //     postImage: 'image_dummy_05.png',
+    //     postTitle: 'He is Not Korean',
+    //     postName: '슈카형필립스광고'),
+  //];
 
   List<Widget> getHomeList(BuildContext context) {
     List<Widget> homeList = [];
@@ -140,7 +148,8 @@ class MainHomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: GestureDetector(
               onTap: () {
-                context.go('/mainhome_screen/blogpost_screen01');
+                context.go('/mainhome_screen/post_screen01',
+                extra: '1');
               },
               child: Column(
                 children: getHomeList(context),

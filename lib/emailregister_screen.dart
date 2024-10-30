@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/firebasePractice.dart';
-import 'package:lottoblog/firebase_aut_service.dart';
+import 'package:lottoblog/firebase/firebase_auth_service.dart';
 import 'show_snackbar.dart';
 
 class Emailregister_Screen extends StatelessWidget {
@@ -34,8 +33,9 @@ class Emailregister_Screen extends StatelessWidget {
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                Text('회원가입을 위해\n정보를 입력해주세요'),
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: '이름',

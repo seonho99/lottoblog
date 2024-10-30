@@ -1,22 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/blogwriting_screen.dart';
-import 'package:lottoblog/editprofile_screen.dart';
 import 'package:lottoblog/emaillogin_screen.dart';
 import 'package:lottoblog/emailregister_screen.dart';
 import 'package:lottoblog/fram_screen.dart';
 import 'package:lottoblog/listofposts_screen.dart';
 import 'package:lottoblog/login_screen.dart';
 import 'package:lottoblog/personal_screen.dart';
+import 'package:lottoblog/post_screen/post_list_screen.dart';
+import 'package:lottoblog/postwriting_screen.dart';
+import 'editprofile_screen.dart';
 import 'landing_screen.dart';
 import 'mainhome_screen.dart';
-import 'blogpost_screen/blogpost_screen01.dart';
+import 'post_screen/post_screen01.dart';
 import 'dayofweek_screen.dart';
 
-// final GlobalObjectKey<NavigatorState> _rootNavigatorKey = GlobalKey(NavigatorState)(debugLabel: 'root');
-// final GlobalObjectKey<NavigatorState> _articleNavigatorKey = GlobalKey(NavigatorState)(debugLabel: 'articleTab');
-// final GlobalObjectKey<NavigatorState> _homeNavigatorKey = GlobalKey(NavigatorState)(debugLabel: 'homeTab');
-// final GlobalObjectKey<NavigatorState> _settingsTabNavigatorKey = GlobalKey(NavigatorState)(debugLabel: 'settingTab');
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -50,9 +47,15 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'blogpost_screen01',
+                  path: 'post_screen01',
                   builder: (BuildContext context, GoRouterState state) {
-                    return BlogPostScreen01();
+                    final String? postId = state.extra as String?;
+
+                    if (postId == null) {
+                      return LoginScreen(); // null일 경우 에러 화면
+                    }
+
+                    return PostListScreen(postId: postId);
                   },
                 ),
               ],
@@ -71,7 +74,7 @@ final GoRouter router = GoRouter(
                 GoRoute(
                   path: 'blogpost_screen01',
                   builder: (BuildContext context, GoRouterState state) {
-                    return BlogPostScreen01();
+                    return PostScreen01();
                   },
                 ),
               ],
@@ -118,7 +121,7 @@ final GoRouter router = GoRouter(
             //     GoRoute(
             //       path: 'blogwriting_screen',
             //       builder: (BuildContext context, GoRouterState state) {
-            //         return BlogWritingScreen();
+            //         return PostwritingScreen();
             //       },
             //     ),
             //     GoRoute(
@@ -128,6 +131,8 @@ final GoRouter router = GoRouter(
             //       },
             //     ),
             //   ],
+
+              
             ),
           ],
         )
@@ -135,3 +140,4 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
+
