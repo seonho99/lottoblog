@@ -12,12 +12,12 @@ class PersonalScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20),
               Row(
                 children: [
                   CircleAvatar(
@@ -56,11 +56,8 @@ class PersonalScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
               Divider(height: 1, color: Colors.grey.shade400),
-              SizedBox(height: 30),
               Text('블로그', style: Theme.of(context).textTheme.titleLarge),
-              SizedBox(height: 30),
               GestureDetector(
                 onTap: () {
                   context.go('/personal_screen/blogwriting_screen');
@@ -78,9 +75,7 @@ class PersonalScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
               Divider(height: 1, color: Colors.grey.shade200),
-              SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
                   context.go('/personal_screen/listofposts_screen');
@@ -98,68 +93,8 @@ class PersonalScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
               Divider(height: 1, color: Colors.grey.shade200),
-              SizedBox(height: 30),
               Text('내정보', style: Theme.of(context).textTheme.titleLarge),
-              SizedBox(height: 30),
-              Container(
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (auth.isLoggedIn()) {
-                          auth.signOut().then((_) {
-                            showSnackBar(context, '로그아웃되었습니다.');
-                          }).catchError((error) {
-                            showSnackBar(context, error.toString());
-                          });
-                        } else {
-                          context.go('/login_screen');
-                        }
-                        ;
-                      },
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Text(
-                              auth.isLoggedIn() ? '로그아웃' : '로그인',
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // ItemCard(
-                    // title: auth.isLoggedIn()?'로그아웃':'로그인',
-                    // color: (brightness == Brightness.light)
-                    //     ? Colors.white
-                    //     : Theme.of(context).scaffoldBackgroundColor,
-                    // rightWidget: null,
-                    // callback: () {
-                    //   if(auth.isLoggedIn()){
-                    //     auth.signOut().then((_) {
-                    //       showSnackBar(context, '로그아웃되었습니다.');
-                    //     }).catchError((error) {
-                    //       showSnackBar(context, error.toString());
-                    //     });
-                    //   }else{
-                    //     context.go('/login_screen');
-                    //   }
-                    // },
-                    // ),
-                    //   Icon(Icons.login,
-                    //       size: 30,
-                    //       color: Theme.of(context).colorScheme.secondary),
-                    //   SizedBox(width: 15),
-                    //   Text('로그인',
-                    //       style: Theme.of(context).textTheme.headlineSmall),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Divider(height: 1, color: Colors.grey.shade200),
-              SizedBox(height: 20),
               Container(
                 child: Row(
                   children: [
@@ -172,9 +107,7 @@ class PersonalScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
               Divider(height: 1, color: Colors.grey.shade200),
-              SizedBox(height: 20),
               Container(
                 child: Row(
                   children: [
@@ -187,7 +120,26 @@ class PersonalScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              Divider(height: 1, color: Colors.grey.shade200),
+              Container(
+                child: GestureDetector(
+                  onTap: () async {
+                    if (auth.isLoggedIn()) {  // 로그인 상태일 때
+                      try {
+                        await auth.signOut();  // 로그아웃 수행
+                        showSnackBar(context, '로그아웃 되었습니다.');
+                      } catch (error) {
+                        showSnackBar(context, error.toString());
+                      }
+                    } else {
+                      // 로그인 상태가 아닐 때 (로그인 버튼을 클릭한 경우)
+                      context.go('/login_screen');
+                    }
+                  },
+                  child: Text(auth.isLoggedIn() ? '로그아웃' : '로그인',
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ),
+              ),
               Divider(height: 1, color: Colors.grey.shade200),
             ],
           ),

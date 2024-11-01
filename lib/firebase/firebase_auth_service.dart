@@ -14,14 +14,13 @@ class FirebaseAuthService {
   }) async {
     String? errorMessage;
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
       await _auth.currentUser?.updateDisplayName(name);
       await _auth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'weak-password':
-          errorMessage = '영문, 숫자, 특수문자를 포함하여 최소 6자 이상 작성 해야 합니다';
+          errorMessage = '영문, 숫자, 특수문자를 포함하여 최소 8자 이상 작성 해야 합니다';
           break;
         case 'email-already-used':
           errorMessage = '이미 사용중인 이메일입니다.';

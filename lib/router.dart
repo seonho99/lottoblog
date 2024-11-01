@@ -14,7 +14,6 @@ import 'mainhome_screen.dart';
 import 'post_screen/post_screen01.dart';
 import 'dayofweek_screen.dart';
 
-
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
 final GlobalKey<NavigatorState> _articleNavigatorKey =
@@ -72,7 +71,7 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'blogpost_screen01',
+                  path: 'post_screen01',
                   builder: (BuildContext context, GoRouterState state) {
                     return PostScreen01();
                   },
@@ -97,42 +96,20 @@ final GoRouter router = GoRouter(
                   },
                   routes: <RouteBase>[
                     GoRoute(
+                      path: 'personal_screen',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return PersonalScreen();
+                      },
+                    ),
+                    GoRoute(
                       path: 'emailregister_screen',
                       builder: (BuildContext context, GoRouterState state) {
-                        return Emailregister_Screen();
+                        return EmailregisterScreen();
                       },
                     ),
                   ],
                 ),
               ],
-
-            // GoRoute(
-            //   path: '/personal_screen',
-            //   builder: (context, state) {
-            //     return PersonalScreen();
-            //   },
-            //   routes: <RouteBase>[
-            //     GoRoute(
-            //       path: 'editprofile_screen',
-            //       builder: (BuildContext context, GoRouterState state) {
-            //         return EditProfileScreen();
-            //       },
-            //     ),
-            //     GoRoute(
-            //       path: 'blogwriting_screen',
-            //       builder: (BuildContext context, GoRouterState state) {
-            //         return PostwritingScreen();
-            //       },
-            //     ),
-            //     GoRoute(
-            //       path: 'listofposts_screen',
-            //       builder: (BuildContext context, GoRouterState state) {
-            //         return ListofpostsScreen();
-            //       },
-            //     ),
-            //   ],
-
-              
             ),
           ],
         )
@@ -140,4 +117,3 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
-

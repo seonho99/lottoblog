@@ -51,7 +51,6 @@ class EmailloginScreen extends StatelessWidget {
                     labelText: '이메일',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
-
                   ),
                 ),
                 TextFormField(
@@ -59,8 +58,8 @@ class EmailloginScreen extends StatelessWidget {
                     if(value==null || value.isEmpty){
                       return '비밀번호를 입력하세요';
                     }
-                    if (value.length < 6){
-                      return '비밀번호는 최소 6자리 이상이어야 합니다.';
+                    if (value.length < 7){
+                      return '비밀번호는 최소 8자리 이상이어야 합니다.';
                     }
                     return null;
                   },
@@ -98,6 +97,7 @@ class EmailloginScreen extends StatelessWidget {
                           password:password!,
                         ).then((_){
                           showSnackBar(context, '로그인이 되었습니다.');
+                          context.go('/mainhome_screen');
                         }).catchError((error){
                           showSnackBar(context, error.toString());
                         });
