@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: (){
-                    context.go('/login_screen/emaillogin_screen');
+                    context.go('/login/emaillogin');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

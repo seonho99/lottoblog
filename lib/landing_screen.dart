@@ -11,7 +11,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   void _navigateToWorkoutHome() async {
     await Future.delayed(Duration(seconds: 2));
-    context.go('/mainhome_screen');
+    context.go('/mainhome');
   }
 
   @override

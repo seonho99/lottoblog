@@ -147,7 +147,7 @@ class MainHomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: GestureDetector(
               onTap: () {
-                context.go('/mainhome_screen/post_screen01',
+                context.go('/mainhome/post_screen01',
                 extra: '1');
               },
               child: Column(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/show_snackbar.dart';
-import 'firebase/firebase_auth_service.dart';
+import '../firebase/firebase_auth_service.dart';
 
 class EmailloginScreen extends StatelessWidget {
   EmailloginScreen({super.key});
@@ -77,11 +77,15 @@ class EmailloginScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.go('/login/emaillogin');
+                      },
                       child: Text('이메일 찾기',style: Theme.of(context).textTheme.titleSmall,),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.go('/login/emaillogin/emailresetpassword');
+                      },
                       child: Text('비밀번호 찾기',style: Theme.of(context).textTheme.titleSmall,),
                     ),
                   ],
@@ -97,7 +101,7 @@ class EmailloginScreen extends StatelessWidget {
                           password:password!,
                         ).then((_){
                           showSnackBar(context, '로그인이 되었습니다.');
-                          context.go('/mainhome_screen');
+                          context.go('/login/emaillogin/personal');
                         }).catchError((error){
                           showSnackBar(context, error.toString());
                         });
@@ -127,9 +131,9 @@ class EmailloginScreen extends StatelessWidget {
                             EdgeInsets.zero),
                       ),
                       onPressed: () {
-                        context.go('/login_screen/emaillogin_screen/emailregister_screen');
+                        context.go('/login/emaillogin/emailregister');
                       },
-                      child: Text('회원가입 하기',style: Theme.of(context).textTheme.titleSmall,),
+                      child: Text('회원가입하기',style: Theme.of(context).textTheme.titleSmall,),
                     ),
                   ],
                 ),

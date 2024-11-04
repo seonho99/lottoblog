@@ -39,7 +39,7 @@ class PersonalScreen extends StatelessWidget {
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      context.go('/personal_screen/editprofile_screen');
+                      context.go('/login/emaillogin/personal/editprofile');
                     },
                     icon: Icon(Icons.edit, size: 18),
                     label: Text('수정'),
@@ -60,7 +60,7 @@ class PersonalScreen extends StatelessWidget {
               Text('블로그', style: Theme.of(context).textTheme.titleLarge),
               GestureDetector(
                 onTap: () {
-                  context.go('/personal_screen/blogwriting_screen');
+                  context.go('/login/emaillogin/personal/postwriting');
                 },
                 child: Container(
                   child: Row(
@@ -78,7 +78,7 @@ class PersonalScreen extends StatelessWidget {
               Divider(height: 1, color: Colors.grey.shade200),
               GestureDetector(
                 onTap: () {
-                  context.go('/personal_screen/listofposts_screen');
+                  context.go('/login/emaillogin/personal/listofposts');
                 },
                 child: Container(
                   child: Row(
@@ -121,24 +121,36 @@ class PersonalScreen extends StatelessWidget {
                 ),
               ),
               Divider(height: 1, color: Colors.grey.shade200),
-              Container(
-                child: GestureDetector(
-                  onTap: () async {
-                    if (auth.isLoggedIn()) {  // 로그인 상태일 때
-                      try {
-                        await auth.signOut();  // 로그아웃 수행
-                        showSnackBar(context, '로그아웃 되었습니다.');
-                      } catch (error) {
-                        showSnackBar(context, error.toString());
-                      }
-                    } else {
-                      // 로그인 상태가 아닐 때 (로그인 버튼을 클릭한 경우)
-                      context.go('/login_screen');
-                    }
-                  },
-                  child: Text(auth.isLoggedIn() ? '로그아웃' : '로그인',
-                      style: Theme.of(context).textTheme.headlineSmall),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.white
+                    ),
+                    child: InkWell(
+                      onTap: (){
+                        if(auth.isLoggedIn()) {
+                          auth.signOut().then((_){
+                            showSnackBar(context, '로그아웃 되었습니다.');
+                          }).catchError((error){
+                            showSnackBar(context, error.toString());
+                          });
+                        } else {
+                          context.go('/login_screen');
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          auth.isLoggedIn() ? '로그아웃' : '로그인',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Divider(height: 1, color: Colors.grey.shade200),
             ],
@@ -149,30 +161,5 @@ class PersonalScreen extends StatelessWidget {
   }
 }
 
-// Widget _buildMyPageSection(BuildContext context) {
-//   return Card(
-//     elevation: 2,
-//     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-//     child: Padding(
-//       padding: EdgeInsets.all(16),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text('활동', style: Theme.of(context).textTheme.titleLarge),
-//           SizedBox(height: 16),
-//           _buildListTile(context, Icons.favorite, '좋아요한 글', Colors.red),
-//           _buildListTile(context, Icons.bookmark, '저장한 글', Colors.green),
-//         ],
-//       ),
-//     ),
-//   );
-// }
 
-//   Widget _buildListTile(BuildContext context, IconData icon, String title, Color iconColor) {
-//     return ListTile(
-//       leading: Icon(icon, color: iconColor),
-//       title: Text(title),
-//       trailing: Icon(Icons.chevron_right),
-//       onTap: () {},
-//     );
-//   }
+

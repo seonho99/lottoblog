@@ -1,14 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/emaillogin_screen.dart';
-import 'package:lottoblog/emailregister_screen.dart';
+import 'package:lottoblog/editprofile_screen.dart';
+import 'package:lottoblog/email/emaillogin_screen.dart';
+import 'package:lottoblog/email/emailregister_screen.dart';
+import 'package:lottoblog/email/emailresetpassword_screen.dart';
 import 'package:lottoblog/fram_screen.dart';
 import 'package:lottoblog/listofposts_screen.dart';
 import 'package:lottoblog/login_screen.dart';
 import 'package:lottoblog/personal_screen.dart';
 import 'package:lottoblog/post_screen/post_list_screen.dart';
 import 'package:lottoblog/postwriting_screen.dart';
-import 'editprofile_screen.dart';
 import 'landing_screen.dart';
 import 'mainhome_screen.dart';
 import 'post_screen/post_screen01.dart';
@@ -40,7 +42,7 @@ final GoRouter router = GoRouter(
           navigatorKey: _articleNavigatorKey,
           routes: [
             GoRoute(
-              path: '/mainhome_screen',
+              path: '/mainhome',
               builder: (context, state) {
                 return MainHomeScreen();
               },
@@ -65,7 +67,7 @@ final GoRouter router = GoRouter(
           navigatorKey: _homeNavigatorKey,
           routes: [
             GoRoute(
-              path: '/dayofweek_screen',
+              path: '/dayofweek',
               builder: (context, state) {
                 return DayOfWeekScreen();
               },
@@ -84,28 +86,54 @@ final GoRouter router = GoRouter(
           navigatorKey: _settingsTabNavigatorKey,
           routes: [
             GoRoute(
-              path: '/login_screen',
+              path: '/login',
               builder: (context, state) {
                 return LoginScreen();
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'emaillogin_screen',
+                  path: 'emaillogin',
                   builder: (BuildContext context, GoRouterState state) {
                     return EmailloginScreen();
                   },
                   routes: <RouteBase>[
                     GoRoute(
-                      path: 'personal_screen',
-                      builder: (BuildContext context, GoRouterState state) {
-                        return PersonalScreen();
-                      },
-                    ),
-                    GoRoute(
-                      path: 'emailregister_screen',
+                      path: 'emailregister',
                       builder: (BuildContext context, GoRouterState state) {
                         return EmailregisterScreen();
                       },
+                    ),
+                    GoRoute(
+                      path: 'emailresetpassword',
+                      builder: (context, state) {
+                        return EmailresetpasswordScreen();
+                      },
+                    ),
+                    GoRoute(
+                      path: 'personal',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return PersonalScreen();
+                      },
+                      routes: <RouteBase>[
+                        GoRoute(
+                            path: 'editprofile',
+                          builder: (BuildContext context, GoRouterState state){
+                              return EditProfileScreen();
+                          },
+                        ),
+                        GoRoute(
+                            path: 'postwriting',
+                            builder: (BuildContext context, GoRouterState state){
+                              return PostwritingScreen();
+                            },
+                        ),
+                        GoRoute(
+                          path: 'listofposts',
+                          builder: (BuildContext context, GoRouterState state){
+                            return ListofpostsScreen();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -116,4 +144,21 @@ final GoRouter router = GoRouter(
       ],
     ),
   ],
+    redirect: (context, state) {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      // 사용자가 로그인하지 않은 경우
+      if (user == null && state.uri.path == '/login/emaillogin' &&
+          state.uri.path == '/login/emaillogin/emailregister' &&
+          state.uri.path == '/login/emaillogin/emailresetpassword') {
+        return '/login'; // 로그인 화면으로 리디렉션
+      }
+
+      // 사용자가 로그인한 경우
+      if (user != null && state.uri.path == '/login/emaillogin/personal') {
+        return '/login/emaillogin/personal'; // 홈 화면으로 리디렉션
+      }
+
+      return null; // 기본 동작
+    }
 );

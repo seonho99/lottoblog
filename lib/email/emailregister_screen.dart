@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/firebase/firebase_auth_service.dart';
-import 'show_snackbar.dart';
+
+import '../show_snackbar.dart';
 
 class EmailregisterScreen extends StatelessWidget {
   EmailregisterScreen({super.key});
