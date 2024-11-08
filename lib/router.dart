@@ -124,7 +124,11 @@ final GoRouter router = GoRouter(
                         GoRoute(
                             path: 'postwriting',
                             builder: (BuildContext context, GoRouterState state){
-                              return PostwritingScreen();
+                              final String? userId = FirebaseAuth.instance.currentUser?.uid;
+                              if (userId == null ){
+                                return LoginScreen();
+                              }
+                              return PostwritingScreen(userId: userId);
                             },
                         ),
                         GoRoute(

@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottoblog/dayofweek_screen.dart';
 import 'package:lottoblog/firebase/firebase_auth_service.dart';
 import 'package:lottoblog/firebase/firebase_storage_service.dart';
 import 'package:lottoblog/show_snackbar.dart';
@@ -35,6 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             File(pickedFile.path), auth.user?.uid);
 
         await auth.updatePhotoUrl(downloadURL);
+
         setState(() {
           profileImageURL = downloadURL;
         });
@@ -50,7 +52,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     name = auth.user?.displayName;
     email = auth.user?.email;
@@ -86,11 +87,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           backgroundImage: profileImageURL != null
                               ? NetworkImage(profileImageURL!)
                               : const AssetImage(
-                                  '/assets/profile_dummy/profile_03.png'),
+                                  'assets/profile_dummy/profile_03.png'),
                           child: _isUploading
                             ? CircularProgressIndicator()
                           :  Icon(Icons.camera_alt,
                               size: 30, color: Colors.white),
+                          onBackgroundImageError: (_,__){
+                            setState(() {
+                              profileImageURL = null;
+                            });
+                          },
                         ),
                       ),
                       Positioned(
@@ -109,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 try {
                                   await auth.deletePhotoUrl();
                                   await storage.deleteProfileImage(auth.user?.uid);
-                                }catch(e){
+                                } catch(e) {
                                   showSnackBar(context, e.toString());
                                 }
                                 setState(() {
@@ -157,7 +163,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Text('이메일 인증을 아직 안하셨나요?',
                         style: Theme.of(context).textTheme.titleSmall),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if(auth.user?.emailVerified??false){
+                          showSnackBar(context, '이미 인증된 사용자입니다.');
+                          return;
+                        }
+                        try {
+                          auth.sendVerificationEmail();
+                          showSnackBar(context, '인증 이메일이 다시 전송되었습니다.');
+                        } catch (e) {
+                          showSnackBar(context, e.toString());
+                        }
+                      },
                       child: Text(
                         'Send Email',
                         style: Theme.of(context).textTheme.titleSmall,
@@ -190,7 +207,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(color: Colors.white)),
+                            ?.copyWith(color: Colors.white),),
                   ),
                 ),
                 // 로그아웃/회원탈퇴
@@ -198,7 +215,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await auth.signOut();
+                          context.go('/login');
+                        } catch (e) {
+                          showSnackBar(context, toString());
+                        }
+                      },
                       child: Text(
                         '로그아웃',
                         style: Theme.of(context).textTheme.titleSmall,
@@ -206,7 +230,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     Text('|'),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try{
+                          await auth.deleteAccount();
+                          showSnackBar(context, '탈퇴처리가 완료되었습니다.');
+                          context.go('/login');
+                        }catch(e){
+                          showSnackBar(context, e.toString());
+                        }
+                      },
                       child: Text(
                         '회원탈퇴',
                         style: Theme.of(context).textTheme.titleSmall,

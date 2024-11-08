@@ -9,9 +9,7 @@ import 'firebase/firebase_options.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -25,9 +23,9 @@ class MyApp extends StatelessWidget {
       // (home: PersonalScreen(),
         .router
       (
-
       routerConfig: router,
       title: 'Lotto Blog',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'NanumSquareNeo',
         textTheme: const TextTheme(

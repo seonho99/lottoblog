@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottoblog/firebase/post_service.dart';
 import 'package:lottoblog/models/post_model.dart';
 
 
@@ -14,7 +13,6 @@ class PostListScreen extends StatefulWidget {
 }
 
 class _PostListScreenState extends State<PostListScreen> {
-  final PostService postService = PostService();
   PostModel? post; // 특정 게시물 정보
 
   @override

@@ -19,11 +19,7 @@ class MainHomeScreen extends StatelessWidget {
       postTitle: '왜 핑이 들어갈까?',
       postName: '하츄핑 로얄핑',
     ),
-    MainhomeClass(
-      postImage: 'image_dummy_03.png',
-      postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty',
-      postName: '수수수 수퍼노바',
-    ),
+
     MainhomeClass(
       postImage: 'image_dummy_04.png',
       postTitle: '세계 최고 부자가 일런머스크가 말하는 6가지 성공 비결',
@@ -33,6 +29,11 @@ class MainHomeScreen extends StatelessWidget {
       postImage: 'image_dummy_05.png',
       postTitle: 'He is Not Korean',
       postName: '슈카형필립스광고',
+    ),
+    MainhomeClass(
+      postImage: 'image_dummy_03.png',
+      postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty',
+      postName: '수수수 수퍼노바',
     ),
   ];
 

@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth;
@@ -7,6 +7,7 @@ class FirebaseAuthService {
     _auth.setLanguageCode('kr');
   }
 
+  final storageRef = FirebaseStorage.instance.ref();
   User? get user => _auth.currentUser;
 
   Future<void> singUpWithEmail({
@@ -137,14 +138,23 @@ class FirebaseAuthService {
       throw Exception('수정 실패:$e');
     }
   }
-  Future<void> deleteProfileImage(String? uid) async {
-    if(uid == null) throw Exception('잘못된 접근입니다');
+
+  Future<void> sendVerificationEmail() async {
     try {
-      final profileRef = storageRef.child('user_profiles/${uid}_profile_image.jpg');
-      await profileRef.delete();
-    } catch (e) {
-      throw Exception('upload 실패');
+      if(!(_auth.currentUser?.emailVerified??true)){
+        await _auth.currentUser?.sendEmailVerification();
+      } else {
+        throw Exception('이미 이메일 인증이 완료되었습니다.');
+      }
+    } catch (e){
+      throw Exception('인증 메일 전송이 실패 했습니다.');
     }
   }
-
+  Future<void> deleteAccount() async {
+    try {
+      await _auth.currentUser?.delete();
+    } catch (e) {
+      throw Exception('탈퇴 과정에 문제가 있습니다. ${e.toString()}');
+    }
+  }
 }

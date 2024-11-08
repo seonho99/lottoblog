@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottoblog/dayofweek_class.dart';
 
 class DayOfWeekScreen extends StatelessWidget {
@@ -15,16 +16,16 @@ class DayOfWeekScreen extends StatelessWidget {
         postTitle: '왜 핑이 들어갈까?'),
 
     DayofweekClass(
-        postImage: 'image_dummy_03.png',
-        postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty'),
-
-    DayofweekClass(
         postImage: 'image_dummy_04.png',
         postTitle: '세계 최고 부자가 일런머스크가 말하는 6가지 성공 비결'),
 
     DayofweekClass(
         postImage: 'image_dummy_05.png',
         postTitle: 'He is Not Korean'),
+
+    DayofweekClass(
+        postImage: 'image_dummy_03.png',
+        postTitle: '윈터 너무 예쁘다 ♥ aespa Winter is so pretty'),
   ];
 
   List<Widget> getDayofweeks(BuildContext context){
@@ -134,23 +135,27 @@ class DayOfWeekScreen extends StatelessWidget {
                               height: 1,
                             ),
                             SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Text('[로또]',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold)),
-                                SizedBox(width: 6),
-                                Expanded(
-                                  child: Text('2024 10 02 로또 5,000원 샀습니다.',
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                              ],
+                            GestureDetector(
+                              onTap: (){
+                                context.go('/dayofweek/post_screen01');},
+                              child: Row(
+                                children: [
+                                  Text('[로또]',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold)),
+                                  SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text('2024 10 02 로또 5,000원 샀습니다.',
+                                        style:
+                                            Theme.of(context).textTheme.bodyLarge,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(height: 20),
                             Divider(

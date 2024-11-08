@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottoblog/firebase/post_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottoblog/models/post_model.dart';
 import 'imagepicker_widget.dart';
+import 'firebase/firestore_service.dart';
 
 class PostwritingScreen extends StatefulWidget {
-  PostwritingScreen({super.key});
+  final String userId;
+
+  PostwritingScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<PostwritingScreen> createState() => _PostwritingScreenState();
@@ -15,12 +20,25 @@ class PostwritingScreen extends StatefulWidget {
 class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
-  final PostService postService = PostService(); // PostService 인스턴스 생성
+  final FirestoreService firestoreService = FirestoreService();
+  List<String> _imageUrls = [];
+  final ImagePicker _imagePicker = ImagePicker();
 
   int _totalLengthTitle = 0;
   int _totalLengthContents = 0;
   final int _maxLengthTitle = 30;
   final int _maxLengthContents = 200;
+
+  // Future<void> _selectImage() async {
+  //   final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null){
+  //     String imageUrl = await uploadImage(File(pickedFile.path));
+  //     setState(() {
+  //       _imageUrls.add(imageUrl);
+  //     });
+  //   }
+  // }
+
 
   void _onChangedTitle(String text) {
     setState(() {
@@ -28,37 +46,48 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
     });
   }
 
-  void _onChangedContents(String text) {
+  void _onChangedContent(String text) {
     setState(() {
       _totalLengthContents = text.length;
     });
   }
 
-  Future<void> _submitPost() async {
-    // postId와 작성 시간 생성
-    String postId = FirebaseFirestore.instance.collection('posts').doc().id;
-    DateTime createdAt = DateTime.now();
-
-    // PostModel 객체 생성
-    final post = PostModel(
-      postId: postId,
+  void _submitPost() async {
+    if(_textControllerTitle.text.isEmpty || _textControllerTitle.text.isEmpty){
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('오류'),
+              content: Text('제목과 내용을 모두 입력해야 합니다.'),
+              actions: [
+                TextButton(onPressed: (){
+                  Navigator.of(context).pop();
+                }, child: Text('확인'),
+                ),
+              ],
+            );
+          },
+      );
+      return;
+    }
+    final newPost = PostModel(
+      postId: '',
       title: _textControllerTitle.text,
       content: _textControllerContents.text,
+      createdAt: DateTime.now(),
+      authorId: widget.userId,
       likeCount: 0,
-      imageUrls: [], // 이미지 URL 리스트 설정
-      createdAt: createdAt,
-      authorId: 'sampleUserId',
-      blockedUserIds: [],
       reportCount: 0,
     );
 
-    // Firestore에 데이터 저장
-    await postService.addPost(post);
+    // DocumentReference docRef = await _firestoreService.addPost(newPost);
+    // newPost.postId = docRef.id;
+    // print('게시글이 추가되었습니다: ${newPost.postId}');
 
-    // 등록 후 피드백 제공 또는 화면 이동
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('게시물이 등록되었습니다!')),
-    );
+    _textControllerTitle.clear();
+    _textControllerTitle.clear();
+    _imageUrls.clear();
   }
 
   @override
@@ -69,7 +98,10 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           '글 작성',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .headlineSmall
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       resizeToAvoidBottomInset: true,
@@ -100,7 +132,10 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                       decoration: InputDecoration(
                         hintText: '제목을 입력해주세요.',
                         border: InputBorder.none,
-                        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey),
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: Colors.grey),
                       ),
                     ),
                   ),
@@ -111,7 +146,10 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                   children: [
                     Text(
                       '${_totalLengthTitle}/${_maxLengthTitle}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -127,17 +165,23 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                     padding: EdgeInsets.all(8),
                     child: TextField(
                       maxLines: 14,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(height: 1.6),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(height: 1.6),
                       keyboardType: TextInputType.text,
                       controller: _textControllerContents,
-                      onChanged: _onChangedContents,
+                      onChanged: _onChangedContent,
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(200),
                       ],
                       decoration: InputDecoration(
                         hintText: '글을 작성해주세요.',
                         border: InputBorder.none,
-                        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey),
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: Colors.grey),
                       ),
                     ),
                   ),
@@ -148,19 +192,17 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                   children: [
                     Text(
                       '${_totalLengthContents}/${_maxLengthContents}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Colors.grey),
                     ),
                   ],
                 ),
-                SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _submitPost,
-                      child: Text('등록'),
-                    ),
-                  ],
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: _submitPost,
+                  child: Text("게시글 작성"),
                 ),
               ],
             ),

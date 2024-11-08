@@ -5,14 +5,15 @@ class UsersModel {
   String userName; // 사용자 이름
   String email; // 사용자 이메일
   String profileImageUrl; // 프로필 사진 URL
-  String postIds; // 작성한 글 ID 목록
+  List<String> postIds; // 작성한 글 ID 목록
 
   UsersModel(
       {required this.userId,
       required this.userName,
       required this.email,
       required this.profileImageUrl,
-      required this.postIds});
+      this.postIds = const [],
+      });
 
   // Firestore => 로컬
   factory UsersModel.fromFirestore(

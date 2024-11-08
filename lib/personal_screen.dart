@@ -3,9 +3,22 @@ import 'package:go_router/go_router.dart';
 import 'package:lottoblog/show_snackbar.dart';
 import 'firebase/firebase_auth_service.dart';
 
-class PersonalScreen extends StatelessWidget {
+class PersonalScreen extends StatefulWidget {
   PersonalScreen({super.key});
+
+  @override
+  State<PersonalScreen> createState() => _PersonalScreenState();
+}
+
+class _PersonalScreenState extends State<PersonalScreen> {
   final auth = FirebaseAuthService();
+  String? profileImgaeURL;
+
+  @override
+  void initState() {
+    super.initState();
+    profileImgaeURL = auth.user?.photoURL;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +33,24 @@ class PersonalScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        AssetImage('assets/profile_dummy/profile_01.png'),
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Colors.grey.shade200),
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: profileImgaeURL != null
+                              ? NetworkImage(profileImgaeURL!)
+                              : AssetImage(
+                                  'assets/profile_dummy/profile_03.png'),
+                          onError: (_, __) {
+                            setState(() {
+                              profileImgaeURL = null;
+                            });
+                          },
+                          fit: BoxFit.cover),
+                    ),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -127,15 +154,13 @@ class PersonalScreen extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(16),
                     height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white
-                    ),
+                    decoration: BoxDecoration(color: Colors.white),
                     child: InkWell(
-                      onTap: (){
-                        if(auth.isLoggedIn()) {
-                          auth.signOut().then((_){
+                      onTap: () {
+                        if (auth.isLoggedIn()) {
+                          auth.signOut().then((_) {
                             showSnackBar(context, '로그아웃 되었습니다.');
-                          }).catchError((error){
+                          }).catchError((error) {
                             showSnackBar(context, error.toString());
                           });
                         } else {
@@ -160,6 +185,3 @@ class PersonalScreen extends StatelessWidget {
     );
   }
 }
-
-
-
