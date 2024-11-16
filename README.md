@@ -33,4 +33,4 @@
 - `Figma` 를 사용하여 Google Play, App Store ImageScreen 샷 등록
 - `Flutter` 를 사용하여 이미지 및 UI를 구현
 - `Firebase Authentication` 을 사용하여 회원가입 및 로그인 기능을 구현
-- `Firestore` 데이터 처리
+- `Firestore` 데이터 처리.
