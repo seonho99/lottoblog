@@ -9,7 +9,7 @@ class DayOfWeekScreen extends StatelessWidget {
 
     DayofweekClass(
         postImage: 'image_dummy_01.png',
-        postTitle: '2024 10 02 로또 5,000원 샀습니다.'),
+        postTitle: '이번주도 구매 완료.'),
 
     DayofweekClass(
         postImage: 'image_dummy_02.png',
@@ -148,7 +148,7 @@ class DayOfWeekScreen extends StatelessWidget {
                                               fontWeight: FontWeight.bold)),
                                   SizedBox(width: 6),
                                   Expanded(
-                                    child: Text('2024 10 02 로또 5,000원 샀습니다.',
+                                    child: Text('이번주도 구매 완료.',
                                         style:
                                             Theme.of(context).textTheme.bodyLarge,
                                         maxLines: 1,

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottoblog/dayofweek_screen.dart';
 import 'package:lottoblog/firebase/firebase_auth_service.dart';
 import 'package:lottoblog/firebase/firebase_storage_service.dart';
 import 'package:lottoblog/show_snackbar.dart';
@@ -65,7 +64,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title:
-            Text('프로필 수정', style: Theme.of(context).textTheme.headlineMedium),
+            Text('프로필 수정', style:Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
       ),

@@ -1,39 +1,36 @@
-2024.09.18 flutter UI 디자인 시작
+![Thumbnail_github](https://github.com/user-attachments/assets/84619edd-8d3b-4a96-82f6-c9727b874f20)
+-----------------
 
-===========================
+## 목차
+- [프로젝트 소개](#프로젝트-소개)
+- [기술 스택](#기술-스택)
+- [학습](#학습)
 
-2024.09.28 Zira로 TODO 리스트 작성
+# 프로젝트 소개
 
-===========================
+### 로또 블로그
+로또를 구매하는 분들과 로또에 관심이 있는 분들을 위한 소셜 네트워크 커뮤니티 입니다.
 
-2024.10.02 Font 나눔스퀘어 네오 적용
 
-===========================
+## 기능
+| 기능               |
+|-------------------|
+| ✏️ 게시글 업로드    |  
+| ❤️ 게시글 좋아요    |         
+| 🗑️ 게시글 삭제    |
 
-2024.10.04 유저 글쓰기 기능 구현
 
-===========================
+## 개발 기간
+- 2024.09.18 ~
 
-2024.10.07 글 신고 UI 구현
+## 기술 스택
+- 언어: `Dart`
+- 프레임워크: `Flutter`
+- UI 라이브러리: `Flutter`
+- 벡엔드: `Firebase`
 
-===========================
-
-2024.10.13 이메일 회원가입 구현
-
-===========================
-
-2024.10.17 파이어베이스 프로젝트 연동
-
-===========================
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+## 학습
+- `Figma` 를 사용하여 Google Play, App Store ImageScreen 샷 등록
+- `Flutter` 를 사용하여 이미지 및 UI를 구현
+- `Firebase Authentication` 을 사용하여 회원가입 및 로그인 기능을 구현
+- `Firestore` 데이터 처리

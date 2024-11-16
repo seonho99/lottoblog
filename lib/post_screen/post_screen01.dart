@@ -56,7 +56,7 @@ class PostScreen01 extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  '2024 10 02 로또 5,000원 샀습니다.',
+                  '이번주도 구매 완료.',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(height: 1.6),
                 ),
                 const SizedBox(height: 20),

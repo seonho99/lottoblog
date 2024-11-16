@@ -14,11 +14,23 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   final ImagePicker picker = ImagePicker();
 
   Future<void> getImages(ImageSource imageSource) async {
-    final List<XFile>? pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles != null) {
-      setState(() {
-        _images!.addAll(pickedFiles);
-      });
+    if (_images!.length < 3) {
+      final List<XFile>? pickedFiles = await picker.pickMultiImage();
+      if (pickedFiles != null) {
+        setState(() {
+          _images!.addAll(pickedFiles);
+          if (_images!.length > 3) {
+            _images = _images!.sublist(0, 3);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('최대 3장까지 선택할 수 있습니다.')),
+            );
+          }
+        });
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('최대 3장까지 선택할 수 있습니다.')),
+      );
     }
   }
 
@@ -43,7 +55,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   Widget _buildPhotoArea() {
     return _images != null && _images!.isNotEmpty
         ? Container(
-            height: 300,
+            height: 100,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -63,7 +75,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
                       right: 5,
                       top: 5,
                       child: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
+                        icon: Icon(Icons.delete, color: Colors.grey),
                         onPressed: () => _removeImage(index),
                       ),
                     ),
@@ -74,7 +86,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
           )
         : Container(
             decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+                BoxDecoration(shape: BoxShape.circle, color: Colors.blue.shade300),
             padding: EdgeInsets.all(20),
             child: Icon(Icons.camera_alt, color: Colors.white, size: 50),
           );
@@ -88,6 +100,9 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
           onPressed: () {
             getImages(ImageSource.gallery);
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white
+          ),
           child: Text('사진/이미지', style: Theme.of(context).textTheme.titleSmall),
         ),
       ],

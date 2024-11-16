@@ -1,12 +1,8 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:lottoblog/firebase/firebase_storage_service.dart';
 import 'package:lottoblog/models/post_model.dart';
 import 'imagepicker_widget.dart';
-import 'firebase/firestore_service.dart';
 
 class PostwritingScreen extends StatefulWidget {
   final String userId;
@@ -20,25 +16,12 @@ class PostwritingScreen extends StatefulWidget {
 class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
-  final FirestoreService firestoreService = FirestoreService();
-  List<String> _imageUrls = [];
-  final ImagePicker _imagePicker = ImagePicker();
+  final FirebaseStorageService firebaseStorageService = FirebaseStorageService();
 
   int _totalLengthTitle = 0;
   int _totalLengthContents = 0;
   final int _maxLengthTitle = 30;
   final int _maxLengthContents = 200;
-
-  // Future<void> _selectImage() async {
-  //   final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null){
-  //     String imageUrl = await uploadImage(File(pickedFile.path));
-  //     setState(() {
-  //       _imageUrls.add(imageUrl);
-  //     });
-  //   }
-  // }
-
 
   void _onChangedTitle(String text) {
     setState(() {
@@ -53,41 +36,91 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
   }
 
   void _submitPost() async {
-    if(_textControllerTitle.text.isEmpty || _textControllerTitle.text.isEmpty){
-      showDialog(
+    try {
+      if (_textControllerTitle.text.isEmpty || _textControllerContents.text.isEmpty) {
+        showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
+              backgroundColor: Colors.white,
               title: Text('오류'),
               content: Text('제목과 내용을 모두 입력해야 합니다.'),
               actions: [
-                TextButton(onPressed: (){
-                  Navigator.of(context).pop();
-                }, child: Text('확인'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    '확인',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
                 ),
               ],
             );
           },
+        );
+        return;
+      }
+
+      PostModel newPost = PostModel(
+        postId: '',
+        title: _textControllerTitle.text,
+        content: _textControllerContents.text,
+        createdAt: DateTime.now(),
+        authorId: widget.userId,
+        likeCount: 0,
+        reportCount: 0,
+        imageUrls: [],
       );
-      return;
+
+      // 이미지 업로드
+      FirebaseStorageService().uploadFile(context);
+      // await firebaseStorageService.uploadImageToFirestore(newPost);
+
+      // 필드 초기화
+      _textControllerTitle.clear();
+      _textControllerContents.clear();
+
+      // 성공 메시지 표시
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            title: Text('성공'),
+            content: Text('게시글이 작성되었습니다.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('확인'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      // 에러 처리
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            title: Text('오류'),
+            content: Text('게시글 작성에 실패했습니다: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('확인'),
+              ),
+            ],
+          );
+        },
+      );
     }
-    final newPost = PostModel(
-      postId: '',
-      title: _textControllerTitle.text,
-      content: _textControllerContents.text,
-      createdAt: DateTime.now(),
-      authorId: widget.userId,
-      likeCount: 0,
-      reportCount: 0,
-    );
-
-    // DocumentReference docRef = await _firestoreService.addPost(newPost);
-    // newPost.postId = docRef.id;
-    // print('게시글이 추가되었습니다: ${newPost.postId}');
-
-    _textControllerTitle.clear();
-    _textControllerTitle.clear();
-    _imageUrls.clear();
   }
 
   @override
@@ -111,13 +144,13 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
           padding: const EdgeInsets.all(16),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   height: 50,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 1, color: Colors.black54),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(left: 10.0),
@@ -135,7 +168,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                         hintStyle: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(color: Colors.grey),
+                            ?.copyWith(color: Colors.black54),
                       ),
                     ),
                   ),
@@ -149,7 +182,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
-                          ?.copyWith(color: Colors.grey),
+                          ?.copyWith(color: Colors.black54),
                     ),
                   ],
                 ),
@@ -158,8 +191,8 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                 Container(
                   height: 190,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 1, color: Colors.black54),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(8),
@@ -181,7 +214,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                         hintStyle: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(color: Colors.grey),
+                            ?.copyWith(color: Colors.black54),
                       ),
                     ),
                   ),
@@ -195,14 +228,17 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
-                          ?.copyWith(color: Colors.grey),
+                          ?.copyWith(color: Colors.black54),
                     ),
                   ],
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _submitPost,
-                  child: Text("게시글 작성"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  child: Text("게시글 작성", style: Theme.of(context).textTheme.titleSmall),
                 ),
               ],
             ),

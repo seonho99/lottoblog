@@ -11,7 +11,7 @@ class MainHomeScreen extends StatelessWidget {
   final List<MainhomeClass> mainhomes = [
     MainhomeClass(
       postImage: 'image_dummy_01.png',
-      postTitle: '2024 10 02 로또 5,000원 샀습니다.',
+      postTitle: '이번주도 구매 완료.',
       postName: '함께 분석해봐요',
     ),
     MainhomeClass(
