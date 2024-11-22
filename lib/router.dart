@@ -1,20 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/editprofile_screen.dart';
+import 'package:lottoblog/screen/editprofile_screen.dart';
 import 'package:lottoblog/email/emaillogin_screen.dart';
 import 'package:lottoblog/email/emailregister_screen.dart';
 import 'package:lottoblog/email/emailresetpassword_screen.dart';
-import 'package:lottoblog/fram_screen.dart';
-import 'package:lottoblog/listofposts_screen.dart';
-import 'package:lottoblog/login_screen.dart';
-import 'package:lottoblog/personal_screen.dart';
+import 'package:lottoblog/screen/email/fram_screen.dart';
+import 'package:lottoblog/screen/listofposts_screen.dart';
+import 'package:lottoblog/screen/login_screen.dart';
+import 'package:lottoblog/screen/personal_screen.dart';
 import 'package:lottoblog/post_screen/post_list_screen.dart';
-import 'package:lottoblog/postwriting_screen.dart';
-import 'landing_screen.dart';
-import 'mainhome_screen.dart';
+import 'package:lottoblog/screen/postwriting_screen.dart';
+import 'screen/landing_screen.dart';
+import 'screen/mainhome_screen.dart';
 import 'post_screen/post_screen01.dart';
-import 'dayofweek_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');

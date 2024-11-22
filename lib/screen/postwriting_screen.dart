@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottoblog/firebase/firebase_storage_service.dart';
 import 'package:lottoblog/models/post_model.dart';
-import 'imagepicker_widget.dart';
+import 'package:lottoblog/service/firebase_storage_service.dart';
+import '../widget/imagepicker_widget.dart';
 
 class PostwritingScreen extends StatefulWidget {
   final String userId;

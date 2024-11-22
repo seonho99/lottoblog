@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottoblog/popupmenubotton_widget.dart';
+import 'package:lottoblog/widget/popupmenubotton_widget.dart';
 
 class PostScreen01 extends StatelessWidget {
   PostScreen01({super.key});

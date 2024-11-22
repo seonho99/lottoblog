@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottoblog/firebase/firebase_auth_service.dart';
-import 'package:lottoblog/firebase/firebase_storage_service.dart';
+import 'package:lottoblog/service/firebase_auth_service.dart';
+import 'package:lottoblog/service/firebase_storage_service.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
 class EditProfileScreen extends StatefulWidget {
