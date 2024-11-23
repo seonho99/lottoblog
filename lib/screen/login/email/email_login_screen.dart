@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/show_snackbar.dart';
-import '../firebase/firebase_auth_service.dart';
 
-class EmailloginScreen extends StatelessWidget {
-  EmailloginScreen({super.key});
+import '../../../service/firebase_auth_service.dart';
+
+class EmailLoginScreen extends StatelessWidget {
+  EmailLoginScreen({super.key});
+
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
@@ -27,24 +29,25 @@ class EmailloginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Flexible(
-                    child: FractionallySizedBox(
-                        child:
-                            Image.asset('assets/logo/lottoblog_300_300.jpeg',
-                            // fit: BoxFit.cover
-                            ),
-                    widthFactor: 0.7,),),
+                  child: FractionallySizedBox(
+                    child: Image.asset(
+                      'assets/logo/lottoblog_300_300.jpeg',
+                    ),
+                    widthFactor: 0.7,
+                  ),
+                ),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value){
-                    if (value == null || value.isEmpty){
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
                       return '이메일을 입력하세요.';
                     }
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)){
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                       return '올바른 이메일 형식을 입력하세요';
                     }
                     return null;
                   },
-                  onSaved: (value){
+                  onSaved: (value) {
                     email = value;
                   },
                   decoration: InputDecoration(
@@ -54,16 +57,17 @@ class EmailloginScreen extends StatelessWidget {
                   ),
                 ),
                 TextFormField(
-                  validator: (value){
-                    if(value==null || value.isEmpty){
+                  keyboardType: TextInputType.text,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
                       return '비밀번호를 입력하세요';
                     }
-                    if (value.length < 7){
+                    if (value.length < 7) {
                       return '비밀번호는 최소 8자리 이상이어야 합니다.';
                     }
                     return null;
                   },
-                  onSaved: (value){
+                  onSaved: (value) {
                     password = value;
                   },
                   decoration: InputDecoration(
@@ -78,15 +82,21 @@ class EmailloginScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () {
-                        context.go('/login/emaillogin');
+                        context.go('');
                       },
-                      child: Text('이메일 찾기',style: Theme.of(context).textTheme.titleSmall,),
+                      child: Text(
+                        '이메일 찾기',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
-                        context.go('/login/emaillogin/emailresetpassword');
+                        context.go('/login/email_login/email_resetpassword');
                       },
-                      child: Text('비밀번호 찾기',style: Theme.of(context).textTheme.titleSmall,),
+                      child: Text(
+                        '비밀번호 찾기',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
                   ],
                 ),
@@ -94,15 +104,15 @@ class EmailloginScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      if(_formKey.currentState?.validate()?? false){
+                      if (_formKey.currentState?.validate() ?? false) {
                         _formKey.currentState?.save();
                         auth.signInwithEmail(
-                          email:email!,
-                          password:password!,
-                        ).then((_){
+                          email: email!,
+                          password: password!,
+                        ).then((_) {
                           showSnackBar(context, '로그인이 되었습니다.');
-                          context.go('/login/emaillogin/personal');
-                        }).catchError((error){
+                          context.go('/login/email_login/personal');
+                        }).catchError((error) {
                           showSnackBar(context, error.toString());
                         });
                       }
@@ -114,16 +124,18 @@ class EmailloginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: Text(
-                      '로그인',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white)
+                    child: Text('로그인',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("계정이 없으신가요?",style: Theme.of(context).textTheme.titleSmall,),
+                    Text(
+                      "계정이 없으신가요?",
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     SizedBox(width: 15),
                     TextButton(
                       style: ButtonStyle(
@@ -131,9 +143,12 @@ class EmailloginScreen extends StatelessWidget {
                             EdgeInsets.zero),
                       ),
                       onPressed: () {
-                        context.go('/login/emaillogin/emailregister');
+                        context.go('/login/email_login/email_register');
                       },
-                      child: Text('회원가입하기',style: Theme.of(context).textTheme.titleSmall,),
+                      child: Text(
+                        '회원가입 하기',
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
                   ],
                 ),

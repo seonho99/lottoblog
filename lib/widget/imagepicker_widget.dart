@@ -10,17 +10,17 @@ class ImagepickerWidget extends StatefulWidget {
 }
 
 class _ImagepickerWidgetState extends State<ImagepickerWidget> {
-  List<XFile>? _images = [];
+  List<XFile> _images = [];
   final ImagePicker picker = ImagePicker();
 
   Future<void> getImages(ImageSource imageSource) async {
-    if (_images!.length < 3) {
+    if (_images.length < 3) {
       final List<XFile>? pickedFiles = await picker.pickMultiImage();
       if (pickedFiles != null) {
         setState(() {
-          _images!.addAll(pickedFiles);
-          if (_images!.length > 3) {
-            _images = _images!.sublist(0, 3);
+          _images.addAll(pickedFiles);
+          if (_images.length > 3) {
+            _images = _images.sublist(0, 3);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('최대 3장까지 선택할 수 있습니다.')),
             );
@@ -36,7 +36,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
 
   void _removeImage(int index) {
     setState(() {
-      _images!.removeAt(index);
+      _images.removeAt(index);
     });
   }
 
@@ -53,9 +53,9 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   }
 
   Widget _buildPhotoArea() {
-    return _images != null && _images!.isNotEmpty
+    return _images.isNotEmpty
         ? Container(
-            height: 100,
+            height: 150,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -63,13 +63,17 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
               ),
-              itemCount: _images!.length,
+              itemCount: _images.length,
               itemBuilder: (context, index) {
                 return Stack(
                   children: [
-                    Image.file(
-                      File(_images![index].path),
-                      fit: BoxFit.cover,
+                    SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: Image.file(
+                        File(_images[index].path),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     Positioned(
                       right: 5,
@@ -84,12 +88,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
               },
             ),
           )
-        : Container(
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.blue.shade300),
-            padding: EdgeInsets.all(20),
-            child: Icon(Icons.camera_alt, color: Colors.white, size: 50),
-          );
+        : Center(child: Text('선택한 이미지가 없습니다.'));
   }
 
   Widget _buildButton() {
@@ -100,9 +99,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
           onPressed: () {
             getImages(ImageSource.gallery);
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white
-          ),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
           child: Text('사진/이미지', style: Theme.of(context).textTheme.titleSmall),
         ),
       ],

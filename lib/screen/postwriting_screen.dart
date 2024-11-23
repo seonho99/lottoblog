@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottoblog/models/post_model.dart';
 import 'package:lottoblog/service/firebase_storage_service.dart';
 import '../widget/imagepicker_widget.dart';
 
@@ -62,20 +61,6 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
         return;
       }
 
-      PostModel newPost = PostModel(
-        postId: '',
-        title: _textControllerTitle.text,
-        content: _textControllerContents.text,
-        createdAt: DateTime.now(),
-        authorId: widget.userId,
-        likeCount: 0,
-        reportCount: 0,
-        imageUrls: [],
-      );
-
-      // 이미지 업로드
-      FirebaseStorageService().uploadFile(context);
-      // await firebaseStorageService.uploadImageToFirestore(newPost);
 
       // 필드 초기화
       _textControllerTitle.clear();

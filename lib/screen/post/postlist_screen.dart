@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottoblog/models/post_model.dart';
+
+import '../../models/post_model.dart';
 
 
 class PostListScreen extends StatefulWidget {

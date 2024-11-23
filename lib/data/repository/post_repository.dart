@@ -1,23 +1,23 @@
-class WorkoutRepository{
-  FakeDb fakeDb;
-  WorkoutRepository(this.fakeDb);
-
-  List<Workout> fetchWorkouts(){
-    return fakeDb.fetchWorkouts();
-  }
-
-  Workout getWorkout(int index){
-    return fakeDb.getWorkout(index);
-  }
-  void addWorkout(Workout workout){
-    fakeDb.adddWorkout(workout);
-  }
-
-  void deleteWorkout(Workout workout){
-    fakeDb.deleteWorkout(workout);
-  }
-
-  void updateWorkout(Workout workout){
-    fakeDb.updateWorkout(workout);
-  }
-}
+// class PostRepository{
+//   FakeDb fakeDb;
+//   PostRepository(this.fakeDb);
+//
+//   List<> fetch(){
+//     return fakeDb.fetchWorkouts();
+//   }
+//
+//    get( ){
+//     return fakeDb.get();
+//   }
+//   void add( ){
+//     fakeDb.add();
+//   }
+//
+//   void delete( ){
+//     fakeDb.delete();
+//   }
+//
+//   void update(){
+//     fakeDb.update();
+//   }
+// }
