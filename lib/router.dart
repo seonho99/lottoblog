@@ -14,8 +14,7 @@ import 'screen/login/email/email_resetpassword_screen.dart';
 import 'screen/login/login_screen.dart';
 import 'screen/mainhome_screen.dart';
 import 'screen/personal_screen.dart';
-import 'screen/post/postlist_screen.dart';
-import 'screen/post/post_screen01.dart';
+import 'screen/post/post_screen.dart';
 import 'screen/postwriting_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -50,15 +49,9 @@ final GoRouter router = GoRouter(
                 },
                 routes: <RouteBase>[
                   GoRoute(
-                    path: 'post_screen01',
-                    builder: (BuildContext context, GoRouterState state) {
-                      final String? postId = state.extra as String?;
-
-                      if (postId == null) {
-                        return LoginScreen(); // null일 경우 에러 화면
-                      }
-
-                      return PostListScreen(postId: postId);
+                    path: 'post_screen',
+                    builder: (BuildContext context, GoRouterState state){
+                      return PostScreen();
                     },
                   ),
                 ],
@@ -75,9 +68,9 @@ final GoRouter router = GoRouter(
                 },
                 routes: <RouteBase>[
                   GoRoute(
-                    path: 'post_screen01',
+                    path: 'post_screen',
                     builder: (BuildContext context, GoRouterState state) {
-                      return PostScreen01();
+                      return PostScreen();
                     },
                   ),
                 ],
@@ -162,5 +155,5 @@ final GoRouter router = GoRouter(
         return '/login/email_login/personal'; // 홈 화면으로 리디렉션
       }
 
-      return null; // 기본 동작
+      return null;
     });

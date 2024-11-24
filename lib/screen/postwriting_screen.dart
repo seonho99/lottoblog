@@ -15,28 +15,42 @@ class PostwritingScreen extends StatefulWidget {
 class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
-  final FirebaseStorageService firebaseStorageService = FirebaseStorageService();
+  final FirebaseStorageService firebaseStorageService =
+      FirebaseStorageService();
 
-  int _totalLengthTitle = 0;
-  int _totalLengthContents = 0;
   final int _maxLengthTitle = 30;
   final int _maxLengthContents = 200;
 
   void _onChangedTitle(String text) {
-    setState(() {
-      _totalLengthTitle = text.length;
-    });
+    if (text.length > _maxLengthTitle) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('제목이 30자를 넘겼습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      _textControllerTitle.text = text.substring(0,_maxLengthTitle);
+      _textControllerTitle.selection = TextSelection.collapsed(offset: _maxLengthTitle);
+    }
   }
 
   void _onChangedContent(String text) {
-    setState(() {
-      _totalLengthContents = text.length;
-    });
+    if (text.length > _maxLengthContents){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('내용이 200를 넘겼습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      _textControllerContents.text = text.substring(0,_maxLengthContents);
+      _textControllerContents.selection = TextSelection.collapsed(offset: _maxLengthContents);
+    }
   }
 
   void _submitPost() async {
     try {
-      if (_textControllerTitle.text.isEmpty || _textControllerContents.text.isEmpty) {
+      if (_textControllerTitle.text.isEmpty ||
+          _textControllerContents.text.isEmpty) {
         showDialog(
           context: context,
           builder: (context) {
@@ -60,7 +74,6 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
         );
         return;
       }
-
 
       // 필드 초기화
       _textControllerTitle.clear();
@@ -115,7 +128,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         title: Text(
-          '글 작성',
+          '블로그 작성',
           style: Theme.of(context)
               .textTheme
               .headlineSmall
@@ -131,99 +144,95 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.black54),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: TextField(
-                      style: Theme.of(context).textTheme.titleLarge,
-                      keyboardType: TextInputType.text,
-                      controller: _textControllerTitle,
-                      onChanged: _onChangedTitle,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(30),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: '제목을 입력해주세요.',
-                        border: InputBorder.none,
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: Colors.black54),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      '${_totalLengthTitle}/${_maxLengthTitle}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Colors.black54),
-                    ),
+                // Container(
+                //   height: 50,
+                //   decoration: BoxDecoration(
+                //     border: Border.all(width: 1, color: Colors.black54),
+                //     borderRadius: BorderRadius.circular(4),
+                //   ),
+                //   child: Padding(
+                //     padding: EdgeInsets.only(left: 10.0),
+                //     child: TextField(
+                //       style: Theme.of(context).textTheme.titleLarge,
+                //       keyboardType: TextInputType.text,
+                //       controller: _textControllerTitle,
+                //       onChanged: _onChangedTitle,
+                //       inputFormatters: [
+                //         LengthLimitingTextInputFormatter(30),
+                //       ],
+                //       decoration: InputDecoration(
+                //         hintText: '제목을 입력해주세요.',
+                //         border: InputBorder.none,
+                //         hintStyle: Theme.of(context)
+                //             .textTheme
+                //             .titleLarge
+                //             ?.copyWith(color: Colors.black54),
+                //        ),
+                //     ),
+                //   ),
+                // ),
+                TextFormField(
+                  controller: _textControllerTitle,
+                  keyboardType: TextInputType.text,
+                  onChanged: _onChangedTitle,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(_maxLengthTitle),
                   ],
+                  decoration: InputDecoration(
+                      labelText: '제목',
+                      labelStyle: Theme.of(context).textTheme.headlineSmall,
+                      border: UnderlineInputBorder(),
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '제목을 입력해주세요';
+                    }
+                    return null;
+                  },
                 ),
+
                 ImagepickerWidget(),
-                SizedBox(height: 30),
-                Container(
-                  height: 190,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.black54),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
-                      maxLines: 14,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(height: 1.6),
-                      keyboardType: TextInputType.text,
-                      controller: _textControllerContents,
-                      onChanged: _onChangedContent,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(200),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: '글을 작성해주세요.',
-                        border: InputBorder.none,
-                        hintStyle: Theme.of(context)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Colors.black54),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextField(
+                        maxLines: 14,
+                        style: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(color: Colors.black54),
+                            ?.copyWith(height: 1.6),
+                        keyboardType: TextInputType.text,
+                        controller: _textControllerContents,
+                        onChanged: _onChangedContent,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(200),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: '내용을 작성 해주세요.',
+                          border: InputBorder.none,
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(color: Colors.black54),
+                        ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      '${_totalLengthContents}/${_maxLengthContents}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Colors.black54),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _submitPost,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                   ),
-                  child: Text("게시글 작성", style: Theme.of(context).textTheme.titleSmall),
+                  child: Text("게시글 작성",
+                      style: Theme.of(context).textTheme.titleSmall),
                 ),
               ],
             ),

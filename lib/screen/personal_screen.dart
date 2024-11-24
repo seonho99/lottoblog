@@ -41,34 +41,35 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade300),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: profileImgaeURL != null
-                                ? NetworkImage(profileImgaeURL!)
-                                : AssetImage(
-                                    'assets/profile_dummy/profile_03.png'),
-                            onError: (_, __) {
-                              setState(() {
-                                profileImgaeURL = null;
-                              });
-                            },
-                            fit: BoxFit.cover),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 1, color: Colors.grey.shade300),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: profileImgaeURL != null
+                                  ? NetworkImage(profileImgaeURL!)
+                                  : AssetImage(
+                                      'assets/profile_dummy/profile_03.png'),
+                              onError: (_, __) {
+                                setState(() {
+                                  profileImgaeURL = null;
+                                });
+                              },
+                              fit: BoxFit.cover),
+                        ),
                       ),
                     ),
-                    SizedBox(width: 20),
                     Expanded(
                       child: Text(
                         '윈터',
                         style: Theme.of(context)
                             .textTheme
-                            .headlineLarge
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                            .headlineMedium
                       ),
                     ),
                     ElevatedButton.icon(

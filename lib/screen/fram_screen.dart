@@ -31,6 +31,7 @@ class FramScreen extends StatelessWidget {
               label: '프로필'),
         ],
         backgroundColor: Colors.white,
+        indicatorColor: Colors.transparent,
       ),
     );
   }

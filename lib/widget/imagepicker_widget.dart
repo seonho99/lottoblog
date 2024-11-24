@@ -55,7 +55,7 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   Widget _buildPhotoArea() {
     return _images.isNotEmpty
         ? Container(
-            height: 150,
+            height: 100,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
