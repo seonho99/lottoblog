@@ -5,8 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/post_model.dart';
-
 
 class FirebaseStorageService {
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -41,10 +39,7 @@ class FirebaseStorageService {
     }
   }
 
-  Future<DocumentReference> addPost(PostModel post) async {
-    CollectionReference posts = _db.collection('posts');
-    return await posts.add(post.toMap());
-  }
+
 
   Future<void> uploadFile(BuildContext context) async {
     final picker = ImagePicker();

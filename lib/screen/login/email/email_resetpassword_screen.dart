@@ -90,7 +90,7 @@ class EmailResetpasswordScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Text('* 이메일을 통해 비밀번호 재설정 링크를 확인하세요.',
+              Text('- 이메일을 통해 비밀번호 재설정 링크를 확인하세요.',
                   style: Theme.of(context).textTheme.titleMedium),
             ],
           ),

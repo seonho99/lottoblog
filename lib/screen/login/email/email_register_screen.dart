@@ -158,7 +158,8 @@ class EmailRegisterScreen extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall
-                              ?.copyWith(color: Colors.white)),
+                              ?.copyWith(color: Colors.white),
+                      ),
                     ),
                   )
                 ],

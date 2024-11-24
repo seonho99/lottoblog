@@ -27,7 +27,7 @@ class DayofweekScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: (){
-                          context.go('/mainhome/post_screen');
+                          context.go('/dayofweek/post_screen');
                         },
                         child: Column(
                           children: [
@@ -131,11 +131,14 @@ class DayofweekScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+
                     ],
                   ),
                 ),
-                
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Divider(color: Colors.grey.shade300, thickness: 1.0),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30),
                   child: Text('이번주 핫한 이슈',
@@ -153,7 +156,7 @@ class DayofweekScreen extends StatelessWidget {
                       Text('이번주도 구매 완료',
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
                       ),
-                      Text('닉네임',style: Theme.of(context).textTheme.titleMedium),
+                      Text('닉네임',style: Theme.of(context).textTheme.titleSmall),
                     ],
                   ),
                 ),
@@ -172,7 +175,7 @@ class DayofweekScreen extends StatelessWidget {
                       Text('이번주도 구매 완료',
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
                       ),
-                      Text('닉네임',style: Theme.of(context).textTheme.titleMedium),
+                      Text('닉네임',style: Theme.of(context).textTheme.titleSmall),
                     ],
                   ),
                 ),

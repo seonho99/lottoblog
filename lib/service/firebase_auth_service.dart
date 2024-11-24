@@ -10,6 +10,7 @@ class FirebaseAuthService {
   final storageRef = FirebaseStorage.instance.ref();
   User? get user => _auth.currentUser;
 
+  // 회원가입 코드
   Future<void> singUpWithEmail({
     required String email,
     required String password,
@@ -42,6 +43,7 @@ class FirebaseAuthService {
     }
   }
 
+  // 로그인
   Future<void> signInwithEmail({
     required String email,
     required String password,
@@ -74,6 +76,7 @@ class FirebaseAuthService {
     }
   }
 
+  // 로그아웃
   Future<void> signOut() async {
     try {
       await _auth.signOut();
@@ -86,6 +89,7 @@ class FirebaseAuthService {
     return _auth.currentUser != null;
   }
 
+  // 비밀번호 재설정
   Future<void> resetPassword({
     required String email,
   }) async {
@@ -150,6 +154,8 @@ class FirebaseAuthService {
       throw Exception('인증 메일 전송이 실패 했습니다.');
     }
   }
+
+  // 계정 삭제
   Future<void> deleteAccount() async {
     try {
       await _auth.currentUser?.delete();

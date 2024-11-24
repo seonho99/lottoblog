@@ -43,8 +43,10 @@ class LoginScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.mail, size: 20),
-                        SizedBox(width: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(Icons.mail, size: 20),
+                        ),
                         Text(
                           'Email 로그인',
                           style: Theme.of(context).textTheme.titleMedium,
@@ -73,15 +75,17 @@ class LoginScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 18,
-                          height: 18,
-                          child: Image(
-                            image: AssetImage('assets/logo/google_logo.png'),
-                            fit: BoxFit.cover,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            width: 18,
+                            height: 18,
+                            child: Image(
+                              image: AssetImage('assets/logo/google_logo.png'),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 10),
                         Text(
                           'Google 로그인',
                           style: Theme.of(context).textTheme.titleMedium,
@@ -108,8 +112,10 @@ class LoginScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.apple, color: Colors.black),
-                      SizedBox(width: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Icon(Icons.apple, color: Colors.black),
+                      ),
                       Text(
                         'Apple 로그인',
                         style: Theme.of(context).textTheme.titleMedium,

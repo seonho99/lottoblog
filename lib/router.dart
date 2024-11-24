@@ -152,7 +152,7 @@ final GoRouter router = GoRouter(
 
       // 사용자가 로그인한 경우
       if (user != null && state.uri.path == '/login/email_login/personal') {
-        return '/login/email_login/personal'; // 홈 화면으로 리디렉션
+        return '/login/email_login/personal';
       }
 
       return null;
