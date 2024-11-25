@@ -89,7 +89,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           backgroundImage: profileImageURL != null
                               ? NetworkImage(profileImageURL!)
                               : const AssetImage(
-                                  'assets/profile_dummy/profile_03.png'),
+                                  'assets/profile_dummy/profile_01.png'),
                           child: _isUploading
                             ? CircularProgressIndicator()
                           :  Icon(Icons.camera_alt,

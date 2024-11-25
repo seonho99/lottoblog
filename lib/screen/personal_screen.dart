@@ -25,36 +25,32 @@ class _PersonalScreenState extends State<PersonalScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 16, left: 10, right: 10),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(right: 16),
                       child: Container(
                         width: 70,
                         height: 70,
                         decoration: BoxDecoration(
                           border:
-                              Border.all(width: 1, color: Colors.grey.shade300),
+                              Border.all(width: 1, color: Colors.black54),
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               image: profileImgaeURL != null
                                   ? NetworkImage(profileImgaeURL!)
                                   : AssetImage(
-                                      'assets/profile_dummy/profile_03.png'),
+                                      'assets/profile_dummy/profile_01.png'),
                               onError: (_, __) {
                                 setState(() {
                                   profileImgaeURL = null;
@@ -66,7 +62,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        '윈터',
+                        '사용자',
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium
@@ -79,7 +75,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       label: Text('수정'),
                       icon: Icon(Icons.edit, size: 18),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
+                        backgroundColor: Colors.black54,
                         foregroundColor:
                             Theme.of(context).colorScheme.onSecondary,
                         shape: RoundedRectangleBorder(
@@ -103,7 +99,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: Colors.grey.shade300,
+                      color: Colors.black54,
                       width: 1,
                     ),
                   ),
@@ -118,19 +114,21 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         child: Container(
                           child: Row(
                             children: [
-                              Icon(Icons.edit_document,
-                                  size: 30,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
-                              SizedBox(width: 15),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(Icons.edit_document,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary),
+                              ),
                               Text('글 작성',
                                   style:
-                                      Theme.of(context).textTheme.headlineSmall)
+                                      Theme.of(context).textTheme.titleLarge)
                             ],
                           ),
                         ),
                       ),
-                      Divider(height: 1, color: Colors.grey.shade300),
+                      Divider(height: 1, color: Colors.black54),
                       GestureDetector(
                         onTap: () {
                           context.go('/login/email_login/personal/listofposts');
@@ -138,15 +136,18 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         child: Container(
                           child: Row(
                             children: [
-                              Icon(Icons.subject,
-                                  size: 30,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
-                              SizedBox(width: 15),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(Icons.subject,
+                                    size: 25,
+                                    color:
+                                        Colors.black54),
+                              ),
+
                               Text('글 목록',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headlineSmall),
+                                      .titleLarge),
                             ],
                           ),
                         ),
@@ -166,7 +167,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: Colors.grey.shade300,
+                      color: Colors.black54,
                       width: 1,
                     ),
                   ),
@@ -177,27 +178,30 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       Container(
                         child: Row(
                           children: [
-                            Icon(Icons.campaign,
-                                size: 30,
-                                color: Theme.of(context).colorScheme.secondary),
-                            SizedBox(width: 15),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Icon(Icons.campaign,
+                                  size: 25,
+                                  color: Colors.black54),
+                            ),
                             Text('공지사항',
                                 style:
-                                    Theme.of(context).textTheme.headlineSmall),
+                                    Theme.of(context).textTheme.titleLarge),
                           ],
                         ),
                       ),
-                      Divider(height: 1, color: Colors.grey.shade200),
+                      Divider(height: 1, color: Colors.black54),
                       Container(
                         child: Row(
                           children: [
-                            Icon(Icons.help_outline,
-                                size: 30,
-                                color: Theme.of(context).colorScheme.secondary),
-                            SizedBox(width: 15),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Icon(Icons.help_outline,
+                                  size: 25,
+                              color: Colors.black54)
+                            ),
                             Text('고객센터/도움말',
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall),
+                                style: Theme.of(context).textTheme.titleLarge),
                           ],
                         ),
                       ),
