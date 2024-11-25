@@ -49,8 +49,6 @@ dependencies:
   google_sign_in: ^6.2.1
   cloud_firestore: ^5.4.4
 
-  authentication_repository:
-    path: packages/authentication_repository
 
 flutter_launcher_icons:
   ios: true
