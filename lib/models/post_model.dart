@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class PostModel {
   String postId; // 포스트 ID
   String title; // 글 제목
@@ -18,19 +20,31 @@ class PostModel {
     this.likeCount = 0,
     this.reportCount = 0,
   });
+
+  Map<String, dynamic> toMap(){
+    return {
+      'postId': postId,
+      'title': title,
+      'content': content,
+      'imageUrls': imageUrls,
+      'createdAt': createdAt,
+      'uid': uid,
+      'likeCount': likeCount,
+      'reportCount': reportCount,
+    };
+  }
+
+  factory PostModel.fromMap(Map<String, dynamic> map){
+    return PostModel(
+        postId: map['postId'],
+        title: map['title'],
+        content: map['content'],
+        imageUrls: List<String>.from(map['imageUrls'] ??[]),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        uid: map['uid'],
+      likeCount: map['likeCount'] ?? 0,
+      reportCount: map['reportCount'] ?? 0,
+    );
+  }
 }
 
-// 컬렉션 posts
-// 도큐먼트 자동 생성한 ID
-// 도큐먼트필드
-
-List<PostModel> posts = [
-  PostModel(
-    postId: '',
-    title: '',
-    content: '',
-    imageUrls: [],
-    uid: '',
-    createdAt: DateTime.now(),
-  )
-];

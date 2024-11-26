@@ -107,11 +107,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          context.go('/personal/postwriting');
-                        },
-                        child: Container(
+                      Container(
+                        child: GestureDetector(
+                          onTap: (){
+                            context.go('/personal/postwriting');
+                          },
                           child: Row(
                             children: [
                               Padding(
@@ -129,21 +129,18 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         ),
                       ),
                       Divider(height: 1, color: Colors.black54),
-                      GestureDetector(
-                        onTap: () {
-                          context.go('/personal/listofposts');
-                        },
-                        child: Container(
+                      Container(
+                        child: GestureDetector(
+                          onTap: (){
+                            context.go('/personal/listofposts');
+                          },
                           child: Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Icon(Icons.subject,
-                                    size: 25,
-                                    color:
-                                        Colors.black54),
-                              ),
-
+                              Icon(Icons.subject,
+                                  size: 25,
+                                  color:
+                                      Colors.black54),
+                              SizedBox(width: 10),
                               Text('글 목록',
                                   style: Theme.of(context)
                                       .textTheme

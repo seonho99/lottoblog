@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/auth/auth_bloc.dart';
+import 'package:lottoblog/data/bloc/auth/auth_event.dart';
+import 'package:lottoblog/data/bloc/auth/auth_state.dart';
+import 'package:lottoblog/data/repository/auth_repository.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
 import '../../../service/firebase_auth_service.dart';
@@ -12,9 +17,11 @@ class EmailLoginScreen extends StatelessWidget {
   String? password;
 
   final auth = FirebaseAuthService();
+  late final AuthRepository authRepository;
 
   @override
   Widget build(BuildContext context) {
+    authRepository = AuthRepository(auth);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -106,15 +113,7 @@ class EmailLoginScreen extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
                         _formKey.currentState?.save();
-                        auth.signInwithEmail(
-                          email: email!,
-                          password: password!,
-                        ).then((_) {
-                          showSnackBar(context, '로그인이 되었습니다.');
-                          context.go('/personal');
-                        }).catchError((error) {
-                          showSnackBar(context, error.toString());
-                        });
+                        context.read<AuthBloc>().add(SignInWithEmail(email!, password!));
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -129,14 +128,27 @@ class EmailLoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                BlocListener<AuthBloc, AuthState>(
+                    listener: (context,state){
+                      if(state is AuthAuthenticatedState){
+                        context.go('/personal');
+                      }
+                      if (state is AuthErrorState){
+                        showSnackBar(context, state.message);
+                      }
+                    },
+                  child: Container(),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "계정이 없으신가요?",
-                      style: Theme.of(context).textTheme.titleSmall,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Text(
+                        "계정이 없으신가요?",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
-                    SizedBox(width: 15),
                     TextButton(
                       style: ButtonStyle(
                         padding: WidgetStateProperty.all<EdgeInsets>(

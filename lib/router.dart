@@ -163,6 +163,11 @@ final GoRouter router = GoRouter(
       return '/login';
     }
 
+    if (currentState is AuthAuthenticatedState &&
+        state.uri.path.contains('/login')){
+      return '/personal';
+    }
+
     return null;
   },
 );

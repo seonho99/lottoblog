@@ -19,7 +19,7 @@ class FramScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: BlocBuilder<TabNavigationBloc, TabNavigationState>(
           builder: (context, state) {
-            // 탭 상태가 없을 경우 초기 상태 설정
+
             final selectedIndex = state is TabChangedState
                 ? state.selectedIndex
                 : navigationShell.currentIndex;
@@ -29,6 +29,7 @@ class FramScreen extends StatelessWidget {
         ),
         bottomNavigationBar: BlocBuilder<TabNavigationBloc, TabNavigationState>(
           builder: (context, state) {
+
             final selectedIndex = state is TabChangedState
                 ? state.selectedIndex
                 : navigationShell.currentIndex;
@@ -36,10 +37,11 @@ class FramScreen extends StatelessWidget {
             return NavigationBar(
               selectedIndex: selectedIndex,
               onDestinationSelected: (index) {
-                // 탭 선택 시 상태 변경
+
                 context.read<TabNavigationBloc>().add(TabChangedEvent(index));
                 navigationShell.goBranch(index,
-                    initialLocation: index == selectedIndex);
+                    initialLocation: index == selectedIndex)
+                ;
               },
               destinations: const [
                 NavigationDestination(

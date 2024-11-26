@@ -9,7 +9,7 @@ class AuthRepository {
 
   Future<User?> signInWithEmail(String email, String password) async {
     try {
-      await _firebaseAuthService.signInwithEmail(email: email, password: password);
+      await _firebaseAuthService.signInWithEmail(email: email, password: password);
       return _firebaseAuthService.user;
     } catch (e) {
       throw Exception('로그인 실패: $e');

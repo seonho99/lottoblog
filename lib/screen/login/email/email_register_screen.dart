@@ -142,7 +142,7 @@ class EmailRegisterScreen extends StatelessWidget {
                             name: name!,
                           ).then((_) {
                            showSnackBar(context, '회원가입이 완료되었습니다.');
-                            context.go('/person_screen');
+                            context.go('/login/email_login');
                           }).catchError((error) {
                               showSnackBar(context, error.toString());
                           });

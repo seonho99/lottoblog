@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottoblog/service/firebase_storage_service.dart';
@@ -15,8 +16,7 @@ class PostwritingScreen extends StatefulWidget {
 class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
-  final FirebaseStorageService firebaseStorageService =
-      FirebaseStorageService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final int _maxLengthTitle = 30;
   final int _maxLengthContents = 200;
@@ -144,33 +144,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Container(
-                //   height: 50,
-                //   decoration: BoxDecoration(
-                //     border: Border.all(width: 1, color: Colors.black54),
-                //     borderRadius: BorderRadius.circular(4),
-                //   ),
-                //   child: Padding(
-                //     padding: EdgeInsets.only(left: 10.0),
-                //     child: TextField(
-                //       style: Theme.of(context).textTheme.titleLarge,
-                //       keyboardType: TextInputType.text,
-                //       controller: _textControllerTitle,
-                //       onChanged: _onChangedTitle,
-                //       inputFormatters: [
-                //         LengthLimitingTextInputFormatter(30),
-                //       ],
-                //       decoration: InputDecoration(
-                //         hintText: '제목을 입력해주세요.',
-                //         border: InputBorder.none,
-                //         hintStyle: Theme.of(context)
-                //             .textTheme
-                //             .titleLarge
-                //             ?.copyWith(color: Colors.black54),
-                //        ),
-                //     ),
-                //   ),
-                // ),
+
                 TextFormField(
                   controller: _textControllerTitle,
                   keyboardType: TextInputType.text,

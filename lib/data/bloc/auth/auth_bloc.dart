@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../repository/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
+import '../../repository/auth_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
@@ -10,9 +10,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AppStarted>((event, emit) async {
       await _mapAppStartedToState(emit);
     });
+
     on<SignInWithEmail>((event, emit) async {
       await _mapSignInWithEmailToState(event, emit);
     });
+
     on<SignOut>((event, emit) async {
       await _mapSignOutToState(emit);
     });
@@ -32,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _authRepository.signInWithEmail(event.email, event.password);
       emit(AuthAuthenticatedState(user!));
     } catch (e) {
-      emit(AuthErrorState(e.toString()));
+      emit(AuthErrorState('로그인 실패: $e'));
     }
   }
 
@@ -42,7 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepository.signOut();
       emit(AuthUnauthenticatedState());
     } catch (e) {
-      emit(AuthErrorState(e.toString()));
+      emit(AuthErrorState('로그아웃 실패: $e'));
     }
   }
 }
