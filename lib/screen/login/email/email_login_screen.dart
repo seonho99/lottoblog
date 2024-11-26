@@ -111,7 +111,7 @@ class EmailLoginScreen extends StatelessWidget {
                           password: password!,
                         ).then((_) {
                           showSnackBar(context, '로그인이 되었습니다.');
-                          context.go('/login/email_login/personal');
+                          context.go('/personal');
                         }).catchError((error) {
                           showSnackBar(context, error.toString());
                         });

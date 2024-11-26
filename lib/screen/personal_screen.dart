@@ -70,7 +70,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () {
-                        context.go('/login/email_login/personal/editprofile');
+                        context.go('/personal/editprofile');
                       },
                       label: Text('수정'),
                       icon: Icon(Icons.edit, size: 18),
@@ -109,7 +109,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          context.go('/login/email_login/personal/postwriting');
+                          context.go('/personal/postwriting');
                         },
                         child: Container(
                           child: Row(
@@ -131,7 +131,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       Divider(height: 1, color: Colors.black54),
                       GestureDetector(
                         onTap: () {
-                          context.go('/login/email_login/personal/listofposts');
+                          context.go('/personal/listofposts');
                         },
                         child: Container(
                           child: Row(
