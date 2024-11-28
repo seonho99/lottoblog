@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottoblog/data/bloc/post/post_bloc.dart';
+import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
+import 'package:lottoblog/service/firestore_service.dart';
 
 import 'data/bloc/auth/auth_bloc.dart';
 import 'data/repository/auth_repository.dart';
@@ -19,13 +22,19 @@ void main() async {
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
   final AuthBloc authBloc;
+  final PostRepository postRepository;
+  final PostBloc postBloc;
 
-   MyApp({
+  MyApp({
     super.key,
     AuthRepository? authRepository,
     AuthBloc? authBloc,
+    PostRepository? postRepository,
+    PostBloc? postBloc,
   })  : authRepository = authRepository ?? AuthRepository(FirebaseAuthService()),
-        authBloc = authBloc ?? AuthBloc(AuthRepository(FirebaseAuthService()));
+        authBloc = authBloc ?? AuthBloc(authRepository?? AuthRepository(FirebaseAuthService())),
+        postRepository = postRepository ?? PostRepository(FireStoreService()),
+        postBloc = postBloc ?? PostBloc(postRepository?? PostRepository(FireStoreService()));
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +43,17 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AuthRepository>(
           create: (context) => authRepository,
         ),
+        RepositoryProvider<PostRepository>(
+          create: (context) => postRepository,
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(
             create: (context) => authBloc,
+          ),
+          BlocProvider<PostBloc>(
+            create: (context) => postBloc,
           ),
         ],
         child: MaterialApp.router(

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostModel {
-  String postId; // 포스트 ID
+  String? postId; // 포스트 ID
   String title; // 글 제목
   String content; // 글 내용
   List<String> imageUrls; // 이미지 URL 목록
@@ -11,19 +11,18 @@ class PostModel {
   int reportCount; // 신고 횟수
 
   PostModel({
-    required this.postId,
+    this.postId,
     required this.title,
     required this.content,
     this.imageUrls = const [],
-    required this.createdAt,
     required this.uid,
     this.likeCount = 0,
     this.reportCount = 0,
-  });
+    createdAt,
+  }):createdAt=createdAt??DateTime.now();
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
-      'postId': postId,
       'title': title,
       'content': content,
       'imageUrls': imageUrls,
@@ -34,17 +33,16 @@ class PostModel {
     };
   }
 
-  factory PostModel.fromMap(Map<String, dynamic> map){
+  factory PostModel.fromMap(Map<String, dynamic> map,String id) {
     return PostModel(
-        postId: map['postId'],
-        title: map['title'],
-        content: map['content'],
-        imageUrls: List<String>.from(map['imageUrls'] ??[]),
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        uid: map['uid'],
+      postId: id,
+      title: map['title'],
+      content: map['content'],
+      imageUrls: List<String>.from(map['imageUrls'] ?? []),
+      createdAt: (map['createdAt'] as Timestamp).toDate(),
+      uid: map['uid'],
       likeCount: map['likeCount'] ?? 0,
       reportCount: map['reportCount'] ?? 0,
     );
   }
 }
-

@@ -1,20 +1,23 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'post_event.dart';
 import 'post_state.dart';
+import '../../repository/post_repository.dart';
 
+class PostBloc extends Bloc<PostEvent, PostState>{
+  final PostRepository _postRepository;
 
-class PostBloc extends Bloc<PostEvent,PostState>{
-  PostBloc() : super(CounterInital()){
-    on<IncreasedEvent>(_onIncreasedEvent);
-    on<ReducedEvent>(_onReducedEvent);
-  }
+  PostBloc(this._postRepository) : super(PostInitialState()) {
+    on<PostContentChangedEvent>((event, emit) {
+      emit(PostContentChangedState(event.content));
+    });
 
-  void _onIncreasedEvent(IncreasedEvent event, Emitter<PostState> emit){
-    emit(CounterChanged(state.counter+1));
-  }
-
-  void _onReducedEvent(ReducedEvent event, Emitter<PostState> emit){
-    emit(CounterChanged(state.counter-1));
+    on<PostSubmittedEvent>((event, emit) async {
+      try {
+        await _postRepository.createPost(event.postModel);
+        emit(PostSubmittedState(event.postModel));
+      } catch (e) {
+        emit(PostErrorState('게시글 제출에 실패했습니다.'));
+      }
+    });
   }
 }
