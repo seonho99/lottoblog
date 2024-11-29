@@ -1,4 +1,4 @@
-import 'package:lottoblog/models/post_model.dart';
+import '../../../models/post_model.dart';
 
 sealed class PostEvent {
   const PostEvent();
@@ -6,9 +6,14 @@ sealed class PostEvent {
 
 // 게시글 수정
 final class PostContentChangedEvent extends PostEvent {
+  final String title;
   final String content;
+  final List<String> imageUrls;
 
-  PostContentChangedEvent(this.content);
+  PostContentChangedEvent(
+       this.title,
+       this.content,
+       this.imageUrls,);
 }
 
 // 게시글 제출 중

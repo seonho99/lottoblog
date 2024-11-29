@@ -7,11 +7,16 @@ final class PostInitialState extends PostState {}
 
 // 게시글 변경
 final class PostContentChangedState extends PostState {
+  final String title;
   final String content;
+  final List<String> imageUrls;
 
-  PostContentChangedState(this.content);
+  PostContentChangedState({
+    required this.title,
+    required this.content,
+    required this.imageUrls,
+  });
 }
-
 
 // 게시글 제출
 final class PostSubmittedState extends PostState {
@@ -26,8 +31,3 @@ final class PostErrorState extends PostState {
 
   PostErrorState(this.message);
 }
-
-
-
-
-

@@ -7,8 +7,7 @@ class FireStoreService {
   // 게시글 생성
   Future<void> createPost(PostModel postModel) async {
     try {
-      final postCollection = _db.collection('posts');
-      await postCollection.add(postModel.toMap()); // postModel.toMap()으로 데이터를 Map으로 변환하여 저장
+      await _db.collection('posts').add(postModel.toMap());
     } catch (e) {
       throw Exception('게시글 생성에 실패했습니다: $e');
     }

@@ -55,39 +55,39 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   Widget _buildPhotoArea() {
     return _images.isNotEmpty
         ? Container(
-            height: 100,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 1,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
+      height: 100,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 1,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
+        ),
+        itemCount: _images.length,
+        itemBuilder: (context, index) {
+          return Stack(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 100,
+                child: Image.file(
+                  File(_images[index].path),
+                  fit: BoxFit.cover,
+                ),
               ),
-              itemCount: _images.length,
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 100,
-                      child: Image.file(
-                        File(_images[index].path),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      right: 5,
-                      top: 5,
-                      child: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.grey),
-                        onPressed: () => _removeImage(index),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          )
+              Positioned(
+                right: 5,
+                top: 5,
+                child: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.grey),
+                  onPressed: () => _removeImage(index),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    )
         : Center(child: Text('선택한 이미지가 없습니다.'));
   }
 
