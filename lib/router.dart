@@ -142,11 +142,13 @@ final GoRouter router = GoRouter(
                   },
                 ),
                 GoRoute(
-                  path: 'listofposts',
+                  path: '/listofposts/:uid', // :uid로 경로에서 가져올 수 있음
                   builder: (BuildContext context, GoRouterState state) {
-                    return ListofpostsScreen();
+                    final uid = state.pathParameters['uid']!; // 경로 파라미터에서 uid를 가져옴
+                    return ListofPostsScreen(uid: uid);
                   },
-                ),
+                )
+
               ],
             ),
           ],

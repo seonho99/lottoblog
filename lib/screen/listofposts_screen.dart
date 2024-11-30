@@ -1,121 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../data/bloc/post/post_bloc.dart';
+import '../data/bloc/post/post_event.dart';
+import '../data/bloc/post/post_state.dart';
+import '../data/repository/post_repository.dart';
+import '../service/firestore_service.dart';
 
-class ListofpostsScreen extends StatelessWidget {
-  const ListofpostsScreen({super.key});
+class ListofPostsScreen extends StatelessWidget {
+  final String uid;
+
+  const ListofPostsScreen({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('글 목록',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        title: Text('게시글 목록'),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '10월',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                    border: Border.all(width: 1,color: Colors.grey.shade300),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Container(
-                        width: 80,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey[300]!),
-                        ),
-                        child: const Image(
-                          image:
-                          AssetImage('assets/image_dummy/image_dummy_01.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('No 1.',
-                              style:
-                              Theme.of(context).textTheme.titleSmall != null
-                                  ? Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .secondary)
-                                  : TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .secondary)),
-                          SizedBox(height: 4),
-                          Text(
-                            '2024 10 02 로또 5,000원 샀습니다.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 4),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('24. 10. 02.',
-                                  style: Theme.of(context).textTheme.titleSmall),
-                              SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Icons.favorite_outline,
-                                    size: 16,
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text('1,000,000',
-                                      style:
-                                      Theme.of(context).textTheme.titleSmall),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Divider(height: 1,color: Colors.grey.shade300),
-            ],
-          ),
+      body: BlocProvider(
+        create: (context) => PostBloc(PostRepository(FireStoreService()))..add(PostGetAllPostsEvent(uid)),
+        child: BlocBuilder<PostBloc, PostState>(
+          builder: (context, state) {
+            if (state is PostLoadingState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is PostLoadedState) {
+              // 게시글이 로딩된 상태에서 표시
+              return ListView.builder(
+                itemCount: state.posts.length,
+                itemBuilder: (context, index) {
+                  final post = state.posts[index];
+                  return ListTile(
+                    title: Text(post.title),
+                    subtitle: Text(post.content),
+                    leading: post.imageUrls.isNotEmpty
+                        ? Image.network(post.imageUrls[0], width: 50, height: 50, fit: BoxFit.cover)
+                        : Icon(Icons.image),
+                  );
+                },
+              );
+            } else if (state is PostErrorState) {
+              return Center(child: Text(state.message));
+            }
+            return Container();
+          },
         ),
       ),
     );

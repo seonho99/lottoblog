@@ -1,8 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottoblog/service/firebase_storage_service.dart';
-import '../widget/imagepicker_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottoblog/data/bloc/post/post_event.dart';
+import 'package:lottoblog/models/post_model.dart';
+import 'package:lottoblog/widget/imagepicker_widget.dart';
+
+import '../data/bloc/post/post_bloc.dart';
 
 class PostwritingScreen extends StatefulWidget {
   final String userId;
@@ -16,77 +19,74 @@ class PostwritingScreen extends StatefulWidget {
 class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final int _maxLengthTitle = 30;
   final int _maxLengthContents = 200;
+  List<String> _imageUrls = [];  // 이미지 URL 리스트 추가
 
   void _onChangedTitle(String text) {
     if (text.length > _maxLengthTitle) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('제목이 30자를 넘겼습니다.'),
-          duration: Duration(seconds: 2),
-        ),
+        SnackBar(content: Text('제목이 30자를 넘겼습니다.')),
       );
-
-      _textControllerTitle.text = text.substring(0,_maxLengthTitle);
-      _textControllerTitle.selection = TextSelection.collapsed(offset: _maxLengthTitle);
+      _textControllerTitle.text = text.substring(0, _maxLengthTitle);
+      _textControllerTitle.selection =
+          TextSelection.collapsed(offset: _maxLengthTitle);
     }
   }
 
   void _onChangedContent(String text) {
-    if (text.length > _maxLengthContents){
+    if (text.length > _maxLengthContents) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('내용이 200를 넘겼습니다.'),
-          duration: Duration(seconds: 2),
-        ),
+        SnackBar(content: Text('내용이 200자를 넘겼습니다.')),
       );
-      _textControllerContents.text = text.substring(0,_maxLengthContents);
-      _textControllerContents.selection = TextSelection.collapsed(offset: _maxLengthContents);
+      _textControllerContents.text = text.substring(0, _maxLengthContents);
+      _textControllerContents.selection =
+          TextSelection.collapsed(offset: _maxLengthContents);
     }
   }
 
-  void _submitPost() async {
-    try {
-      if (_textControllerTitle.text.isEmpty ||
-          _textControllerContents.text.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              title: Text('오류'),
-              content: Text('제목과 내용을 모두 입력해야 합니다.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    '확인',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
+  void _onImageSelected(List<String> selectedImageUrls) {
+    setState(() {
+      _imageUrls = selectedImageUrls;
+    });
+  }
 
-      // 필드 초기화
-      _textControllerTitle.clear();
-      _textControllerContents.clear();
+  void _submitPost() {
+    final postBloc = BlocProvider.of<PostBloc>(context);
+    final title = _textControllerTitle.text;
+    final content = _textControllerContents.text;
 
-      // 성공 메시지 표시
-      showDialog(
+    if (title.isEmpty || content.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('제목과 내용 모두 입력해야 합니다.')),
+      );
+      return;
+    }
+
+    final postModel = PostModel(
+      title: title,
+      content: content,
+      uid: widget.userId,
+      imageUrls: _imageUrls,
+      createdAt: DateTime.now(),
+    );
+
+    postBloc.add(PostSubmittedEvent(postModel));
+
+    _textControllerTitle.clear();
+    _textControllerContents.clear();
+    setState(() {
+      _imageUrls.clear();  // 이미지 리스트 초기화
+    });
+
+    showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: Text('성공'),
-            content: Text('게시글이 작성되었습니다.'),
+            content: Text('게시글이 작성되었습니다'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -96,29 +96,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
               ),
             ],
           );
-        },
-      );
-    } catch (e) {
-      // 에러 처리
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Text('오류'),
-            content: Text('게시글 작성에 실패했습니다: $e'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('확인'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+        });
   }
 
   @override
@@ -129,10 +107,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           '블로그 작성',
-          style: Theme.of(context)
-              .textTheme
-              .headlineSmall
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       resizeToAvoidBottomInset: true,
@@ -144,7 +119,6 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 TextFormField(
                   controller: _textControllerTitle,
                   keyboardType: TextInputType.text,
@@ -157,15 +131,8 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                       labelStyle: Theme.of(context).textTheme.headlineSmall,
                       border: UnderlineInputBorder(),
                       floatingLabelBehavior: FloatingLabelBehavior.always),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '제목을 입력해주세요';
-                    }
-                    return null;
-                  },
                 ),
-
-                ImagepickerWidget(),
+                ImagePickerWidget(onImageSelected: _onImageSelected),  // 이미지 선택 처리
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Container(
@@ -178,10 +145,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                       padding: EdgeInsets.all(8),
                       child: TextField(
                         maxLines: 14,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(height: 1.6),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(height: 1.6),
                         keyboardType: TextInputType.text,
                         controller: _textControllerContents,
                         onChanged: _onChangedContent,
@@ -191,10 +155,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                         decoration: InputDecoration(
                           hintText: '내용을 작성 해주세요.',
                           border: InputBorder.none,
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(color: Colors.black54),
+                          hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black54),
                         ),
                       ),
                     ),

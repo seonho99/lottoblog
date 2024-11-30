@@ -132,7 +132,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       Container(
                         child: GestureDetector(
                           onTap: (){
-                            context.go('/personal/listofposts');
+                            context.go('/personal/listofposts/:uid');
                           },
                           child: Row(
                             children: [

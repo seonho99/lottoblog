@@ -30,10 +30,11 @@ class PostModel {
       'uid': uid,
       'likeCount': likeCount,
       'reportCount': reportCount,
+      'postId': postId,
     };
   }
 
-  factory PostModel.fromMap(Map<String, dynamic> map,String id) {
+  factory PostModel.fromMap(Map<String, dynamic> map, String id) {
     return PostModel(
       postId: id,
       title: map['title'],

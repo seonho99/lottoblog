@@ -2,14 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImagepickerWidget extends StatefulWidget {
-  const ImagepickerWidget({super.key});
+class ImagePickerWidget extends StatefulWidget {
+  final Function(List<String>) onImageSelected;
+
+  const ImagePickerWidget({super.key, required this.onImageSelected});
 
   @override
-  State<ImagepickerWidget> createState() => _ImagepickerWidgetState();
+  State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
 }
 
-class _ImagepickerWidgetState extends State<ImagepickerWidget> {
+class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   List<XFile> _images = [];
   final ImagePicker picker = ImagePicker();
 
@@ -26,18 +28,13 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
             );
           }
         });
+        widget.onImageSelected(_images.map((e) => e.path).toList());
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('최대 3장까지 선택할 수 있습니다.')),
       );
     }
-  }
-
-  void _removeImage(int index) {
-    setState(() {
-      _images.removeAt(index);
-    });
   }
 
   @override
@@ -55,39 +52,39 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   Widget _buildPhotoArea() {
     return _images.isNotEmpty
         ? Container(
-      height: 100,
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
-        ),
-        itemCount: _images.length,
-        itemBuilder: (context, index) {
-          return Stack(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 100,
-                child: Image.file(
-                  File(_images[index].path),
-                  fit: BoxFit.cover,
-                ),
+            height: 100,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
               ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.grey),
-                  onPressed: () => _removeImage(index),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    )
+              itemCount: _images.length,
+              itemBuilder: (context, index) {
+                return Stack(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: Image.file(
+                        File(_images[index].path),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      right: 5,
+                      top: 5,
+                      child: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.grey),
+                        onPressed: () => _removeImage(index),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          )
         : Center(child: Text('선택한 이미지가 없습니다.'));
   }
 
@@ -102,7 +99,19 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
           style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
           child: Text('사진/이미지', style: Theme.of(context).textTheme.titleSmall),
         ),
+        SizedBox(width: 10),
+        ElevatedButton(onPressed: (){
+          getImages(ImageSource.camera);
+        },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+            child: Text('카메라', style: Theme.of(context).textTheme.titleSmall),),
       ],
     );
+  }
+
+  void _removeImage(int index){
+    setState(() {
+      _images.removeAt(index);
+    });
   }
 }
