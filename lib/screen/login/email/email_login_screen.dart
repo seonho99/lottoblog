@@ -7,17 +7,11 @@ import 'package:lottoblog/data/bloc/auth/auth_state.dart';
 import 'package:lottoblog/data/repository/auth_repository.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
-import '../../../service/firebase_auth_service.dart';
 
 class EmailLoginScreen extends StatelessWidget {
   EmailLoginScreen({super.key});
-
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
 
-  final auth = FirebaseAuthService();
-  late final AuthRepository authRepository;
 
   @override
   Widget build(BuildContext context) {

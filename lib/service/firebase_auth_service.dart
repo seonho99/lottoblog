@@ -7,8 +7,17 @@ class FirebaseAuthService {
     _auth.setLanguageCode('kr');
   }
 
-  final storageRef = FirebaseStorage.instance.ref();
   User? get user => _auth.currentUser;
+
+  final storageRef = FirebaseStorage.instance.ref();
+
+  Future<String> getUserId() async {
+    final user = _auth.currentUser;
+    if (user == null){
+      throw Exception('사용자가 로그인되지 않았습니다.');
+    }
+    return user.uid;
+  }
 
   // 회원가입 코드
   Future<void> singUpWithEmail({
@@ -140,6 +149,16 @@ class FirebaseAuthService {
       await _auth.currentUser?.updatePhotoURL(null);
     } catch (e) {
       throw Exception('수정 실패:$e');
+    }
+  }
+
+  Future<void> deleteProfileImage(String? uid) async {
+    if(uid == null) throw Exception('잘못된 접근입니다.');
+    try {
+      final profileRef = storageRef.child('user_profiles/${uid}_profile_image.jpg');
+      await profileRef.delete();
+    } catch (e) {
+      throw Exception('upload 실패');
     }
   }
 

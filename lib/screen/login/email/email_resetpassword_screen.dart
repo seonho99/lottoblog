@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
-import '../../../service/firebase_auth_service.dart';
-
 class EmailResetpasswordScreen extends StatelessWidget {
   EmailResetpasswordScreen({super.key});
   final _formKey = GlobalKey<FormState>();
-  final auth = FirebaseAuthService();
 
   String? email;
 

@@ -1,18 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-sealed class AuthState{}
+sealed class AuthState{
+  const AuthState();
+}
 
 // 초기상태
 final class AuthInitialState extends AuthState {}
 
-// 로그인 상태
+// 인증
 final class AuthAuthenticatedState extends AuthState {
-  final User user;
+  final String uid;
 
-  AuthAuthenticatedState(this.user);
+  AuthAuthenticatedState(this.uid);
 }
 
-// 로그아웃 상태
+// 인증 안됨
 final class AuthUnauthenticatedState extends AuthState{}
 
 // 에러 상태

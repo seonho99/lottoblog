@@ -1,25 +1,22 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 
 class FirebaseStorageService {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final storageRef = FirebaseStorage.instance.ref();
 
-  Future<String> uploadProfileImage(File imageFile, String? uid) async {
-    if (uid == null) throw Exception('잘못된 접근입니다');
+  Future<String> uploadProfileImage(Uint8List bytes, String path, String? uid) async {
+    if (uid == null) throw Exception('잘못된 접근 입니다');
     try {
-      final profileRef =
-      storageRef.child('user_profiles/${uid}_profile_image.jpg');
-      if (kIsWeb) {
-        await profileRef.putData(await imageFile.readAsBytes());
-      } else {
-        await profileRef.putFile(imageFile);
-      }
+      final profileRef = storageRef.child('user_profiles/${uid}_profile_image.jpg');
+      final metadata = SettableMetadata(
+        contentType: 'image/png',
+        customMetadata: {'picked-file-path': path},
+      );
+      profileRef.putData(bytes, metadata);
       final downloadUrl = await profileRef.getDownloadURL();
       return downloadUrl;
     } catch (e) {
@@ -38,27 +35,27 @@ class FirebaseStorageService {
     }
   }
 
+  Future<List<String>> uploadImages(List<File> imageFiles) async {
+    List<String> imageUrls = [];
 
-  Future<void> uploadFile(BuildContext context) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      File file = File(pickedFile.path);
+    for (var file in imageFiles) {
       try {
-        await storage.ref('uploads/${pickedFile.name}').putFile(file);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('파일 업로드 성공')),
-        );
-      } on FirebaseException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('파일 업로드 실패: ${e.message}')),
-        );
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('post_images')
+            .child('${DateTime
+            .now()
+            .millisecondsSinceEpoch}.jpg');
+
+        await storageRef.putFile(file);
+
+        final downloadUrl = await storageRef.getDownloadURL();
+        imageUrls.add(downloadUrl);
+      } catch (e) {
+        throw Exception('이미지 업로드에 실패했습니다: $e');
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('이미지가 선택되지 않았습니다')),
-      );
     }
+
+    return imageUrls;
   }
 }

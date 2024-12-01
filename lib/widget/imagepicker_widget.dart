@@ -99,12 +99,12 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
           child: Text('사진/이미지', style: Theme.of(context).textTheme.titleSmall),
         ),
-        SizedBox(width: 10),
-        ElevatedButton(onPressed: (){
-          getImages(ImageSource.camera);
-        },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-            child: Text('카메라', style: Theme.of(context).textTheme.titleSmall),),
+        // SizedBox(width: 10),
+        // ElevatedButton(onPressed: (){
+        //   getImages(ImageSource.camera);
+        // },
+        //     style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+        //     child: Text('카메라', style: Theme.of(context).textTheme.titleSmall),),
       ],
     );
   }

@@ -7,23 +7,29 @@ class AuthRepository {
 
   AuthRepository(this._firebaseAuthService);
 
+  bool isLoggedIn() {
+    return _firebaseAuthService.user != null;
+  }
+
+  String get currentUid => _firebaseAuthService.user?.uid ?? '';
+
   Future<User?> signInWithEmail(String email, String password) async {
-    try {
-      await _firebaseAuthService.signInWithEmail(email: email, password: password);
-      return _firebaseAuthService.user;
-    } catch (e) {
-      throw Exception('로그인 실패: $e');
-    }
+    return await _firebaseAuthService.signInWithEmail(email: email, password: password);
   }
 
   Future<void> signOut() async {
     await _firebaseAuthService.signOut();
   }
 
-  bool isLoggedIn() {
-    return _firebaseAuthService.isLoggedIn();
+  Future<void> signUpWithEmail(String email, String password, String? name) async {
+    await _firebaseAuthService.singUpWithEmail(email: email, password: password);
   }
 
-  User? get currentUser => _firebaseAuthService.user;
+  Future<void> resetPassword(String email) async {
+    await _firebaseAuthService.resetPassword(email: email);
+  }
 
+  Future<void> deleteAccount() async {
+    await _firebaseAuthService.deleteAccount();
+  }
 }

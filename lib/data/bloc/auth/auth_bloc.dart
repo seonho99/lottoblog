@@ -7,7 +7,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
   AuthBloc(this._authRepository) : super(AuthInitialState()) {
-    on<AppStarted>((event, emit) async {
+
+    on<AppStarted>((event, emit) async{
       await _mapAppStartedToState(emit);
     });
 
@@ -20,9 +21,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
+  // 시작 시
   Future<void> _mapAppStartedToState(Emitter<AuthState> emit) async {
-    if (_authRepository.isLoggedIn()) {
-      emit(AuthAuthenticatedState(_authRepository.currentUser!));
+    if (_authRepository.isLoggedIn()){
+      emit(AuthAuthenticatedState(_authRepository.currentUserId));
     } else {
       emit(AuthUnauthenticatedState());
     }
