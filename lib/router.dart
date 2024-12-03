@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/data/bloc/auth/auth_state.dart';
 
-import 'data/bloc/auth/auth_bloc.dart';
+import 'data/bloc/signIn/signin_bloc.dart';
+import 'data/bloc/signIn/signin_state.dart';
 import 'screen/dayofweek_screen.dart';
 import 'screen/editprofile_screen.dart';
 
@@ -12,7 +12,7 @@ import 'screen/fram_screen.dart';
 import 'screen/landing_screen.dart';
 import 'screen/listofposts_screen.dart';
 import 'screen/login/email/email_login_screen.dart';
-import 'screen/login/email/email_register_screen.dart';
+import 'screen/login/email/signup_email_screen.dart';
 import 'screen/login/email/email_resetpassword_screen.dart';
 import 'screen/login/login_screen.dart';
 import 'screen/mainhome_screen.dart';
@@ -98,9 +98,9 @@ final GoRouter router = GoRouter(
                   },
                   routes: <RouteBase>[
                     GoRoute(
-                      path: 'email_register',
+                      path: 'signup_email',
                       builder: (BuildContext context, GoRouterState state) {
-                        return EmailRegisterScreen();
+                        return SignUpEmailScreen();
                       },
                     ),
                     GoRoute(
@@ -124,12 +124,12 @@ final GoRouter router = GoRouter(
                 return PersonalScreen();
               },
               routes: <RouteBase>[
-                GoRoute(
-                  path: 'editprofile',
-                  builder: (BuildContext context, GoRouterState state) {
-                    return EditProfileScreen();
-                  },
-                ),
+                // GoRoute(
+                //   path: 'editprofile',
+                //   builder: (BuildContext context, GoRouterState state) {
+                //     return EditProfileScreen();
+                //   },
+                // ),
                 GoRoute(
                   path: 'postwriting',
                   builder: (BuildContext context, GoRouterState state) {
@@ -142,7 +142,7 @@ final GoRouter router = GoRouter(
                   },
                 ),
                 GoRoute(
-                  path: '/listofposts/:uid', // :uid로 경로에서 가져올 수 있음
+                  path: '/listofposts',
                   builder: (BuildContext context, GoRouterState state) {
                     final uid = state.pathParameters['uid']!; // 경로 파라미터에서 uid를 가져옴
                     return ListofPostsScreen(uid: uid);
@@ -157,15 +157,15 @@ final GoRouter router = GoRouter(
     ),
   ],
   redirect: (context, state) {
-    final authBloc = context.read<AuthBloc>();
+    final authBloc = context.read<SignInBloc>();
     final currentState = authBloc.state;
 
-    if (currentState is AuthUnauthenticatedState &&
+    if (currentState is SignInUnAuthenticatedState &&
         state.uri.path.contains('/login')) {
       return '/login';
     }
 
-    if (currentState is AuthAuthenticatedState &&
+    if (currentState is SignInAuthenticatedState &&
         state.uri.path.contains('/login')){
       return '/personal';
     }

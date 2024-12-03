@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../service/firebase_auth_service.dart';
+import '../../../data/bloc/signup/signup_event.dart';
+import '../../../data/bloc/signup/signup_bloc.dart';
+import '../../../data/bloc/signup/signup_state.dart';
 import '../../../show_snackbar.dart';
 
+class SignUpEmailScreen extends StatelessWidget {
+  SignUpEmailScreen({super.key});
 
-class EmailRegisterScreen extends StatelessWidget {
-  EmailRegisterScreen({super.key});
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   String? name;
   String? email;
   String? password;
-
-  final auth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +36,7 @@ class EmailRegisterScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: Text('회원가입을 위해\n정보를 입력해주세요',style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800,height: 1.5),),
                   ),
+                  // 이름 입력
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: TextFormField(
@@ -51,11 +53,12 @@ class EmailRegisterScreen extends StatelessWidget {
                         }
                         return null;
                       },
-                      onSaved: (value) { //이름 저장
+                      onSaved: (value) {
                         name = value;
                       },
                     ),
                   ), // 이름
+                  // 이메일 입력
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: TextFormField(
@@ -80,6 +83,7 @@ class EmailRegisterScreen extends StatelessWidget {
                       },
                     ),
                   ), // 이메일
+                  // 비밀번호 입력
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: TextFormField(
@@ -99,7 +103,7 @@ class EmailRegisterScreen extends StatelessWidget {
                           return '비밀번호를 입력하세요.';
                         }
                         if (value.length < 7) {
-                          return '비밀번호는 8자리 이상이여야 합니다';
+                          return '비밀번호는 8자리 이상이어야 합니다';
                         }
                         return null;
                       },
@@ -107,7 +111,8 @@ class EmailRegisterScreen extends StatelessWidget {
                         password = value;
                       },
                     ),
-                  ), // 비밀번호
+                  ),
+                  // 비밀번호 확인
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: TextFormField(
@@ -136,16 +141,12 @@ class EmailRegisterScreen extends StatelessWidget {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          auth.singUpWithEmail(
+                          // 회원가입 이벤트 발생
+                          context.read<SignUpBloc>().add(SignUpWithEmail(
                             email: email!,
                             password: password!,
                             name: name!,
-                          ).then((_) {
-                           showSnackBar(context, '회원가입이 완료되었습니다.');
-                            context.go('/login/email_login');
-                          }).catchError((error) {
-                              showSnackBar(context, error.toString());
-                          });
+                          ));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -155,13 +156,25 @@ class EmailRegisterScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           )),
                       child: Text('가입하기',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(color: Colors.white),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(color: Colors.white),
                       ),
                     ),
-                  )
+                  ),
+                  BlocListener<SignUpBloc, SignUpState>(
+                    listener: (context, state) {
+                      if (state is SignUpSuccess) {
+                        showSnackBar(context, '회원가입이 완료되었습니다.');
+                        context.go('/login/email_login');
+                      }
+                      if (state is SignUpError) {
+                        showSnackBar(context, state.message);
+                      }
+                    },
+                    child: Container(),
+                  ),
                 ],
               ),
             ),

@@ -8,19 +8,10 @@ class FirebaseAuthService {
   }
 
   User? get user => _auth.currentUser;
-
   final storageRef = FirebaseStorage.instance.ref();
 
-  Future<String> getUserId() async {
-    final user = _auth.currentUser;
-    if (user == null){
-      throw Exception('사용자가 로그인되지 않았습니다.');
-    }
-    return user.uid;
-  }
-
   // 회원가입 코드
-  Future<void> singUpWithEmail({
+  Future<void> signUpWithEmail({
     required String email,
     required String password,
     String? name,
@@ -69,10 +60,7 @@ class FirebaseAuthService {
           errorMessage = '비밀번호가 올바르지 않습니다.';
           break;
         case 'invalid-credential':
-          errorMessage = '유효하지 않은 이메일 입니다.';
-          break;
-        case 'invalid-credential':
-          errorMessage = '비밀번호가 올바르지 않거나 유효하지 않은 이메일입니다.';
+          errorMessage = '비밀번호가 올바르지 않거나 유효하지 않은 이메일 입니다.';
           break;
         default:
           errorMessage = '알 수 없는 오류가 발생했습니다.';
@@ -126,6 +114,7 @@ class FirebaseAuthService {
     }
   }
 
+  // 유저 이름 변경
   Future<void> updateName(String? name) async {
     try {
       await _auth.currentUser?.updateDisplayName(name);
@@ -134,6 +123,7 @@ class FirebaseAuthService {
     }
   }
 
+  // 유저 사진 변경
   Future<void> updatePhotoUrl(String? url) async {
     try {
       await _auth.currentUser?.updatePhotoURL(url);
@@ -144,21 +134,12 @@ class FirebaseAuthService {
 
   Future<void> loginWithEmail() async {}
 
+  // 유저 사진 삭제
   Future<void> deletePhotoUrl() async {
     try {
       await _auth.currentUser?.updatePhotoURL(null);
     } catch (e) {
       throw Exception('수정 실패:$e');
-    }
-  }
-
-  Future<void> deleteProfileImage(String? uid) async {
-    if(uid == null) throw Exception('잘못된 접근입니다.');
-    try {
-      final profileRef = storageRef.child('user_profiles/${uid}_profile_image.jpg');
-      await profileRef.delete();
-    } catch (e) {
-      throw Exception('upload 실패');
     }
   }
 

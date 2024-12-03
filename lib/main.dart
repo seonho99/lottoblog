@@ -1,12 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
+import 'package:lottoblog/data/bloc/signIn/signin_bloc.dart';
+import 'package:lottoblog/data/bloc/signup/signup_bloc.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
 import 'package:lottoblog/service/firestore_service.dart';
 
-import 'data/bloc/auth/auth_bloc.dart';
 import 'data/repository/auth_repository.dart';
 import 'service/firebase_auth_service.dart';
 import 'service/firebase_options.dart';
@@ -21,20 +23,31 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
-  final AuthBloc authBloc;
+  final SignInBloc signInBloc;
+  final SignUpBloc signUpBloc;
+  final EmailResetPasswordBloc emailResetPasswordBloc;
   final PostRepository postRepository;
   final PostBloc postBloc;
 
   MyApp({
     super.key,
     AuthRepository? authRepository,
-    AuthBloc? authBloc,
+    SignInBloc? signInBloc,
+    SignUpBloc? signUpBloc,
+    EmailResetPasswordBloc? emailResetPasswordBloc,
     PostRepository? postRepository,
     PostBloc? postBloc,
-  })  : authRepository = authRepository ?? AuthRepository(FirebaseAuthService()),
-        authBloc = authBloc ?? AuthBloc(authRepository?? AuthRepository(FirebaseAuthService())),
+  })  : authRepository =
+      authRepository ?? AuthRepository(FirebaseAuthService()),
+        signInBloc = signInBloc ??
+            SignInBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+        signUpBloc = signUpBloc ??
+            SignUpBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+        emailResetPasswordBloc = emailResetPasswordBloc ??
+            EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService())), // 수정
         postRepository = postRepository ?? PostRepository(FireStoreService()),
-        postBloc = postBloc ?? PostBloc(postRepository?? PostRepository(FireStoreService()));
+        postBloc = postBloc ??
+            PostBloc(postRepository ?? PostRepository(FireStoreService()));
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +62,14 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AuthBloc>(
-            create: (context) => authBloc,
+          BlocProvider<SignInBloc>(
+            create: (context) => signInBloc,
+          ),
+          BlocProvider<SignUpBloc>(
+            create: (context) => signUpBloc,
+          ),
+          BlocProvider<EmailResetPasswordBloc>(
+            create: (context) => emailResetPasswordBloc,
           ),
           BlocProvider<PostBloc>(
             create: (context) => postBloc,

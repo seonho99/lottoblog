@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/data/bloc/auth/auth_bloc.dart';
-import 'package:lottoblog/data/bloc/auth/auth_event.dart';
-import 'package:lottoblog/data/bloc/auth/auth_state.dart';
-import 'package:lottoblog/data/repository/auth_repository.dart';
 import 'package:lottoblog/show_snackbar.dart';
+
+import '../../../data/bloc/signIn/signin_bloc.dart';
+import '../../../data/bloc/signIn/signin_event.dart';
+import '../../../data/bloc/signIn/signin_state.dart';
 
 
 class EmailLoginScreen extends StatelessWidget {
   EmailLoginScreen({super.key});
-  final _formKey = GlobalKey<FormState>();
 
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    authRepository = AuthRepository(auth);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -37,7 +38,9 @@ class EmailLoginScreen extends StatelessWidget {
                     widthFactor: 0.7,
                   ),
                 ),
+                // 이메일 입력
                 TextFormField(
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -48,16 +51,15 @@ class EmailLoginScreen extends StatelessWidget {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    email = value;
-                  },
                   decoration: InputDecoration(
                     labelText: '이메일',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
                   ),
                 ),
+                // 비밀번호 입력
                 TextFormField(
+                  controller: _passwordController,
                   keyboardType: TextInputType.text,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -68,15 +70,12 @@ class EmailLoginScreen extends StatelessWidget {
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    password = value;
-                  },
+                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: '비밀번호',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.lock),
                   ),
-                  obscureText: true,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -106,8 +105,9 @@ class EmailLoginScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        _formKey.currentState?.save();
-                        context.read<AuthBloc>().add(SignInWithEmail(email!, password!));
+                        final email = _emailController.text;
+                        final password = _passwordController.text;
+                        context.read<SignInBloc>().add(SignInWithEmail(email, password));
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -117,20 +117,21 @@ class EmailLoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: Text('로그인',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+                    child: Text(
+                      '로그인',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
                   ),
                 ),
-                BlocListener<AuthBloc, AuthState>(
-                    listener: (context,state){
-                      if(state is AuthAuthenticatedState){
-                        context.go('/personal');
-                      }
-                      if (state is AuthErrorState){
-                        showSnackBar(context, state.message);
-                      }
-                    },
+                BlocListener<SignInBloc, SignInState>(
+                  listener: (context, state) {
+                    if (state is SignInAuthenticatedState) {
+                      context.go('/personal');
+                    }
+                    if (state is SignInErrorState) {
+                      showSnackBar(context, state.message);
+                    }
+                  },
                   child: Container(),
                 ),
                 Row(
@@ -145,11 +146,10 @@ class EmailLoginScreen extends StatelessWidget {
                     ),
                     TextButton(
                       style: ButtonStyle(
-                        padding: WidgetStateProperty.all<EdgeInsets>(
-                            EdgeInsets.zero),
+                        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
                       ),
                       onPressed: () {
-                        context.go('/login/email_login/email_register');
+                        context.go('/login/email_login/signup_email');
                       },
                       child: Text(
                         '회원가입 하기',
