@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../service/firebase_auth_service.dart';
 
@@ -12,16 +11,23 @@ class AuthRepository {
   }
 
   Future<User?> signInWithEmail(String email, String password) async {
-    await _firebaseAuthService.signInWithEmail(email: email, password: password);
-    return _firebaseAuthService.user;
+    try {
+      await _firebaseAuthService.signInWithEmail(
+          email: email, password: password);
+      return _firebaseAuthService.user;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> signOut() async {
     await _firebaseAuthService.signOut();
   }
 
-  Future<void> signUpWithEmail(String email, String password, String? name) async {
-    await _firebaseAuthService.signUpWithEmail(email: email, password: password, name: name);
+  Future<void> signUpWithEmail(
+      String email, String password, String? name) async {
+    await _firebaseAuthService.signUpWithEmail(
+        email: email, password: password, name: name);
   }
 
   Future<void> resetPassword(String email) async {

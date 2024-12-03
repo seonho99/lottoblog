@@ -1,8 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottoblog/models/user_model.dart';
 import '../models/post_model.dart';
 
 class FireStoreService {
   final FirebaseFirestore _fs = FirebaseFirestore.instance;
+
+  Future<UserModel?> getUserData(String uid) async {
+    try {
+      DocumentSnapshot snapshot = await _fs.collection('user').doc(uid).get();
+
+      if (snapshot.exists) {
+        return UserModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
+      }
+      return null;
+    } catch (e) {
+      throw Exception('사용자 데이터를 가져오는데 실패했습니다. $e');
+    }
+  }
 
   // 게시글 생성
   Future<void> createPost(PostModel postModel) async {

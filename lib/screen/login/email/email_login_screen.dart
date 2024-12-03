@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
-import '../../../data/bloc/signIn/signin_bloc.dart';
-import '../../../data/bloc/signIn/signin_event.dart';
-import '../../../data/bloc/signIn/signin_state.dart';
+import '../../../data/bloc/login/login_bloc.dart';
+import '../../../data/bloc/login/login_event.dart';
+import '../../../data/bloc/login/login_state.dart';
+
+
 
 
 class EmailLoginScreen extends StatelessWidget {
@@ -107,7 +109,7 @@ class EmailLoginScreen extends StatelessWidget {
                       if (_formKey.currentState?.validate() ?? false) {
                         final email = _emailController.text;
                         final password = _passwordController.text;
-                        context.read<SignInBloc>().add(SignInWithEmail(email, password));
+                        context.read<LoginBloc>().add(LoginWithEmail(email, password));
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -123,12 +125,12 @@ class EmailLoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                BlocListener<SignInBloc, SignInState>(
+                BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
-                    if (state is SignInAuthenticatedState) {
+                    if (state is LoginAuthenticatedState) {
                       context.go('/personal');
                     }
-                    if (state is SignInErrorState) {
+                    if (state is LoginErrorState) {
                       showSnackBar(context, state.message);
                     }
                   },

@@ -1,13 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:lottoblog/models/user_model.dart';
 
 class FirebaseAuthService {
-  final FirebaseAuth _auth;
-  FirebaseAuthService() : _auth = FirebaseAuth.instance {
-    _auth.setLanguageCode('kr');
-  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _fs = FirebaseFirestore.instance;
 
   User? get user => _auth.currentUser;
+
   final storageRef = FirebaseStorage.instance.ref();
 
   // 회원가입 코드
@@ -18,9 +19,29 @@ class FirebaseAuthService {
   }) async {
     String? errorMessage;
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      await _auth.currentUser?.updateDisplayName(name);
-      await _auth.currentUser?.sendEmailVerification();
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      // await _auth.currentUser?.updateDisplayName(name);
+      // await _auth.currentUser?.sendEmailVerification();
+
+      User? user = _auth.currentUser;
+      await user?.updateDisplayName(name);
+
+      UserModel userModel = UserModel(
+          uid: user?.uid,
+          userName: name ?? '',
+          email: email,
+          profileImageUrl: '',
+          createdAt: DateTime.now());
+
+      await _fs
+          .collection('users')
+          .doc(user?.uid)
+          .set(userModel.toMap());
+
+      await user?.sendEmailVerification();
+
+
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'weak-password':
@@ -73,12 +94,32 @@ class FirebaseAuthService {
     }
   }
 
+  Future<Map<String, dynamic>?> getUserData() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('로그인된 사용자가 없습니다.');
+      }
+
+      DocumentSnapshot docSnapshot = await _fs.collection('users').doc(
+          user.uid).get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot.data() as Map<String, dynamic>?; // Firestore 데이터 반환
+      } else {
+        throw Exception('사용자 정보가 Firestore에 없습니다.');
+      }
+    } catch (e) {
+      throw Exception('사용자 데이터를 가져오는 데 실패했습니다: ${e.toString()}');
+    }
+  }
+
   // 로그아웃
   Future<void> signOut() async {
     try {
       await _auth.signOut();
     } catch (e) {
-      throw Exception(e.toString());
+      throw Exception('로그아웃 실패: ${e.toString()}');
     }
   }
 
@@ -105,12 +146,11 @@ class FirebaseAuthService {
         default:
           errorMessage = error.message ?? '알 수 없는 오류가 발생했습니다.';
       }
-    }catch (error) {
+    } catch (error) {
       errorMessage = '알 수 없는 오류가 발생했습니다.';
     }
     if (errorMessage != null) {
       throw Exception(errorMessage);
-
     }
   }
 
@@ -145,12 +185,12 @@ class FirebaseAuthService {
 
   Future<void> sendVerificationEmail() async {
     try {
-      if(!(_auth.currentUser?.emailVerified??true)){
+      if (!(_auth.currentUser?.emailVerified ?? true)) {
         await _auth.currentUser?.sendEmailVerification();
       } else {
         throw Exception('이미 이메일 인증이 완료되었습니다.');
       }
-    } catch (e){
+    } catch (e) {
       throw Exception('인증 메일 전송이 실패 했습니다.');
     }
   }

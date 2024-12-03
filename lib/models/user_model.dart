@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UsersModel {
+class UserModel {
   String? uid; // 사용자 ID
   String userName; // 사용자 이름
   String email; // 사용자 이메일
   String profileImageUrl; // 프로필 사진 URL
   DateTime createdAt; // 사용자 가입 날짜
 
-  UsersModel({
+  UserModel({
     this.uid,
     required this.userName,
     required this.email,
@@ -25,8 +25,8 @@ class UsersModel {
     };
   }
 
-  factory UsersModel.fromMap(Map<String, dynamic> map, String id) {
-    return UsersModel(
+  factory UserModel.fromMap(Map<String, dynamic> map, String id) {
+    return UserModel(
       uid: id,
       userName: map['userName'] ?? '',
       email: map['email'] ?? '',

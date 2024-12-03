@@ -1,13 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'data/bloc/signIn/signin_bloc.dart';
-import 'data/bloc/signIn/signin_state.dart';
+import 'data/bloc/login/login_bloc.dart';
+import 'data/bloc/login/login_state.dart';
+
 import 'screen/dayofweek_screen.dart';
 import 'screen/editprofile_screen.dart';
-
 import 'screen/fram_screen.dart';
 import 'screen/landing_screen.dart';
 import 'screen/listofposts_screen.dart';
@@ -124,31 +123,24 @@ final GoRouter router = GoRouter(
                 return PersonalScreen();
               },
               routes: <RouteBase>[
-                // GoRoute(
-                //   path: 'editprofile',
-                //   builder: (BuildContext context, GoRouterState state) {
-                //     return EditProfileScreen();
-                //   },
-                // ),
                 GoRoute(
                   path: 'postwriting',
                   builder: (BuildContext context, GoRouterState state) {
-                    final String? userId =
-                        FirebaseAuth.instance.currentUser?.uid;
-                    if (userId == null) {
                       return LoginScreen();
                     }
-                    return PostwritingScreen(userId: userId);
-                  },
                 ),
                 GoRoute(
                   path: '/listofposts',
                   builder: (BuildContext context, GoRouterState state) {
-                    final uid = state.pathParameters['uid']!; // 경로 파라미터에서 uid를 가져옴
-                    return ListofPostsScreen(uid: uid);
+                    return ListofPostsScreen();
                   },
-                )
-
+                ),
+                GoRoute(
+                  path: 'editprofile',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return EditProfileScreen();
+                  },
+                ),
               ],
             ),
           ],
@@ -156,18 +148,20 @@ final GoRouter router = GoRouter(
       ],
     ),
   ],
-  redirect: (context, state) {
-    final authBloc = context.read<SignInBloc>();
-    final currentState = authBloc.state;
 
-    if (currentState is SignInUnAuthenticatedState &&
-        state.uri.path.contains('/login')) {
+  redirect: (context, state) {
+    final loginBloc = context.read<LoginBloc>();
+    final currentState = loginBloc.state;
+
+    if (currentState is LoginUnAuthenticatedState &&
+        state.uri.path.contains('/personal/editprofile/')) {
       return '/login';
     }
 
-    if (currentState is SignInAuthenticatedState &&
-        state.uri.path.contains('/login')){
+    if (currentState is LoginAuthenticatedState &&
+        state.uri.path.contains('/login')) {
       return '/personal';
+
     }
 
     return null;
