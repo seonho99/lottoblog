@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottoblog/data/bloc/login/login_event.dart';
+import 'package:lottoblog/data/bloc/login/login_state.dart';
 import 'package:lottoblog/service/firebase_auth_service.dart';
 import 'package:lottoblog/service/firebase_storage_service.dart';
 import 'package:lottoblog/show_snackbar.dart';
+
+import '../data/bloc/login/login_bloc.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -220,19 +225,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () async {
-                        try {
-                          await auth.signOut();
-                          context.go('/login');
-
-                        } catch (e) {
-                          showSnackBar(context, '로그아웃 중 오류가 발생했습니다: ${e.toString()}');
-                        }
-                      },
-                      child: Text(
-                        '로그아웃',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
+                        onPressed: (){
+                          context.read<LoginBloc>().add(LogoutEvent());
+                        }, child: Text('로그아웃',
+                        style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Text('|'),
                     TextButton(
@@ -249,6 +245,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         '회원탈퇴',
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
+                    ),
+                    BlocListener<LoginBloc, LoginState>(
+                        listener: (context, state) {
+                          if (state is LoginUnAuthenticatedState){
+                            context.go('/login');
+                          }
+                          if (state is LoginErrorState) {
+                            showSnackBar(context, state.message);
+                          }
+                        },
+                      child: Container(),
                     ),
                   ],
                 ),

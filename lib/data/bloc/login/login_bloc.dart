@@ -13,8 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LogoutEvent>(_onLogout);
   }
 
-  Future<void> _onLoginWithEmail(LoginWithEmail event,
-      Emitter<LoginState> emit) async {
+  Future<void> _onLoginWithEmail(LoginWithEmail event, Emitter<LoginState> emit) async {
     emit(LoginLoading());
 
     try {
@@ -26,11 +25,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else if (user == null) {
         emit(LoginErrorState('로그인 실패: 사용자 정보가 없습니다.'));
       } else {
-        emit(LoginErrorState('이메일 인증이 필요합니다.')); // 사용자 정보가 없을 경우 에러 상태로 변경
+        emit(LoginErrorState('이메일 인증이 필요합니다.'));
       }
     } catch (e) {
       emit(
-          LoginErrorState('로그인 오류: ${e.toString()}')); // 예외 메시지를 포함하여 에러 상태로 변경
+          LoginErrorState('로그인 오류: ${e.toString()}'));
     }
   }
 

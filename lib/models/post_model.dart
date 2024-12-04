@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PostModel {
+final class PostModel {
   String? postId; // 포스트 ID
   String title; // 글 제목
   String content; // 글 내용
   List<String> imageUrls; // 이미지 URL 목록
   DateTime createdAt; // 작성 시간
-  String uid; // 작성자 ID
+  String? uid; // 작성자 ID
   int likeCount; // 좋아요 개수
   int reportCount; // 신고 횟수
 
@@ -15,7 +15,7 @@ class PostModel {
     required this.title,
     required this.content,
     this.imageUrls = const [],
-    required this.uid,
+    this.uid,
     this.likeCount = 0,
     this.reportCount = 0,
     createdAt,
@@ -34,9 +34,9 @@ class PostModel {
     };
   }
 
-  factory PostModel.fromMap(Map<String, dynamic> map, String id) {
+  factory PostModel.fromMap(Map<String, dynamic> map) {
     return PostModel(
-      postId: id,
+      postId: map['postId'],
       title: map['title'],
       content: map['content'],
       imageUrls: List<String>.from(map['imageUrls'] ?? []),

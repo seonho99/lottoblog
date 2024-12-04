@@ -1,34 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lottoblog/models/user_model.dart';
 import '../models/post_model.dart';
 
-class FireStoreService {
-  final FirebaseFirestore _fs = FirebaseFirestore.instance;
+class FirestoreService {
+  FirebaseFirestore _fs = FirebaseFirestore.instance;
 
-  Future<UserModel?> getUserData(String uid) async {
-    try {
-      DocumentSnapshot snapshot = await _fs.collection('user').doc(uid).get();
-
-      if (snapshot.exists) {
-        return UserModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
-      }
-      return null;
-    } catch (e) {
-      throw Exception('사용자 데이터를 가져오는데 실패했습니다. $e');
-    }
-  }
+  // Future<UserModel?> getUserData(String uid) async {
+  //   try {
+  //     DocumentSnapshot snapshot = await _fs.collection('user').doc(uid).get();
+  //
+  //     if (snapshot.exists) {
+  //       return UserModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
+  //     }
+  //     return null;
+  //   } catch (e) {
+  //     throw Exception('사용자 데이터를 가져오는데 실패했습니다. $e');
+  //   }
+  // }
 
   // 게시글 생성
-  Future<void> createPost(PostModel postModel) async {
-    try {
-      final postDocRef = await _fs.collection('posts').add(postModel.toMap());
+ Future<void> createPost(PostModel postmodel) async {
+   final postCollection = _fs.collection('posts');
 
-      await postDocRef.update({'postId':postDocRef.id});
-    } catch (e) {
-      throw Exception('게시글 생성에 실패했습니다: $e');
-    }
-  }
+   try {
+     await postCollection.add(postmodel.toMap());
+
+   } on FirebaseException catch (e) {
+     print('FBException : $e');
+     throw Exception('저장에 실패했습니다. $e');
+   } catch (e) {
+     print('알 수 없는 에러 : $e');
+     throw Exception('저장 실패 : $e');
+   }
+}
 
 
   Future<PostModel> readPost(String postId) async {

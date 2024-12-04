@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/screen/postwriting_screen.dart';
 
 import 'data/bloc/login/login_bloc.dart';
 import 'data/bloc/login/login_state.dart';
@@ -17,7 +18,6 @@ import 'screen/login/login_screen.dart';
 import 'screen/mainhome_screen.dart';
 import 'screen/personal_screen.dart';
 import 'screen/post/post_screen.dart';
-import 'screen/postwriting_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -126,11 +126,11 @@ final GoRouter router = GoRouter(
                 GoRoute(
                   path: 'postwriting',
                   builder: (BuildContext context, GoRouterState state) {
-                      return LoginScreen();
+                      return PostwritingScreen();
                     }
                 ),
                 GoRoute(
-                  path: '/listofposts',
+                  path: 'listofposts',
                   builder: (BuildContext context, GoRouterState state) {
                     return ListofPostsScreen();
                   },
@@ -153,17 +153,12 @@ final GoRouter router = GoRouter(
     final loginBloc = context.read<LoginBloc>();
     final currentState = loginBloc.state;
 
-    if (currentState is LoginUnAuthenticatedState &&
+    if (currentState is LoginAuthenticatedState &&
         state.uri.path.contains('/personal/editprofile/')) {
       return '/login';
-    }
-
-    if (currentState is LoginAuthenticatedState &&
+    } else if (currentState is LoginAuthenticatedState &&
         state.uri.path.contains('/login')) {
       return '/personal';
-
     }
-
-    return null;
   },
 );

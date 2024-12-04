@@ -14,6 +14,8 @@ class AuthRepository {
     try {
       await _firebaseAuthService.signInWithEmail(
           email: email, password: password);
+
+
       return _firebaseAuthService.user;
     } catch (e) {
       rethrow;

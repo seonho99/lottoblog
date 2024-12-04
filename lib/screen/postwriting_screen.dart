@@ -8,9 +8,8 @@ import 'package:lottoblog/widget/imagepicker_widget.dart';
 import '../data/bloc/post/post_bloc.dart';
 
 class PostwritingScreen extends StatefulWidget {
-  final String userId;
 
-  PostwritingScreen({Key? key, required this.userId}) : super(key: key);
+  const PostwritingScreen({super.key});
 
   @override
   State<PostwritingScreen> createState() => _PostwritingScreenState();
@@ -22,7 +21,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
 
   final int _maxLengthTitle = 30;
   final int _maxLengthContents = 200;
-  List<String> _imageUrls = [];  // 이미지 URL 리스트 추가
+  List<String> _imageUrls = [];
 
   void _onChangedTitle(String text) {
     if (text.length > _maxLengthTitle) {
@@ -64,20 +63,19 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       return;
     }
 
-    final postModel = PostModel(
-      title: title,
-      content: content,
-      uid: widget.userId,
-      imageUrls: _imageUrls,
-      createdAt: DateTime.now(),
-    );
-
-    postBloc.add(PostSubmittedEvent(postModel));
+    // final postModel = PostModel(
+    //   title: title,
+    //   content: content,
+    //   imageUrls: _imageUrls,
+    //   createdAt: DateTime.now(),
+    // );
+    //
+    // postBloc.add(PostSubmittedEvent(postModel));
 
     _textControllerTitle.clear();
     _textControllerContents.clear();
     setState(() {
-      _imageUrls.clear();  // 이미지 리스트 초기화
+      _imageUrls.clear();
     });
 
     showDialog(

@@ -4,36 +4,33 @@ sealed class PostEvent {
   const PostEvent();
 }
 
+final class LoadPost extends PostEvent {}
+
+// 게시글 등록
+final class AddPost extends PostEvent {
+  final PostModel postModel;
+
+  AddPost(this.postModel);
+}
+
 // 게시글 수정
-final class PostContentChangedEvent extends PostEvent {
+final class UpdatePost extends PostEvent {
+  final String postId;
   final String title;
   final String content;
-  final String uid;
   final List<String> imageUrls;
 
-  PostContentChangedEvent(
-      this.title,
-      this.content,
-      this.uid,
-      this.imageUrls,
-      );
+  UpdatePost({
+    required this.postId,
+    required this.title,
+    required this.content,
+    required this.imageUrls,
+  });
 }
 
-// 게시글
-final class PostSubmittedEvent extends PostEvent {
-  final PostModel postModel;
+// 게시글 삭제
+final class DeletePost extends PostEvent {
+  final String postId;
 
-  PostSubmittedEvent(this.postModel);
-}
-
-// 게시글 수정
-final class PostUpdateEvent extends PostEvent {
-  final PostModel postModel;
-
-  PostUpdateEvent(this.postModel);
-}
-
-final class PostGetAllPostsEvent extends PostEvent {
-  final String uid;
-  PostGetAllPostsEvent(this.uid);
+  DeletePost({required this.postId});
 }
