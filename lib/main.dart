@@ -6,7 +6,6 @@ import 'package:lottoblog/data/bloc/post/post_bloc.dart';
 import 'package:lottoblog/data/bloc/signup/signup_bloc.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
-import 'package:lottoblog/service/firestore_service.dart';
 
 import 'data/bloc/login/login_bloc.dart';
 import 'data/repository/auth_repository.dart';
