@@ -13,7 +13,7 @@ final class PostInitialState extends PostState {
 
 // 갱신
 final class PostLoaded extends PostState{
-  PostLoaded(List<PostModel> postModel) : super (postModel: postModel);
+  PostLoaded({required List<PostModel> postModel}) : super (postModel: postModel);
 }
 
 

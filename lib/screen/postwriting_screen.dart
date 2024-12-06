@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/post/post_event.dart';
-import 'package:lottoblog/models/post_model.dart';
-import 'package:lottoblog/widget/imagepicker_widget.dart';
 
 import '../data/bloc/post/post_bloc.dart';
+import '../data/bloc/post/post_event.dart';
+import '../models/post_model.dart';
+import '../widget/imagepicker_widget.dart';
 
 class PostwritingScreen extends StatefulWidget {
 
@@ -63,20 +63,13 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       return;
     }
 
-    // final postModel = PostModel(
-    //   title: title,
-    //   content: content,
-    //   imageUrls: _imageUrls,
-    //   createdAt: DateTime.now(),
-    // );
-    //
-    // postBloc.add(PostSubmittedEvent(postModel));
-
-    _textControllerTitle.clear();
-    _textControllerContents.clear();
-    setState(() {
-      _imageUrls.clear();
-    });
+    postBloc.add(AddPost(PostModel(
+      postId: '',
+      title: title,
+      content: content,
+      imageUrls: _imageUrls,
+      uid: '',
+    )));
 
     showDialog(
         context: context,

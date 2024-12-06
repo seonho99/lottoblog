@@ -6,6 +6,7 @@ import 'package:lottoblog/data/bloc/post/post_bloc.dart';
 import 'package:lottoblog/data/bloc/signup/signup_bloc.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
+import 'package:lottoblog/service/firestore_service.dart';
 
 import 'data/bloc/login/login_bloc.dart';
 import 'data/repository/auth_repository.dart';
@@ -43,10 +44,9 @@ class MyApp extends StatelessWidget {
         signUpBloc = signUpBloc ??
             SignUpBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         emailResetPasswordBloc = emailResetPasswordBloc ??
-            EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService())), // 수정
-        postRepository = postRepository ?? PostRepository(FireStoreService()),
-        postBloc = postBloc ??
-            PostBloc(postRepository ?? PostRepository(FireStoreService()));
+            EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+        postRepository = postRepository ?? PostRepository(FirestoreService()),
+        postBloc = postBloc ?? PostBloc(postRepository: PostRepository(FirestoreService()));
 
   @override
   Widget build(BuildContext context) {

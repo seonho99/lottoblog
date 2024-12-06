@@ -3,10 +3,14 @@ import '../../service/firebase_auth_service.dart';
 import '../../service/firestore_service.dart';
 
 class PostRepository {
-  FirestoreService _firestoreService = FirestoreService();
+  FirestoreService _firestoreService;
   FirebaseAuthService auth = FirebaseAuthService();
 
+  PostRepository(this._firestoreService);
+
   final List<PostModel> _postmodel = [];
+
+  List<PostModel> get postmodel => _postmodel;
 
   // 게시글 생성
   Future<void> addPost(PostModel postmodel) async {

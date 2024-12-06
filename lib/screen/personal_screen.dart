@@ -44,7 +44,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         height: 70,
                         decoration: BoxDecoration(
                           border:
-                              Border.all(width: 1, color: Colors.black54),
+                              Border.all(width: 1, color: Colors.grey.shade300),
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               image: profileImgaeURL != null

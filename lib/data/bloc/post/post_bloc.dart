@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottoblog/models/post_model.dart';
 
 import '../../repository/post_repository.dart';
 import 'post_event.dart';
@@ -8,52 +9,55 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository postRepository;
 
   PostBloc({required this.postRepository}) : super(PostInitialState()) {
+    on<LoadPost>(_onLoadPostEvent);
+    on<AddPost>(_onAddPostEvent);
+    on<UpdatePost>(_onUpdatePostEvent);
+    on<DeletePost>(_onDeletePostEvent);
+  }
 
-    on<LoadPost>((event, emit) async {
+  Future<void> _onLoadPostEvent(LoadPost event, Emitter<PostState> emit) async {
+    try {
+      await postRepository.fetchAllPosts();
+      emit(PostLoaded(postModel: postRepository.postmodel));
+    } catch (e) {
+      print('Error loading posts: $e');
+    }
+}
 
-        List<PostModel> postModel = await postRepository.fetchAllPosts(event.uid);
-        await Future.delayed(Duration(seconds: 2));
-        emit(PostLoaded(postModel));
+  Future<void> _onAddPostEvent(AddPost event, Emitter<PostState> emit) async {
+    try {
+      await postRepository.addPost(event.postModel);
+      await postRepository.fetchAllPosts();
+      emit(PostLoaded(postModel:postRepository.postmodel));
+    } catch (e) {
+      print('Error adding post: $e');
+    }
+  }
 
-    });
-
-    on<AddPost>((event, emit) async {
-      try {
-        await postRepository.addPost(event.postModel);
-        List<PostModel> updatedPosts = await postRepository.fetchAllPosts();
-        emit(PostLoaded(updatedPosts));
-      } catch (e) {
-        emit(PostInitialState());
-      }
-    });
-
-    on<UpdatePost>((event, emit) async {
-      try {
-        PostModel updatedPost = PostModel(
-          postId: event.postId,
+  Future<void> _onUpdatePostEvent(UpdatePost event, Emitter<PostState> emit) async {
+    try {
+      PostModel updatedPost = PostModel(
+        postId: event.postId,
           title: event.title,
           content: event.content,
-          imageUrls: event.imageUrls,
-          createdAt: DateTime.now(),
-        );
-        await postRepository.updatePost(updatedPost);
-
-        List<PostModel> updatedPosts = await postRepository.fetchAllPosts();
-        emit(PostLoaded(updatedPosts));
-      } catch (e) {
-        emit(PostInitialState());
-      }
-    });
-
-    on<DeletePost>((event, emit) async {
-      try {
-        await postRepository.deletePost(event.postId);
-
-        List<PostModel> updatedPosts = await postRepository.fetchAllPosts();
-        emit(PostLoaded(updatedPosts));
-      } catch (e) {
-        emit(PostInitialState());
-      }
-    });
+        imageUrls: event.imageUrls,
+      );
+      await postRepository.updatePost(updatedPost);
+      await postRepository.fetchAllPosts();
+      emit(PostLoaded(postModel: postRepository.postmodel));
+    } catch (e) {
+      print('Error updating post: $e');
+    }
   }
+
+  Future<void> _onDeletePostEvent(DeletePost event, Emitter<PostState> emit) async {
+    try {
+      await postRepository.deletePost(event.postId);
+      await postRepository.fetchAllPosts();
+      emit(PostLoaded(postModel: postRepository.postmodel));
+    } catch (e) {
+      print('Error deleting post: $e');
+    }
+  }
+
 }
