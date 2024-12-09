@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/post_model.dart';
 
 class FirestoreService {
@@ -7,7 +8,6 @@ class FirestoreService {
   // 게시글 생성
   Future<void> createPost(PostModel postmodel) async {
     final postCollection = _fs.collection('posts');
-
     try {
       final docRef = await postCollection.add(postmodel.toMap());
       await docRef.update({'postId': docRef.id});
@@ -20,28 +20,20 @@ class FirestoreService {
     }
   }
 
-  Future<PostModel> readPost(String postId) async {
-    final postCollection = _fs.collection('posts');
-    final documentSnapshot = await postCollection.doc(postId).get();
-    if (!documentSnapshot.exists) {
-      throw Exception('해당 게시글을 찾을 수 없습니다.');
-    }
-    final mapData = documentSnapshot.data()!;
-    return PostModel.fromMap(mapData);
-  }
-
   // 전체
-  Future<List<PostModel>> fetchAllPosts({required String postId}) async {
+  Future<List<PostModel>> fetchAllPosts() async {
     final _postCollection = _fs.collection('posts');
     List<PostModel> returnData = [];
 
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _postCollection.where('postId', isEqualTo: postId).get();
+      await _postCollection
+          .where('postId')
+          .get();
 
       final queryDocumentSnapshot = querySnapshot.docs;
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-          in queryDocumentSnapshot) {
+      in queryDocumentSnapshot) {
         returnData.add(PostModel.fromMap(doc.data()));
       }
     } catch (e) {
@@ -50,6 +42,26 @@ class FirestoreService {
     }
     return returnData;
   }
+
+  Future<PostModel> readPost(String postId) async {
+    final postCollection = _fs.collection('posts');
+
+    try {
+      final documentSnapshot = await postCollection
+          .where('postId')
+          .get();
+      if (documentSnapshot.docs.isEmpty) {
+        throw Exception('해당 게시글을 찾을 수 없습니다.');
+      }
+      final mapData = documentSnapshot.docs.first.data();
+      return PostModel.fromMap(mapData);
+    } catch (e) {
+      print('Error reading post: $e');
+      throw Exception('게시글을 읽어오는 데 실패했습니다.');
+    }
+  }
+
+
 
   Future<void> updatePost(PostModel postmodel) async {
     final _postCollection = _fs.collection('posts');

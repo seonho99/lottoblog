@@ -34,3 +34,11 @@ final class DeletePost extends PostEvent {
 
   DeletePost({required this.postId});
 }
+
+final class readPost extends PostEvent {
+  final String postId;
+
+  readPost({required this.postId});
+}
+
+

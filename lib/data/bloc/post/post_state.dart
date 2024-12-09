@@ -11,9 +11,17 @@ final class PostInitialState extends PostState {
 }
 
 
+final class PostLoading extends PostState {
+  PostLoading() : super(postModel: []);
+}
+
 // 갱신
 final class PostLoaded extends PostState{
   PostLoaded({required List<PostModel> postModel}) : super (postModel: postModel);
 }
 
 
+final class PostError extends PostState {
+  final String message;
+  PostError({required this.message}) : super(postModel: []);
+}
