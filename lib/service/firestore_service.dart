@@ -5,6 +5,7 @@ import '../models/post_model.dart';
 class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
 
+
   // 게시글 생성
   Future<void> createPost(PostModel postmodel) async {
     final postCollection = _fs.collection('posts');

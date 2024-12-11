@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../models/post_model.dart';
 import '../../service/firebase_auth_service.dart';
 import '../../service/firestore_service.dart';
@@ -6,6 +8,7 @@ import '../../service/firestore_service.dart';
 // 로그인하고 posts를 작성
 // 컬렉션에 posts에 uid가 같은것만 가져오겠다
 
+final String currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
 class PostRepository {
   final FirestoreService _firestoreService;

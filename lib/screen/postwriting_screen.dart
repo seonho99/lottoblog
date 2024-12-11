@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../data/bloc/post/post_bloc.dart';
 import '../data/bloc/post/post_event.dart';
+import '../data/repository/post_repository.dart';
 import '../models/post_model.dart';
 import '../widget/imagepicker_widget.dart';
 
@@ -68,7 +69,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       title: title,
       content: content,
       imageUrls: _imageUrls,
-      uid: '',
+      uid: currentUserUid,
     )));
 
     showDialog(
