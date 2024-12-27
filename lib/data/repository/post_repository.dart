@@ -1,82 +1,56 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottoblog/service/firestore_service.dart';
 
 import '../../models/post_model.dart';
-import '../../service/firebase_auth_service.dart';
-import '../../service/firestore_service.dart';
 
-// 컬렉션의 posts에 모든 파일을 가져오겠다
-// 로그인하고 posts를 작성
-// 컬렉션에 posts에 uid가 같은것만 가져오겠다
-
-final String currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
 class PostRepository {
   final FirestoreService _firestoreService;
-  FirebaseAuthService auth = FirebaseAuthService();
 
   PostRepository(this._firestoreService);
 
-  final List<PostModel> _postModels = [];
-
-
-  List<PostModel> get postModel => _postModels;
-
   // 게시글 생성
-  Future<void> addPost(PostModel postModel) async {
-    postModel.uid = auth.user?.uid;
-
+  Future<void> createPost(PostModel postmodel) async {
     try {
-      await _firestoreService.createPost(postModel);
-      _postModels.add(postModel);
+      await _firestoreService.createPost(postmodel);
     } catch (e) {
-      rethrow;
+      throw Exception('게시글 생성에 실패했습니다.: $e');
     }
   }
 
-  Future<void> fetchAllPosts() async {
-    if(auth.user == null) return;
+  Future<PostModel> readPost(String postId) async {
     try {
-      final List<PostModel> fetchPosts = await _firestoreService
-          .fetchAllPosts();
-      _postModels.addAll(fetchPosts);
+      return await _firestoreService.readPost(postId);
     } catch (e) {
-     rethrow;
+      throw Exception('게시글을 읽어오는데 실패했습니다.: $e');
     }
   }
 
-  Future<void> readPost(String postId) async {
-    if(auth.user == null) return;
+  Future<List<PostModel>> fetchAllPosts({required String uid}) async {
     try {
-      final PostModel readPost = await _firestoreService.readPost(postId);
-    } catch (e) {
-      rethrow;
+      return await _firestoreService.fetchAllPosts(uid: uid);
+    }catch(e){
+      throw Exception('게시글을 가져오는데 실패했습니다.: $e');
     }
+
   }
 
 
 // 게시글 수정
-  Future<void> updatePost(PostModel postModel) async {
-    if (postModel.postId == null || postModel.postId!.isEmpty) {
-      throw Exception('postId가 없습니다.');
-    }
+  Future<void> updatePost(PostModel postmodel) async {
     try {
-      await _firestoreService.updatePost(postModel);
+      await _firestoreService.updatePost(postmodel);
     } catch (e) {
-      rethrow;
+      throw Exception('게시글을 가져오는데 실패했습니다.: $e');
     }
   }
 
 
 // 게시글 삭제
   Future<void> deletePost(String postId) async {
-    if (postId.isEmpty) {
-      throw Exception('삭제할 게시글 ID가 없습니다.');
-    }
     try {
       await _firestoreService.deletePost(postId);
-    } catch (e){
-      rethrow;
+    } catch (e) {
+      throw Exception('게시글을 삭제하는데 실패했습니다.: $e');
     }
-
   }
 }

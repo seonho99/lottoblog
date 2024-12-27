@@ -1,16 +1,18 @@
 import '../../../models/post_model.dart';
 
-sealed class PostEvent {
-  const PostEvent();
+sealed class PostEvent {}
+
+final class LoadPost extends PostEvent {
+  final String uid;
+
+  LoadPost({required this.uid});
 }
 
-final class LoadPost extends PostEvent {}
-
 // 게시글 등록
-final class AddPost extends PostEvent {
-  final PostModel postModel;
+final class CreatePost extends PostEvent {
+  final PostModel postmodel;
 
-  AddPost(this.postModel);
+  CreatePost(this.postmodel);
 }
 
 // 게시글 수정
@@ -35,10 +37,10 @@ final class DeletePost extends PostEvent {
   DeletePost({required this.postId});
 }
 
-final class readPost extends PostEvent {
+final class ReadPost extends PostEvent {
   final String postId;
 
-  readPost({required this.postId});
+  ReadPost({required this.postId});
 }
 
 

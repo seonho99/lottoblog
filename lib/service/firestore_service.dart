@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/post_model.dart';
+import 'package:lottoblog/models/post_model.dart';
 
 class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
 
-
   // 게시글 생성
+
   Future<void> createPost(PostModel postmodel) async {
     final postCollection = _fs.collection('posts');
+
     try {
       final docRef = await postCollection.add(postmodel.toMap());
       await docRef.update({'postId': docRef.id});
@@ -21,40 +22,17 @@ class FirestoreService {
     }
   }
 
-  // 전체
-  Future<List<PostModel>> fetchAllPosts() async {
-    final _postCollection = _fs.collection('posts');
-    List<PostModel> returnData = [];
-
-    try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await _postCollection
-          .where('postId')
-          .get();
-
-      final queryDocumentSnapshot = querySnapshot.docs;
-      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in queryDocumentSnapshot) {
-        returnData.add(PostModel.fromMap(doc.data()));
-      }
-    } catch (e) {
-      print('Firestore fetch error: $e');
-      throw Exception('게시글 가져오는데 실패 했습니다.');
-    }
-    return returnData;
-  }
-
   Future<PostModel> readPost(String postId) async {
     final postCollection = _fs.collection('posts');
 
     try {
-      final documentSnapshot = await postCollection
-          .where('postId')
-          .get();
-      if (documentSnapshot.docs.isEmpty) {
+      final documentSnapshot = await postCollection.doc(postId).get();
+
+      if (!documentSnapshot.exists) {
         throw Exception('해당 게시글을 찾을 수 없습니다.');
       }
-      final mapData = documentSnapshot.docs.first.data();
+
+      final mapData = documentSnapshot.data()!;
       return PostModel.fromMap(mapData);
     } catch (e) {
       print('Error reading post: $e');
@@ -63,9 +41,34 @@ class FirestoreService {
   }
 
 
+  // 전체
+  Future<List<PostModel>> fetchAllPosts({required String uid}) async {
+    final _postCollection = _fs.collection('posts');
+    List<PostModel> returnData = [];
+
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await _postCollection
+          .where('uid',isEqualTo: uid)
+          .get();
+
+      final queryDocumentSnapshot = querySnapshot.docs;
+
+      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+      in queryDocumentSnapshot) {
+        returnData.add(PostModel.fromMap(doc.data()));
+      }
+    } catch (e) {
+      print('Firestore fetch error: $e');
+      throw Exception('게시글을 가져오는데 실패 했습니다.');
+    }
+    return returnData;
+  }
+
 
   Future<void> updatePost(PostModel postmodel) async {
     final _postCollection = _fs.collection('posts');
+
     if (postmodel.postId == null || postmodel.postId!.isEmpty) {
       throw Exception('postId가 없습니다');
     }
@@ -86,8 +89,7 @@ class FirestoreService {
       final documentReference = _postCollection.doc(postId);
       await documentReference.delete();
     } catch (e) {
-      print('게시글 삭제 실패: $e');
-      throw Exception('게시글 삭제에 실패했습니다.');
+      throw Exception('게시글 삭제에 실패했습니다.:$e');
     }
   }
 }

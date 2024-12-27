@@ -1,27 +1,23 @@
-import '../../../models/post_model.dart';
+import 'package:lottoblog/models/post_model.dart';
 
 sealed class PostState {
-  final List<PostModel> postModel;
-  PostState({required this.postModel});
+  final List<PostModel> postmodel;
+
+  PostState({required this.postmodel});
 }
 
-// 초기
-final class PostInitialState extends PostState {
-  PostInitialState(): super(postModel:[]);
+// 초기 상태
+final class PostInitial extends PostState {
+  PostInitial() : super(postmodel: []);
 }
 
-
+// 로딩 상태
 final class PostLoading extends PostState {
-  PostLoading() : super(postModel: []);
+  PostLoading() : super(postmodel: []);
 }
 
-// 갱신
-final class PostLoaded extends PostState{
-  PostLoaded({required List<PostModel> postModel}) : super (postModel: postModel);
+// 게시글 갱신 상태
+final class PostLoaded extends PostState {
+  PostLoaded(List<PostModel> postmodel) : super(postmodel: postmodel);
 }
 
-
-final class PostError extends PostState {
-  final String message;
-  PostError({required this.message}) : super(postModel: []);
-}
