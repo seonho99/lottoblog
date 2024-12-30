@@ -1,117 +1,71 @@
 import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImagePickerWidget extends StatefulWidget {
-  final Function(List<String>) onImageSelected;
-
-  const ImagePickerWidget({super.key, required this.onImageSelected});
+class ImagepickerWidget extends StatefulWidget {
+  const ImagepickerWidget({super.key});
 
   @override
-  State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
+  State<ImagepickerWidget> createState() => _ImagepickerWidgetState();
 }
 
-class _ImagePickerWidgetState extends State<ImagePickerWidget> {
-  List<XFile> _images = [];
-  final ImagePicker picker = ImagePicker();
+class _ImagepickerWidgetState extends State<ImagepickerWidget> {
+  ImagePicker picker = ImagePicker();
+  File? selectedImage;
 
-  Future<void> getImages(ImageSource imageSource) async {
-    if (_images.length < 3) {
-      final List<XFile>? pickedFiles = await picker.pickMultiImage();
-      if (pickedFiles != null) {
-        setState(() {
-          _images.addAll(pickedFiles);
-          if (_images.length > 3) {
-            _images = _images.sublist(0, 3);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('최대 3장까지 선택할 수 있습니다.')),
-            );
-          }
-        });
-        widget.onImageSelected(_images.map((e) => e.path).toList());
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('최대 3장까지 선택할 수 있습니다.')),
-      );
+  Future<void> pickImageFromGallery() async {
+    var image = await picker.pickImage(source: ImageSource.gallery);
+    if(image != null){
+      setState(() {
+        selectedImage = File(image.path);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 30, width: double.infinity),
-        _buildPhotoArea(),
-        SizedBox(height: 20),
-        _buildButton(),
-      ],
-    );
-  }
-
-  Widget _buildPhotoArea() {
-    return _images.isNotEmpty
-        ? Container(
-            height: 100,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 1,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-              ),
-              itemCount: _images.length,
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 100,
-                      child: Image.file(
-                        File(_images[index].path),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      right: 5,
-                      top: 5,
-                      child: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.grey),
-                        onPressed: () => _removeImage(index),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          )
-        : Center(child: Text('선택한 이미지가 없습니다.'));
-  }
-
-  Widget _buildButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            getImages(ImageSource.gallery);
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-          child: Text('사진/이미지', style: Theme.of(context).textTheme.titleSmall),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.check)),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _selectedImage(),
+            _imageGallery(),
+          ],
         ),
-        // SizedBox(width: 10),
-        // ElevatedButton(onPressed: (){
-        //   getImages(ImageSource.camera);
-        // },
-        //     style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-        //     child: Text('카메라', style: Theme.of(context).textTheme.titleSmall),),
-      ],
+      ),
     );
   }
 
-  void _removeImage(int index){
-    setState(() {
-      _images.removeAt(index);
-    });
+  Widget _selectedImage() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width,
+      color: Colors.black,
+      child: Center(
+        child: (selectedImage == null) ? Icon(Icons.image_not_supported,color: Colors.white,size: 100)
+        : Image.file(selectedImage!,fit: BoxFit.fill),
+      ),
+    );
+  }
+
+  Widget _imageGallery() {
+    return GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 1.0,
+            crossAxisSpacing: 1.0,
+            crossAxisCount: 3),
+        itemCount: 30,
+        itemBuilder: (context, index) => Container(
+          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+        ));
   }
 }

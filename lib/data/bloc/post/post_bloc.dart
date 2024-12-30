@@ -12,25 +12,31 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc(this.postRepository) : super(PostInitial()) {
 
     on<LoadPost>((event, emit) async {
-      List<PostModel> postmodel = await postRepository.fetchAllPosts(uid: event.uid);
+      List<PostModel> postLists = await postRepository.fetchAllPosts(uid: event.uid);
       await Future.delayed(Duration(seconds: 2));
-      emit(PostLoaded(postmodel));
+      emit(PostLoaded(postLists));
     });
 
     on<CreatePost>((event, emit) async {
-      List<PostModel> postmodel = state.postmodel;
+      List<PostModel> postLists = state.postmodel;
       postRepository.createPost(event.postmodel);
-      postmodel.add(event.postmodel);
-      emit(PostLoaded(postmodel));
+      postLists.add(event.postmodel);
+      emit(PostLoaded(postLists));
     });
 
     on<UpdatePost>((event, emit) async {
-      List<PostModel> postmodel = state.postmodel;
-      postRepository.updatePost(postmodel[event.postId]);
-      emit(PostLoaded(postmodel));
+      List<PostModel> postLists = state.postmodel;
+      int index = int.parse(event.postId);
+      postRepository.updatePost(postLists[index]);
+      emit(PostLoaded(postLists));
     });
 
-    on<DeletePost>((event, emit) async {});
+    on<DeletePost>((event, emit) async {
+      List<PostModel> postLists = state.postmodel;
+      postRepository.deletePost(event.postId);
+      emit(PostLoaded(postLists));
+
+    });
   }
 
 

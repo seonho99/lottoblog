@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../data/bloc/post/post_bloc.dart';
-import '../data/bloc/post/post_event.dart';
-import '../data/repository/post_repository.dart';
-import '../models/post_model.dart';
-import '../widget/imagepicker_widget.dart';
+import 'package:lottoblog/widget/imagepicker_widget.dart';
 
 class PostwritingScreen extends StatefulWidget {
-
   const PostwritingScreen({super.key});
 
   @override
@@ -20,75 +13,24 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
 
-  final int _maxLengthTitle = 30;
-  final int _maxLengthContents = 200;
-  List<String> _imageUrls = [];
-
   void _onChangedTitle(String text) {
-    if (text.length > _maxLengthTitle) {
+    if (text.length > 30) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('제목이 30자를 넘겼습니다.')),
       );
-      _textControllerTitle.text = text.substring(0, _maxLengthTitle);
-      _textControllerTitle.selection =
-          TextSelection.collapsed(offset: _maxLengthTitle);
+      _textControllerTitle.text = text.substring(0, 30);
+      _textControllerTitle.selection = TextSelection.collapsed(offset: 30);
     }
   }
 
   void _onChangedContent(String text) {
-    if (text.length > _maxLengthContents) {
+    if (text.length > 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('내용이 200자를 넘겼습니다.')),
       );
-      _textControllerContents.text = text.substring(0, _maxLengthContents);
-      _textControllerContents.selection =
-          TextSelection.collapsed(offset: _maxLengthContents);
+      _textControllerContents.text = text.substring(0, 200);
+      _textControllerContents.selection = TextSelection.collapsed(offset: 200);
     }
-  }
-
-  void _onImageSelected(List<String> selectedImageUrls) {
-    setState(() {
-      _imageUrls = selectedImageUrls;
-    });
-  }
-
-  void _submitPost() {
-    final postBloc = BlocProvider.of<PostBloc>(context);
-    final title = _textControllerTitle.text;
-    final content = _textControllerContents.text;
-
-    if (title.isEmpty || content.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('제목과 내용 모두 입력해야 합니다.')),
-      );
-      return;
-    }
-
-    postBloc.add(AddPost(PostModel(
-      postId: '',
-      title: title,
-      content: content,
-      imageUrls: _imageUrls,
-      uid: currentUserUid,
-    )));
-
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Text('성공'),
-            content: Text('게시글이 작성되었습니다'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('확인'),
-              ),
-            ],
-          );
-        });
   }
 
   @override
@@ -97,9 +39,35 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
-        title: Text(
-          '블로그 작성',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ImagepickerWidget()),
+                );
+              },
+              icon: Icon(Icons.photo_camera_outlined, size: 40),
+            ),
+            SizedBox(width: 20),
+            ElevatedButton(
+              onPressed: () {
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xff05D686),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text(
+                '등록',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white, fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
         ),
       ),
       resizeToAvoidBottomInset: true,
@@ -116,50 +84,48 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                   keyboardType: TextInputType.text,
                   onChanged: _onChangedTitle,
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(_maxLengthTitle),
+                    LengthLimitingTextInputFormatter(30),
                   ],
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge
+                      ?.copyWith(color: Colors.black),
                   decoration: InputDecoration(
-                      labelText: '제목',
-                      labelStyle: Theme.of(context).textTheme.headlineSmall,
-                      border: UnderlineInputBorder(),
+                      hintText: '제목',
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .headlineLarge
+                          ?.copyWith(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w800),
+                      border: InputBorder.none,
                       floatingLabelBehavior: FloatingLabelBehavior.always),
                 ),
-                ImagePickerWidget(onImageSelected: _onImageSelected),  // 이미지 선택 처리
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.black54),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: TextField(
-                        maxLines: 14,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(height: 1.6),
-                        keyboardType: TextInputType.text,
-                        controller: _textControllerContents,
-                        onChanged: _onChangedContent,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(200),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: '내용을 작성 해주세요.',
-                          border: InputBorder.none,
-                          hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black54),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: _submitPost,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: Text("게시글 작성",
-                      style: Theme.of(context).textTheme.titleSmall),
+                SizedBox(height: 10),
+                Divider(color: Colors.black54),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: _textControllerContents,
+                  keyboardType: TextInputType.text,
+                  onChanged: _onChangedContent,
+                  maxLines: null,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(200),
+                  ],
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(color: Colors.black,height: 1.6),
+                  decoration: InputDecoration(
+                      hintText: '내용을 입력해주세요',
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w600),
+                      border: InputBorder.none,
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
                 ),
               ],
             ),
