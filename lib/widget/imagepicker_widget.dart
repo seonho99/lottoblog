@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,12 +13,14 @@ class ImagepickerWidget extends StatefulWidget {
 class _ImagepickerWidgetState extends State<ImagepickerWidget> {
   ImagePicker picker = ImagePicker();
   File? selectedImage;
+  List<File> selectedImages = [];
 
   Future<void> pickImageFromGallery() async {
     var image = await picker.pickImage(source: ImageSource.gallery);
-    if(image != null){
+    if (image != null) {
       setState(() {
         selectedImage = File(image.path);
+        selectedImages.add(selectedImage!);
       });
     }
   }
@@ -35,10 +36,13 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _selectedImage(),
-            _imageGallery(),
-          ],
+            // _selectedImage(),
+            _imageGallery()],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: pickImageFromGallery,
+        child: Icon(Icons.add_a_photo),
       ),
     );
   }
@@ -49,8 +53,9 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
       height: MediaQuery.of(context).size.width,
       color: Colors.black,
       child: Center(
-        child: (selectedImage == null) ? Icon(Icons.image_not_supported,color: Colors.white,size: 100)
-        : Image.file(selectedImage!,fit: BoxFit.fill),
+        child: (selectedImage == null)
+            ? Icon(Icons.image_not_supported, color: Colors.white, size: 100)
+            : Image.file(selectedImage!, fit: BoxFit.fill),
       ),
     );
   }
@@ -60,12 +65,16 @@ class _ImagepickerWidgetState extends State<ImagepickerWidget> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: 1.0,
-            crossAxisSpacing: 1.0,
-            crossAxisCount: 3),
-        itemCount: 30,
-        itemBuilder: (context, index) => Container(
-          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-        ));
+            mainAxisSpacing: 1.0, crossAxisSpacing: 1.0, crossAxisCount: 3),
+        itemCount: selectedImages.length,
+        itemBuilder: (context, index) {
+          return Container(
+            color: Colors.black,
+            child: Image.file(
+              selectedImages[index],
+              fit: BoxFit.cover,
+            ),
+          );
+        });
   }
 }

@@ -1,6 +1,15 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottoblog/widget/imagepicker_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:lottoblog/models/post_model.dart';
+import 'package:lottoblog/service/firebase_storage_service.dart';
+
+import '../data/bloc/post/post_bloc.dart';
+import '../data/bloc/post/post_event.dart';
 
 class PostwritingScreen extends StatefulWidget {
   const PostwritingScreen({super.key});
@@ -9,9 +18,15 @@ class PostwritingScreen extends StatefulWidget {
   State<PostwritingScreen> createState() => _PostwritingScreenState();
 }
 
+
 class _PostwritingScreenState extends State<PostwritingScreen> {
+  ImagePicker picker = ImagePicker();
+  File? selectedImage;
+  List<File> selectedImages = [];
+
   final TextEditingController _textControllerTitle = TextEditingController();
   final TextEditingController _textControllerContents = TextEditingController();
+  final FirebaseStorageService _storageService = FirebaseStorageService();
 
   void _onChangedTitle(String text) {
     if (text.length > 30) {
@@ -33,6 +48,102 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
     }
   }
 
+  Future<void> pickImageFromGallery() async {
+    var image = await picker.pickImage(source: ImageSource.gallery);
+    if(image != null){
+      setState(() {
+        selectedImage = File(image.path);
+        selectedImages.add(selectedImage!);
+      });
+    }
+  }
+
+  void _removeImage(int index){
+    setState(() {
+      selectedImages.removeAt(index);
+    });
+  }
+
+
+
+  Widget _imageGallery(){
+    return GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+        crossAxisSpacing: 1.0,
+        mainAxisSpacing: 1.0),
+      itemCount: selectedImages.length,
+      itemBuilder: (context, index) {
+          return Stack(
+            children: [
+              Container(
+                color: Colors.black,
+                width: double.infinity,
+                height: MediaQuery.of(context).size.width*0.8,
+                child: Image.file(selectedImages[index],
+                fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                right: 5,
+                  top: 5,
+                  child: IconButton(
+                      onPressed: ()=> _removeImage(index),
+                      icon: Icon(Icons.delete,color: Colors.grey,)))
+            ],
+          );
+      },
+    );
+  }
+
+  void _clearFields(){
+
+    setState(() {
+      _textControllerTitle.clear();
+      _textControllerContents.clear();
+      selectedImages.clear();
+    });
+  }
+
+  Future<List<String>> uploadImages() async {
+    List<String> imageUrls = await _storageService.uploadImages(selectedImages);
+    return imageUrls;
+  }
+
+  void _submitPost() async {
+    String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    List<String> imageUrls = await uploadImages();
+
+    if(_textControllerTitle.text.trim().isEmpty || _textControllerContents.text.trim().isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('제목과 내용을 입력해주세요.'))
+      );
+      return ;
+    }
+
+    final postModel = PostModel(
+      title: _textControllerTitle.text.trim(),
+      content: _textControllerContents.text.trim(),
+      imageUrls: imageUrls,
+      createdAt: DateTime.now(),
+      uid: uid,
+      likeCount: 0,
+      reportCount: 0,
+      postId: '',
+    );
+
+    context.read<PostBloc>().add(CreatePost(postmodel: postModel));
+
+    _clearFields();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('게시물이 등록되었습니다.'))
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,18 +154,12 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ImagepickerWidget()),
-                );
-              },
-              icon: Icon(Icons.photo_camera_outlined, size: 40),
+              onPressed: pickImageFromGallery,
+              icon: Icon(Icons.add_a_photo_outlined, size: 45),
             ),
             SizedBox(width: 20),
             ElevatedButton(
-              onPressed: () {
-              },
+              onPressed: _submitPost,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xff05D686),
                 shape: RoundedRectangleBorder(
@@ -67,6 +172,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                     color: Colors.white, fontWeight: FontWeight.w800),
               ),
             ),
+
           ],
         ),
       ),
@@ -127,6 +233,8 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
                       border: InputBorder.none,
                       floatingLabelBehavior: FloatingLabelBehavior.always),
                 ),
+                SizedBox(height: 20),
+                _imageGallery(),
               ],
             ),
           ),

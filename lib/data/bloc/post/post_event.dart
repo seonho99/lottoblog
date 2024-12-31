@@ -12,7 +12,7 @@ final class LoadPost extends PostEvent {
 final class CreatePost extends PostEvent {
   final PostModel postmodel;
 
-  CreatePost(this.postmodel);
+  CreatePost({required this.postmodel});
 }
 
 // 게시글 수정
