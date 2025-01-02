@@ -2,11 +2,7 @@ import '../../../models/post_model.dart';
 
 sealed class PostEvent {}
 
-final class LoadPost extends PostEvent {
-  final String uid;
-
-  LoadPost({required this.uid});
-}
+final class LoadPost extends PostEvent {}
 
 // 게시글 등록
 final class CreatePost extends PostEvent {
@@ -43,4 +39,9 @@ final class ReadPost extends PostEvent {
   ReadPost({required this.postId});
 }
 
+final class FetchAllPosts extends PostEvent {
+  final String uid;
+
+  FetchAllPosts({required this.uid});
+}
 

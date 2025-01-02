@@ -1,4 +1,5 @@
-import 'package:lottoblog/models/post_model.dart';
+
+import '../../../models/post_model.dart';
 
 sealed class PostState {
   final List<PostModel> postmodel;
