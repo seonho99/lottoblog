@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
-import 'package:lottoblog/data/bloc/post/post_event.dart';
+import 'package:lottoblog/data/repository/post_repository.dart';
+import 'package:lottoblog/service/firestore_service.dart';
 
+
+import '../data/bloc/post/post_state.dart';
 import '../widget/popupmenubotton_widget.dart';
 
 class MainhomeScreen extends StatefulWidget {
@@ -14,11 +17,7 @@ class MainhomeScreen extends StatefulWidget {
 }
 
 class _MainhomeScreenState extends State<MainhomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<PostBloc>().postRepository.readPost(postId);
-  }
+  final PostBloc _postBloc = PostBloc(PostRepository(FirestoreService()));
 
   @override
   Widget build(BuildContext context) {

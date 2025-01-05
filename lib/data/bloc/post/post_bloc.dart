@@ -27,7 +27,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<ReadPost>((event, emit) async {
       PostModel post = await postRepository.readPost(event.postId);
       List<PostModel> postLists = [post];
-      await Future.delayed(Duration(seconds: 2));
       emit(PostLoaded(postLists));
     });
 

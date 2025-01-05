@@ -5,8 +5,27 @@ import 'package:lottoblog/models/post_model.dart';
 class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
 
-  // 게시글 생성
 
+  Future<String?> getPostId(String postId) async {
+    try {
+      DocumentReference docRef = _fs.collection('posts').doc(postId);
+
+      DocumentSnapshot docSnapshot = await docRef.get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot['postId'];
+      } else {
+        print('문서가 존재하지 않습니다.');
+        return null;
+      }
+    } catch (e) {
+      print('오류 발생: $e');
+      return null;
+    }
+  }
+
+
+  // 게시글 생성
   Future<void> createPost(PostModel postmodel) async {
     final postCollection = _fs.collection('posts');
 

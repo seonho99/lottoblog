@@ -21,4 +21,3 @@ final class PostLoading extends PostState {
 final class PostLoaded extends PostState {
   PostLoaded(List<PostModel> postmodel) : super(postmodel: postmodel);
 }
-
