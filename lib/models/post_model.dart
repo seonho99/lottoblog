@@ -39,7 +39,7 @@ final class PostModel {
       postId: map['postId'],
       title: map['title'],
       content: map['content'],
-      imageUrls: map['imageUrls'] ?? [],
+      imageUrls: List<String>.from(map['imageUrls'] as List),
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       uid: map['uid'],
       likeCount: map['likeCount'] ?? 0,

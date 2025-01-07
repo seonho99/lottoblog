@@ -123,7 +123,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       return ;
     }
 
-    final postModel = PostModel(
+    final posts = PostModel(
       title: _textControllerTitle.text.trim(),
       content: _textControllerContents.text.trim(),
       imageUrls: imageUrls,
@@ -134,7 +134,7 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       postId: '',
     );
 
-    context.read<PostBloc>().add(CreatePost(postmodel: postModel));
+    context.read<PostBloc>().add(CreatePost(posts: posts));
 
     _clearFields();
 

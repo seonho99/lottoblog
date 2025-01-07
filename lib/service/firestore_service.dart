@@ -85,14 +85,14 @@ class FirestoreService {
   }
 
 
-  Future<void> updatePost(PostModel postmodel) async {
+  Future<void> updatePost(PostModel posts) async {
     final _postCollection = _fs.collection('posts');
 
-    if (postmodel.postId == null || postmodel.postId!.isEmpty) {
+    if (posts.postId == null || posts.postId!.isEmpty) {
       throw Exception('postId가 없습니다');
     }
     try {
-      await _postCollection.doc(postmodel.postId).update(postmodel.toMap());
+      await _postCollection.doc(posts.postId).update(posts.toMap());
     } catch (e) {
       throw Exception('update 실패: $e');
     }

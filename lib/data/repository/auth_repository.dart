@@ -6,6 +6,10 @@ class AuthRepository {
 
   AuthRepository(this._firebaseAuthService);
 
+  String? getUid(){
+    return _firebaseAuthService.user?.uid;
+  }
+
   bool isLoggedIn() {
     return _firebaseAuthService.user != null;
   }

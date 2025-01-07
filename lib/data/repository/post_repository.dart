@@ -8,10 +8,12 @@ class PostRepository {
 
   PostRepository(this._firestoreService);
 
+
+
   // 게시글 생성
-  Future<void> createPost(PostModel postmodel) async {
+  Future<void> createPost(PostModel posts) async {
     try {
-      await _firestoreService.createPost(postmodel);
+      await _firestoreService.createPost(posts);
     } catch (e) {
       throw Exception('게시글 생성에 실패했습니다.: $e');
     }
@@ -36,9 +38,9 @@ class PostRepository {
 
 
 // 게시글 수정
-  Future<void> updatePost(PostModel postmodel) async {
+  Future<void> updatePost(PostModel posts) async {
     try {
-      await _firestoreService.updatePost(postmodel);
+      await _firestoreService.updatePost(posts);
     } catch (e) {
       throw Exception('게시글을 가져오는데 실패했습니다.: $e');
     }

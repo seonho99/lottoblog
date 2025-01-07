@@ -6,9 +6,9 @@ final class LoadPost extends PostEvent {}
 
 // 게시글 등록
 final class CreatePost extends PostEvent {
-  final PostModel postmodel;
+  final PostModel posts;
 
-  CreatePost({required this.postmodel});
+  CreatePost({required this.posts});
 }
 
 // 게시글 수정
