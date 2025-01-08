@@ -101,9 +101,6 @@ class FirestoreService {
   Future<void> deletePost(String postId) async {
     final _postCollection = _fs.collection('posts');
 
-    if (postId.isEmpty){
-      throw Exception('삭제할 게시글 ID가 없습니다.');
-    }
     try {
       final documentReference = _postCollection.doc(postId);
       await documentReference.delete();

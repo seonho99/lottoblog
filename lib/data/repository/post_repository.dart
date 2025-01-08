@@ -49,6 +49,9 @@ class PostRepository {
 
 // 게시글 삭제
   Future<void> deletePost(String postId) async {
+    if (postId.isEmpty){
+      throw Exception('삭제할 게시글 ID가 없습니다.');
+    }
     try {
       await _firestoreService.deletePost(postId);
     } catch (e) {

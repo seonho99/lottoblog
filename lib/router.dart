@@ -10,7 +10,6 @@ import 'screen/dayofweek_screen.dart';
 import 'screen/editprofile_screen.dart';
 import 'screen/fram_screen.dart';
 import 'screen/landing_screen.dart';
-import 'screen/listofposts_screen.dart';
 import 'screen/login/email/email_login_screen.dart';
 import 'screen/login/email/signup_email_screen.dart';
 import 'screen/login/email/email_resetpassword_screen.dart';
@@ -128,12 +127,6 @@ final GoRouter router = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                       return PostwritingScreen();
                     }
-                ),
-                GoRoute(
-                  path: 'listofposts',
-                  builder: (BuildContext context, GoRouterState state) {
-                    return ListofPostsScreen();
-                  },
                 ),
                 GoRoute(
                   path: 'editprofile',

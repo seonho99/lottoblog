@@ -8,6 +8,7 @@ import 'package:lottoblog/screen/home/post_tile.dart';
 import '../../data/bloc/post/post_state.dart';
 
 class MainhomeScreen extends StatefulWidget {
+
   MainhomeScreen({super.key});
 
   @override
@@ -16,18 +17,22 @@ class MainhomeScreen extends StatefulWidget {
 
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
+  String? uid;
+
 
   @override
   void initState() {
     super.initState();
+    uid = context.read<PostBloc>().getUid();
 
-    final uid = context.read<PostBloc>().getUid();
 
     if(uid != null){
-      context.read<PostBloc>().add(FetchAllPosts(uid: uid));
+      context.read<PostBloc>().add(FetchAllPosts(uid: uid!));
     } else {
       print('uid is null');
     }
+
+    _scrollController.addListener(_onScroll);
   }
   
 
@@ -36,7 +41,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
     return BlocBuilder<PostBloc, PostState>(
       builder: (context, state) {
         if (state is PostInitial) {
-          return Center(child: Text('초기 상태'));
+          return Container();
         } else if (state is PostLoading) {
           return BottomLoader();
         } else if (state is PostLoaded) {
@@ -56,42 +61,28 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                           ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
-                  PostTile(
-                    imageUrl: state.posts[0].imageUrls[0],
-                    title: state.posts[0].title,
-                    postId: state.posts[0].postId,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.posts.length,
+                      itemBuilder: (context, index){
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PostTile(
+                              imageUrl: state.posts[index].imageUrls[0],
+                              title: state.posts[index].title,
+                              postId: state.posts[index].postId,
+                              // userName: state.,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Divider(color: Colors.grey.shade300, thickness: 1.0),
+                            ),
+                          ],
+                        );
+                      }
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Divider(color: Colors.grey.shade300, thickness: 1.0),
-                  ),
-                  PostTile(
-                    imageUrl: state.posts[1].imageUrls[0],
-                    title: state.posts[1].title,
-                    postId: state.posts[1].postId,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Divider(color: Colors.grey.shade300, thickness: 1.0),
-                  ),
-                  PostTile(
-                    imageUrl: state.posts[2].imageUrls[0],
-                    title: state.posts[2].title,
-                    postId: state.posts[2].postId,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Divider(color: Colors.grey.shade300, thickness: 1.0),
-                  ),
-                  // PostTile(
-                  //   imageUrl: state.posts[3].imageUrls[0],
-                  //   title: state.posts[3].title,
-                  //   postId: state.posts[3].postId,
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 16),
-                  //   child: Divider(color: Colors.grey.shade300, thickness: 1.0),
-                  // ),
                 ],
               ),
             ),
@@ -108,6 +99,12 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll(){
+    if(_isBottom && uid != null){
+      context.read<PostBloc>().add(FetchAllPosts(uid: uid!));
+    }
   }
 
   bool get _isBottom {

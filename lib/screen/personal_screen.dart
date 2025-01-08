@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/service/firebase_auth_service.dart';
+
+
+import '../data/bloc/post/post_bloc.dart';
+import '../data/bloc/post/post_event.dart';
+import '../data/bloc/post/post_state.dart';
+import 'my_post_tile.dart';
 
 class PersonalScreen extends StatefulWidget {
   PersonalScreen({super.key});
@@ -10,13 +16,21 @@ class PersonalScreen extends StatefulWidget {
 }
 
 class _PersonalScreenState extends State<PersonalScreen> {
-  final auth = FirebaseAuthService();
-  String? profileImgaeURL;
+  final _scrollController = ScrollController();
+  String? uid;
+
 
   @override
   void initState() {
     super.initState();
-    profileImgaeURL = auth.user?.photoURL;
+
+    final uid = context.read<PostBloc>().getUid();
+
+    if (uid != null) {
+      context.read<PostBloc>().add(FetchAllPosts(uid: uid));
+    } else {
+      print('uid is null');
+    }
   }
 
   @override
@@ -29,187 +43,130 @@ class _PersonalScreenState extends State<PersonalScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 1, color: Colors.grey.shade300),
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: profileImgaeURL != null
-                                  ? NetworkImage(profileImgaeURL!)
-                                  : AssetImage(
-                                      'assets/profile_dummy/profile_01.png'),
-                              onError: (_, __) {
-                                setState(() {
-                                  profileImgaeURL = null;
-                                });
-                              },
-                              fit: BoxFit.cover),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        '사용자',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        context.go('/personal/editprofile');
-                      },
-                      label: Text('수정'),
-                      icon: Icon(Icons.edit, size: 18),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black54,
-                        foregroundColor:
-                            Theme.of(context).colorScheme.onSecondary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30, bottom: 20),
-                child:
-                    Text('블로그', style: Theme.of(context).textTheme.titleLarge),
-              ),
-              Flexible(
-                child: Container(
-                  height: 160,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.black54,
-                      width: 1,
+              // 사용자 정보 Row
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 45,
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      '사용자',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displaySmall
+                          ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        child: GestureDetector(
-                          onTap: (){
-                            context.go('/personal/postwriting');
-                          },
-                          child: Row(
+                ],
+              ),
+              SizedBox(height: 30),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      context.go('/personal/editprofile');
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.settings_outlined, size: 40),
+                        SizedBox(height: 10),
+                        Text(
+                          '프로필 설정',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 3.0,
+                    height: 60,
+                    color: Colors.grey.shade300,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      context.go('/personal/postwriting');
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.edit_outlined, size: 40),
+                        SizedBox(height: 10),
+                        Text(
+                          '글 작성',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 40),
+              BlocBuilder<PostBloc, PostState>(
+                builder: (context, state) {
+                  if (state is PostInitial) {
+                    return Center(child: Text('초기 상태'));
+                  } else if (state is PostLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is PostLoaded) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: state.posts.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Icon(Icons.edit_document,
-                                    size: 25,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary),
+                              MyPostTile(
+                                imageUrl: state.posts[index].imageUrls[0],
+                                title: state.posts[index].title,
+                                postId: state.posts[index].postId,
                               ),
-                              Text('글 작성',
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                child: Divider(
+                                  color: Colors.grey.shade300,
+                                  thickness: 1.0,
+                                ),
+                              ),
                             ],
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                      Divider(height: 1, color: Colors.black54),
-                      Container(
-                        child: GestureDetector(
-                          onTap: (){
-                            context.go('/personal/listofposts');
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.subject,
-                                  size: 25,
-                                  color:
-                                      Colors.black54),
-                              SizedBox(width: 10),
-                              Text('글 목록',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30,bottom: 20),
-                child: Text('내정보',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ),
-              Flexible(
-                child: Container(
-                  height: 160,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.black54,
-                      width: 1,
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Icon(Icons.campaign,
-                                  size: 25,
-                                  color: Colors.black54),
-                            ),
-                            Text('공지사항',
-                                style:
-                                    Theme.of(context).textTheme.titleLarge),
-                          ],
-                        ),
-                      ),
-                      Divider(height: 1, color: Colors.black54),
-                      Container(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Icon(Icons.help_outline,
-                                  size: 25,
-                              color: Colors.black54)
-                            ),
-                            Text('고객센터/도움말',
-                                style: Theme.of(context).textTheme.titleLarge),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  } else if (state is PostFailure) {
+                    return Center(child: Text('실패: ${state.errorMessage}'));
+                  }
+                  return Center();
+                },
               ),
             ],
           ),
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll(){
+    if(_isBottom && uid != null){
+      context.read<PostBloc>().add(FetchAllPosts(uid: uid!));
+    }
+  }
+
+  bool get _isBottom {
+    if (_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
   }
 }

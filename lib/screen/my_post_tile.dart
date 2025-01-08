@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../widget/popupmenubotton_widget.dart';
+import '../widget/popupmenubotton_widget.dart';
 
-class PostTile extends StatelessWidget {
+class MyPostTile extends StatelessWidget {
   String? imageUrl;
   String title;
   String? postId;
   String? userName;
 
-  PostTile({super.key,this.imageUrl,required this.title, this.postId,
+  MyPostTile({super.key,this.imageUrl,required this.title, this.postId,
     // required this.userName,
   });
 
