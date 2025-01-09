@@ -8,6 +8,7 @@ import 'post_state.dart';
 
 
 class PostBloc extends Bloc<PostEvent, PostState> {
+
   String? getUid(){
     return authRepository.getUid();
   }
@@ -17,7 +18,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   PostBloc(this.postRepository, this.authRepository) : super(PostInitial()) {
 
-    on<FetchAllPosts>((event, emit) async {
+
+
+    on<FetchMyPosts>((event, emit) async {
       try {
         final posts = await postRepository.fetchAllPosts(uid: event.uid);
         emit(PostLoaded(posts));
@@ -34,9 +37,21 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     });
 
     on<ReadPost>((event, emit) async {
-      PostModel posts = await postRepository.readPost(event.postId);
-      List<PostModel> postLists = [posts];
-      emit(PostLoaded(postLists));
+      try {
+        final posts = await postRepository.readPost(event.postId);
+        emit(PostLoaded([posts]));
+      } catch (e) {
+        emit(PostFailure(errorMessage: e.toString()));
+      }
+    });
+
+    on<ReadAllPosts>((event, emit) async {
+      try {
+        final postLists = await postRepository.readAllPosts();
+        emit(PostLoaded(postLists));
+      } catch (e) {
+        emit(PostFailure(errorMessage: e.toString()));
+      }
     });
 
     // on<UpdatePost>((event, emit) async {
@@ -48,7 +63,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       List<PostModel> postLists = state.posts;
       postRepository.deletePost(event.postId);
       emit(PostLoaded(postLists));
-
     });
   }
 }

@@ -27,9 +27,17 @@ class PostRepository {
     }
   }
 
+  Future<List<PostModel>> readAllPosts() async {
+    try {
+      return await _firestoreService.readAllPost();
+    } catch (e) {
+      throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
+    }
+  }
+
   Future<List<PostModel>> fetchAllPosts({required String uid}) async {
     try {
-      return await _firestoreService.fetchAllPosts(uid: uid);
+      return await _firestoreService.fetchMyPosts(uid: uid);
     }catch(e){
       throw Exception('게시글을 가져오는데 실패했습니다.: $e');
     }

@@ -6,37 +6,16 @@ class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
 
 
-  Future<String?> getPostId(String postId) async {
-    try {
-      DocumentReference docRef = _fs.collection('posts').doc(postId);
-
-      DocumentSnapshot docSnapshot = await docRef.get();
-
-      if (docSnapshot.exists) {
-        return docSnapshot['postId'];
-      } else {
-        print('문서가 존재하지 않습니다.');
-        return null;
-      }
-    } catch (e) {
-      print('오류 발생: $e');
-      return null;
-    }
-  }
-
-
   // 게시글 생성
-  Future<void> createPost(PostModel postmodel) async {
+  Future<void> createPost(PostModel postModel) async {
     final postCollection = _fs.collection('posts');
 
     try {
-      final docRef = await postCollection.add(postmodel.toMap());
+      final docRef = await postCollection.add(postModel.toMap());
       await docRef.update({'postId': docRef.id});
     } on FirebaseException catch (e) {
-      print('FBException : $e');
       throw Exception('저장에 실패했습니다. $e');
     } catch (e) {
-      print('알 수 없는 에러 : $e');
       throw Exception('저장 실패 : $e');
     }
   }
@@ -54,27 +33,43 @@ class FirestoreService {
       final mapData = documentSnapshot.data()!;
       return PostModel.fromMap(mapData);
     } catch (e) {
-      print('Error reading post: $e');
-      throw Exception('게시글을 읽어오는 데 실패했습니다.');
+      throw Exception('게시글을 읽어오는데 실패 했습니다.');
     }
   }
 
+  Future<List<PostModel>> readAllPost() async {
+    final _postCollection = _fs.collection('posts');
+    List<PostModel> returnData = [];
+
+    try {
+      QuerySnapshot querySnapshot = await _postCollection.get();
+      final allData = querySnapshot.docs
+          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      print('Fetched Posts: $allData');
+      return allData;
+
+    } catch (e){
+      print('Error fetching posts: $e');
+      return [];
+
+    }
+  }
 
   // 전체
-  Future<List<PostModel>> fetchAllPosts({required String uid}) async {
+  Future<List<PostModel>> fetchMyPosts({required String uid}) async {
     final _postCollection = _fs.collection('posts');
     List<PostModel> returnData = [];
 
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await _postCollection
-          .where('uid',isEqualTo: uid)
-          .get();
+          await _postCollection.where('uid', isEqualTo: uid).get();
 
       final queryDocumentSnapshot = querySnapshot.docs;
 
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in queryDocumentSnapshot) {
+          in queryDocumentSnapshot) {
         returnData.add(PostModel.fromMap(doc.data()));
       }
     } catch (e) {
@@ -83,7 +78,6 @@ class FirestoreService {
     }
     return returnData;
   }
-
 
   Future<void> updatePost(PostModel posts) async {
     final _postCollection = _fs.collection('posts');

@@ -1,4 +1,3 @@
-
 sealed class TabNavigationState{}
 
 final class TabInitialState extends TabNavigationState {}

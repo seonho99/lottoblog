@@ -27,7 +27,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
     final uid = context.read<PostBloc>().getUid();
 
     if (uid != null) {
-      context.read<PostBloc>().add(FetchAllPosts(uid: uid));
+      context.read<PostBloc>().add(FetchMyPosts(uid: uid));
     } else {
       print('uid is null');
     }
@@ -159,7 +159,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   void _onScroll(){
     if(_isBottom && uid != null){
-      context.read<PostBloc>().add(FetchAllPosts(uid: uid!));
+      context.read<PostBloc>().add(FetchMyPosts(uid: uid!));
     }
   }
 

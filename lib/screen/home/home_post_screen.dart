@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../widget/popupmenubotton_widget.dart';
 
-class PostScreen extends StatelessWidget {
-  PostScreen({super.key});
+class HomePostScreen extends StatelessWidget {
+  HomePostScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

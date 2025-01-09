@@ -17,7 +17,7 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/mainhome/post_screen/$postId');
+        context.go('/mainhome/post/$postId');
         //postId 이용 이동일듯,
       },
       child: Row(

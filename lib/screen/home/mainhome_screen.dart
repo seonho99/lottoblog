@@ -8,7 +8,6 @@ import 'package:lottoblog/screen/home/post_tile.dart';
 import '../../data/bloc/post/post_state.dart';
 
 class MainhomeScreen extends StatefulWidget {
-
   MainhomeScreen({super.key});
 
   @override
@@ -17,24 +16,15 @@ class MainhomeScreen extends StatefulWidget {
 
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
-  String? uid;
-
 
   @override
   void initState() {
     super.initState();
-    uid = context.read<PostBloc>().getUid();
 
-
-    if(uid != null){
-      context.read<PostBloc>().add(FetchAllPosts(uid: uid!));
-    } else {
-      print('uid is null');
-    }
+      context.read<PostBloc>().add(ReadAllPosts());
 
     _scrollController.addListener(_onScroll);
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -63,25 +53,27 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: state.posts.length,
-                      itemBuilder: (context, index){
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PostTile(
-                              imageUrl: state.posts[index].imageUrls[0],
-                              title: state.posts[index].title,
-                              postId: state.posts[index].postId,
-                              // userName: state.,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Divider(color: Colors.grey.shade300, thickness: 1.0),
-                            ),
-                          ],
-                        );
-                      }
-                    ),
+                        itemCount: state.posts.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              PostTile(
+                                imageUrl: state.posts[index].imageUrls[0],
+                                title: state.posts[index].title,
+                                postId: state.posts[index].postId,
+                                // userName: state.,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Divider(
+                                    color: Colors.grey.shade300,
+                                    thickness: 1.0),
+                              ),
+                            ],
+                          );
+                        }),
                   ),
                 ],
               ),
@@ -101,10 +93,8 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
     super.dispose();
   }
 
-  void _onScroll(){
-    if(_isBottom && uid != null){
-      context.read<PostBloc>().add(FetchAllPosts(uid: uid!));
-    }
+  void _onScroll() {
+    if (_isBottom) context.read<PostBloc>().add(ReadAllPosts());
   }
 
   bool get _isBottom {
