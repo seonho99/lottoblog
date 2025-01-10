@@ -146,10 +146,10 @@ final GoRouter router = GoRouter(
     final loginBloc = context.read<LoginBloc>();
     final currentState = loginBloc.state;
 
-    if (currentState is LoginAuthenticatedState &&
+    if (currentState is LoginAuthenticated &&
         state.uri.path.contains('/personal/editprofile/')) {
       return '/login';
-    } else if (currentState is LoginAuthenticatedState &&
+    } else if (currentState is LoginAuthenticated &&
         state.uri.path.contains('/login')) {
       return '/personal';
     }

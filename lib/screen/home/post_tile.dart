@@ -6,10 +6,8 @@ import '../../widget/popupmenubotton_widget.dart';
 class PostTile extends StatelessWidget {
   String? imageUrl;
   String title;
-  String? postId;
-  String? userName;
 
-  PostTile({super.key,this.imageUrl,required this.title, this.postId,
+  PostTile({super.key,this.imageUrl,required this.title,
     // required this.userName,
   });
 
@@ -17,7 +15,7 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/mainhome/post/$postId');
+        context.go('/mainhome/post/');
         //postId 이용 이동일듯,
       },
       child: Row(

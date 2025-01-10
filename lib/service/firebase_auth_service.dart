@@ -5,9 +5,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../models/user_model.dart';
 
 
+
 class FirebaseAuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _fs = FirebaseFirestore.instance;
+  final FirebaseAuth _auth;
+  final FirestoreService _fs;
+
+  FirebaseAuthService(
+      this._fs):_auth = FirebaseAuth.instance{
+    _auth.setLanguageCode('kr');
+  }
 
   User? get user => _auth.currentUser;
 
@@ -21,27 +27,23 @@ class FirebaseAuthService {
   }) async {
     String? errorMessage;
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      // await _auth.currentUser?.updateDisplayName(name);
-      // await _auth.currentUser?.sendEmailVerification();
-
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = _auth.currentUser;
-      await user?.updateDisplayName(name);
 
-      UserModel userModel = UserModel(
-          uid: user?.uid,
+      if( user!= null) {
+        await _auth.currentUser?.updateDisplayName(name);
+        await _auth.currentUser?.sendEmailVerification();
+
+        UserModel userModel = UserModel(
+          uid: user.uid,
           userName: name ?? '',
           email: email,
           profileImageUrl: '',
-          createdAt: DateTime.now());
+          createdAt: DateTime.now(),
+        );
 
-      await _fs
-          .collection('users')
-          .doc(user?.uid)
-          .set(userModel.toMap());
-
-      await user?.sendEmailVerification();
+        await _fs.getUserModeltoFS(userModel);
+      }
 
 
     } on FirebaseAuthException catch (error) {
@@ -64,6 +66,11 @@ class FirebaseAuthService {
     if (errorMessage != null) {
       throw Exception(errorMessage);
     }
+  }
+
+  // 로그인 확인
+  bool isLoggedIn() {
+    return _auth.currentUser != null;
   }
 
   // 로그인
@@ -103,11 +110,12 @@ class FirebaseAuthService {
         throw Exception('로그인된 사용자가 없습니다.');
       }
 
-      DocumentSnapshot docSnapshot = await _fs.collection('users').doc(
-          user.uid).get();
+      DocumentSnapshot docSnapshot = await _fs
+          .firestore.collection('users').doc(user.uid)
+          .get();
 
       if (docSnapshot.exists) {
-        return docSnapshot.data() as Map<String, dynamic>?; // Firestore 데이터 반환
+        return docSnapshot.data() as Map<String, dynamic>?;
       } else {
         throw Exception('사용자 정보가 Firestore에 없습니다.');
       }
@@ -125,9 +133,7 @@ class FirebaseAuthService {
     }
   }
 
-  bool isLoggedIn() {
-    return _auth.currentUser != null;
-  }
+
 
   // 비밀번호 재설정
   Future<void> resetPassword({

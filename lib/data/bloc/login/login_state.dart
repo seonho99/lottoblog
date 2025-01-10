@@ -7,17 +7,17 @@ sealed class LoginState {
   LoginState({this.user, this.isLoggedIn = false});
 }
 
-final class LoginInitialState extends LoginState {}
 
-final class LoginAuthenticatedState extends LoginState {
+final class LoginAuthenticated extends LoginState {
   final String uid;
 
-  LoginAuthenticatedState(this.uid);
+  LoginAuthenticated(User user)
+      : uid = user.uid,
+        super(user: user, isLoggedIn: true);
 }
 
-final class LoginUnAuthenticatedState extends LoginState {}
+final class LoginUnAuthenticated extends LoginState {}
 
-final class LoginLoading extends LoginState {}
 
 final class LoginErrorState extends LoginState {
   final String message;

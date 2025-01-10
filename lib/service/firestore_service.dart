@@ -1,10 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottoblog/models/post_model.dart';
+
+import '../models/user_model.dart';
 
 class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
 
+  FirebaseFirestore get firestore => _fs;
+
+  Future<void> getUserModeltoFS(UserModel userModel) async {
+    try{
+     final userCollection = _fs.collection('users');
+
+     await userCollection.doc(userModel.uid).set(userModel.toMap());
+     // await _fs.collection('users').doc(userModel.uid).update({'users': userModel.uid});
+  } catch(e) {
+      throw Exception('저장 실패 : $e');
+    }
+  }
+
+  Future<Map<String, dynamic>?> getUserData(String uid) async {
+    try {
+      DocumentSnapshot docSnapshot = await _fs.collection('users').doc(uid).get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot.data() as Map<String, dynamic>?;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception('Firestore에서 데이터 조회 실패: $e');
+    }
+  }
 
   // 게시글 생성
   Future<void> createPost(PostModel postModel) async {
@@ -13,8 +40,6 @@ class FirestoreService {
     try {
       final docRef = await postCollection.add(postModel.toMap());
       await docRef.update({'postId': docRef.id});
-    } on FirebaseException catch (e) {
-      throw Exception('저장에 실패했습니다. $e');
     } catch (e) {
       throw Exception('저장 실패 : $e');
     }
@@ -39,21 +64,18 @@ class FirestoreService {
 
   Future<List<PostModel>> readAllPost() async {
     final _postCollection = _fs.collection('posts');
-    List<PostModel> returnData = [];
-
     try {
       QuerySnapshot querySnapshot = await _postCollection.get();
       final allData = querySnapshot.docs
           .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      print('Fetched Posts: $allData');
+      print('fetching posts: $allData');
       return allData;
 
     } catch (e){
       print('Error fetching posts: $e');
       return [];
-
     }
   }
 
@@ -72,6 +94,7 @@ class FirestoreService {
           in queryDocumentSnapshot) {
         returnData.add(PostModel.fromMap(doc.data()));
       }
+      print('fetching my posts: $returnData');
     } catch (e) {
       print('Firestore fetch error: $e');
       throw Exception('게시글을 가져오는데 실패 했습니다.');

@@ -21,9 +21,12 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   void initState() {
     super.initState();
 
+    Future.microtask(() {
       context.read<PostBloc>().add(ReadAllPosts());
 
-    _scrollController.addListener(_onScroll);
+      _scrollController.addListener(_onScroll);
+    });
+
   }
 
   @override
@@ -61,7 +64,6 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                               PostTile(
                                 imageUrl: state.posts[index].imageUrls[0],
                                 title: state.posts[index].title,
-                                postId: state.posts[index].postId,
                                 // userName: state.,
                               ),
                               Padding(
