@@ -8,7 +8,7 @@ import '../models/user_model.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth;
-  final
+
 
   FirebaseAuthService():_auth = FirebaseAuth.instance{
     _auth.setLanguageCode('kr');
