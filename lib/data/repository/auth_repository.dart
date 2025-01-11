@@ -1,5 +1,5 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../service/firebase_auth_service.dart';
 
 class AuthRepository {
   final FirebaseAuthService _firebaseAuthService;
@@ -10,15 +10,29 @@ class AuthRepository {
     return _firebaseAuthService.user?.uid;
   }
 
+
+  Future<void> signUpWithEmail(String email, String password, String? name) async {
+    try {
+      await _firebaseAuthService.signUpWithEmail(
+          email: email, password: password, name: name);
+    } catch (e){
+      rethrow;
+    }
+  }
+
   bool isLoggedIn() {
-    return _firebaseAuthService.user != null;
+    try {
+      return _firebaseAuthService.user != null;
+    } catch (e){
+      rethrow;
+    }
   }
 
   Future<User?> signInWithEmail(String email, String password) async {
     try {
       await _firebaseAuthService.signInWithEmail(
-          email: email, password: password);
-
+          email: email,
+          password: password);
 
       return _firebaseAuthService.user;
     } catch (e) {
@@ -30,11 +44,7 @@ class AuthRepository {
     await _firebaseAuthService.signOut();
   }
 
-  Future<void> signUpWithEmail(
-      String email, String password, String? name) async {
-    await _firebaseAuthService.signUpWithEmail(
-        email: email, password: password, name: name);
-  }
+
 
   Future<void> resetPassword(String email) async {
     await _firebaseAuthService.resetPassword(email: email);

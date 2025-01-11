@@ -127,7 +127,7 @@ class EmailLoginScreen extends StatelessWidget {
                 ),
                 BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
-                    if (state is LoginAuthenticatedState) {
+                    if (state is LoginAuthenticated) {
                       context.go('/personal');
                     }
                     if (state is LoginErrorState) {

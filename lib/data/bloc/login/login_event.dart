@@ -1,4 +1,6 @@
-sealed class LoginEvent {}
+sealed class LoginEvent {
+  const LoginEvent();
+}
 
 final class LoginWithEmail extends LoginEvent {
   final String email;
@@ -7,5 +9,5 @@ final class LoginWithEmail extends LoginEvent {
   LoginWithEmail(this.email, this.password);
 }
 
-class LogoutEvent extends LoginEvent {}
+class Logout extends LoginEvent {}
 

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     EmailResetPasswordBloc? emailResetPasswordBloc,
     PostRepository? postRepository,
     PostBloc? postBloc,
-  })  : authRepository = authRepository ?? AuthRepository(FirebaseAuthService()),
+  })  : authRepository = authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService())),
         loginBloc = loginBloc ?? LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         signUpBloc = signUpBloc ?? SignUpBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         emailResetPasswordBloc = emailResetPasswordBloc ?? EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
