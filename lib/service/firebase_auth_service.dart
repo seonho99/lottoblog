@@ -8,10 +8,9 @@ import '../models/user_model.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth;
-  final FirestoreService _fs;
+  final
 
-  FirebaseAuthService(
-      this._fs):_auth = FirebaseAuth.instance{
+  FirebaseAuthService():_auth = FirebaseAuth.instance{
     _auth.setLanguageCode('kr');
   }
 
@@ -42,7 +41,6 @@ class FirebaseAuthService {
           createdAt: DateTime.now(),
         );
 
-        await _fs.getUserModeltoFS(userModel);
       }
 
 

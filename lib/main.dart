@@ -38,11 +38,11 @@ class MyApp extends StatelessWidget {
     PostRepository? postRepository,
     PostBloc? postBloc,
   })  : authRepository = authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService())),
-        loginBloc = loginBloc ?? LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService()))),
-        signUpBloc = signUpBloc ?? SignUpBloc(authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService()))),
-        emailResetPasswordBloc = emailResetPasswordBloc ?? EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService()))),
+        loginBloc = loginBloc ?? LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+        signUpBloc = signUpBloc ?? SignUpBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+        emailResetPasswordBloc = emailResetPasswordBloc ?? EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         postRepository = postRepository ?? PostRepository(FirestoreService()),
-        postBloc = postBloc ?? PostBloc(postRepository ?? PostRepository(FirestoreService()), authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService())));
+        postBloc = postBloc ?? PostBloc(postRepository ?? PostRepository(FirestoreService()), authRepository ?? AuthRepository(FirebaseAuthService()));
 
   @override
   Widget build(BuildContext context) {
