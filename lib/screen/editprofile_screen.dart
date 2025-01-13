@@ -226,7 +226,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     TextButton(
                         onPressed: (){
-                          context.read<LoginBloc>().add(LogoutEvent());
+                          context.read<LoginBloc>().add(Logout());
                         }, child: Text('로그아웃',
                         style: Theme.of(context).textTheme.titleSmall),
                     ),
@@ -248,10 +248,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     BlocListener<LoginBloc, LoginState>(
                         listener: (context, state) {
-                          if (state is LoginUnAuthenticatedState){
+                          if (state is LoginUnAuthenticated){
                             context.go('/login');
                           }
-                          if (state is LoginErrorState) {
+                          if (state is LoginError) {
                             showSnackBar(context, state.message);
                           }
                         },

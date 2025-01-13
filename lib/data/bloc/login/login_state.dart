@@ -9,18 +9,19 @@ sealed class LoginState {
 
 
 final class LoginAuthenticated extends LoginState {
-  final String uid;
 
-  LoginAuthenticated(User user)
-      : uid = user.uid,
-        super(user: user, isLoggedIn: true);
+  LoginAuthenticated(User user) : super(user: user, isLoggedIn: true);
 }
 
-final class LoginUnAuthenticated extends LoginState {}
+final class LoginUnAuthenticated extends LoginState {
+
+  LoginUnAuthenticated(): super(user : null, isLoggedIn: false);
+}
 
 
-final class LoginErrorState extends LoginState {
+final class LoginError extends LoginState {
   final String message;
 
-  LoginErrorState(this.message);
+
+  LoginError(this.message);
 }

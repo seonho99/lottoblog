@@ -1,5 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottoblog/service/firebase_auth_service.dart';
+
 
 class AuthRepository {
   final FirebaseAuthService _firebaseAuthService;
@@ -11,7 +13,7 @@ class AuthRepository {
   }
 
 
-  Future<void> signUpWithEmail(String email, String password, String? name) async {
+  Future<User?> signUpWithEmail({required String email, required String password, String? name}) async {
     try {
       await _firebaseAuthService.signUpWithEmail(
           email: email, password: password, name: name);
@@ -28,7 +30,7 @@ class AuthRepository {
     }
   }
 
-  Future<User?> signInWithEmail(String email, String password) async {
+  Future<User?> signInWithEmail({required String email,required String password}) async {
     try {
       await _firebaseAuthService.signInWithEmail(
           email: email,

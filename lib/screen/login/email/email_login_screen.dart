@@ -130,7 +130,7 @@ class EmailLoginScreen extends StatelessWidget {
                     if (state is LoginAuthenticated) {
                       context.go('/personal');
                     }
-                    if (state is LoginErrorState) {
+                    if (state is LoginError) {
                       showSnackBar(context, state.message);
                     }
                   },

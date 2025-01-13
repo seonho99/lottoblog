@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
-import 'package:lottoblog/data/bloc/signup/signup_bloc.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
 import 'package:lottoblog/service/firestore_service.dart';
@@ -24,7 +23,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
   final LoginBloc loginBloc;
-  final SignUpBloc signUpBloc;
   final EmailResetPasswordBloc emailResetPasswordBloc;
   final PostRepository postRepository;
   final PostBloc postBloc;
@@ -33,16 +31,22 @@ class MyApp extends StatelessWidget {
     super.key,
     AuthRepository? authRepository,
     LoginBloc? loginBloc,
-    SignUpBloc? signUpBloc,
     EmailResetPasswordBloc? emailResetPasswordBloc,
     PostRepository? postRepository,
     PostBloc? postBloc,
-  })  : authRepository = authRepository ?? AuthRepository(FirebaseAuthService(FirestoreService())),
-        loginBloc = loginBloc ?? LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
-        signUpBloc = signUpBloc ?? SignUpBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
-        emailResetPasswordBloc = emailResetPasswordBloc ?? EmailResetPasswordBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+  })
+      : authRepository = authRepository ??
+      AuthRepository(FirebaseAuthService()),
+        loginBloc = loginBloc ??
+            LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
+        emailResetPasswordBloc = emailResetPasswordBloc ??
+            EmailResetPasswordBloc(
+                authRepository ?? AuthRepository(FirebaseAuthService())),
+
         postRepository = postRepository ?? PostRepository(FirestoreService()),
-        postBloc = postBloc ?? PostBloc(postRepository ?? PostRepository(FirestoreService()), authRepository ?? AuthRepository(FirebaseAuthService()));
+        postBloc = postBloc ?? PostBloc(
+            postRepository ?? PostRepository(FirestoreService()),
+            authRepository ?? AuthRepository(FirebaseAuthService()));
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +64,10 @@ class MyApp extends StatelessWidget {
           BlocProvider<LoginBloc>(
             create: (context) => loginBloc,
           ),
-          BlocProvider<SignUpBloc>(
-            create: (context) => signUpBloc,
-          ),
           BlocProvider<EmailResetPasswordBloc>(
             create: (context) => emailResetPasswordBloc,
           ),
+
           BlocProvider<PostBloc>(
             create: (context) => postBloc,
           ),

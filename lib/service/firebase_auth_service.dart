@@ -8,6 +8,7 @@ import '../models/user_model.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth;
+  final FirebaseFirestore _fs = FirebaseFirestore.instance;
 
 
   FirebaseAuthService():_auth = FirebaseAuth.instance{
@@ -40,6 +41,8 @@ class FirebaseAuthService {
           profileImageUrl: '',
           createdAt: DateTime.now(),
         );
+
+        await _fs.collection('users').doc(user.uid).set(userModel.toMap());
 
       }
 
@@ -108,8 +111,7 @@ class FirebaseAuthService {
         throw Exception('로그인된 사용자가 없습니다.');
       }
 
-      DocumentSnapshot docSnapshot = await _fs
-          .firestore.collection('users').doc(user.uid)
+      DocumentSnapshot docSnapshot = await _fs.collection('users').doc(user.uid)
           .get();
 
       if (docSnapshot.exists) {

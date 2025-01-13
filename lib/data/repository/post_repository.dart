@@ -1,13 +1,12 @@
-import 'package:lottoblog/service/firestore_service.dart';
 
 import '../../models/post_model.dart';
+import '../../service/firestore_service.dart';
 
 
 class PostRepository {
   final FirestoreService _firestoreService;
 
   PostRepository(this._firestoreService);
-
 
 
   // 게시글 생성

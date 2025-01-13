@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/login/login_event.dart';
 
-import '../../../data/bloc/signup/signup_event.dart';
-import '../../../data/bloc/signup/signup_bloc.dart';
-import '../../../data/bloc/signup/signup_state.dart';
+
+import '../../../data/bloc/login/login_bloc.dart';
+import '../../../data/bloc/login/login_state.dart';
 import '../../../show_snackbar.dart';
 
 class SignUpEmailScreen extends StatelessWidget {
@@ -142,11 +143,7 @@ class SignUpEmailScreen extends StatelessWidget {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           // 회원가입 이벤트 발생
-                          context.read<SignUpBloc>().add(SignUpWithEmail(
-                            email: email!,
-                            password: password!,
-                            name: name!,
-                          ));
+                          context.read<LoginBloc>().add(SignUpEmail(email: email!, password: password!));
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -163,13 +160,13 @@ class SignUpEmailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  BlocListener<SignUpBloc, SignUpState>(
+                  BlocListener<LoginBloc, LoginState>(
                     listener: (context, state) {
-                      if (state is SignUpSuccess) {
+                      if (state is SignUpEmail) {
                         showSnackBar(context, '회원가입이 완료되었습니다.');
                         context.go('/login/email_login');
                       }
-                      if (state is SignUpError) {
+                      if (state is LoginError) {
                         showSnackBar(context, state.message);
                       }
                     },
