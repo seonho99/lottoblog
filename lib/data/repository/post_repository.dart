@@ -8,6 +8,9 @@ class PostRepository {
 
   PostRepository(this._firestoreService);
 
+  // String getPostId(String postId){
+  //   return _firestoreService.getPostId(postId);
+  // }
 
   // 게시글 생성
   Future<void> createPost(PostModel posts) async {
@@ -26,15 +29,23 @@ class PostRepository {
     }
   }
 
-  Future<List<PostModel>> readAllPosts() async {
+  Future<List<String>> getAllPostIds({required String postId}) async {
     try {
-      return await _firestoreService.readAllPost();
+      return await _firestoreService.getAllPostIds(postId);
+    } catch (e) {
+      throw Exception('포스트 아이디들을 읽어오는데 실패했습니다.: $e');
+    }
+  }
+
+  Future<List<PostModel>> readAllPosts({required String postId, int limit = 10, PostModel? lastPosts}) async {
+    try {
+      return await _firestoreService.readAllPost(postId: postId,limit: limit,lastPosts: lastPosts);
     } catch (e) {
       throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
     }
   }
 
-  Future<List<PostModel>> fetchAllPosts({required String uid}) async {
+  Future<List<PostModel>> fetchMyPosts({required String uid}) async {
     try {
       return await _firestoreService.fetchMyPosts(uid: uid);
     }catch(e){

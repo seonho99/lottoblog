@@ -6,29 +6,29 @@ import '../models/user_model.dart';
 class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
 
-  Future<void> getUserModeltoFS(UserModel userModel) async {
-    try {
-      final userCollection = _fs.collection('users');
-      await userCollection.doc(userModel.uid).set(userModel.toMap());
-    } catch (e) {
-      throw Exception('저장 실패 : $e');
-    }
-  }
+  // Future<void> getUserModeltoFS(UserModel userModel) async {
+  //   try {
+  //     final userCollection = _fs.collection('users');
+  //     await userCollection.doc(userModel.uid).set(userModel.toMap());
+  //   } catch (e) {
+  //     throw Exception('저장 실패 : $e');
+  //   }
+  // }
 
-  Future<Map<String, dynamic>?> getUserData(String uid) async {
-    try {
-      DocumentSnapshot docSnapshot = await _fs.collection('users')
-          .doc(uid)
-          .get();
+  Future<List<String>> getAllPostIds(String postId) async{
+    final postCollection = _fs.collection('posts');
+    final querySnapshot = await postCollection.get();
 
-      if (docSnapshot.exists) {
-        return docSnapshot.data() as Map<String, dynamic>?;
-      } else {
-        return null;
+    List<String> postIds = [];
+
+    for (var doc in querySnapshot.docs){
+      final data = doc.data() as Map<String, dynamic>;
+      final postId = data['postId'] as String?;
+      if(postId != null){
+        postIds.add(postId);
       }
-    } catch (e) {
-      throw Exception('Firestore에서 데이터 조회 실패: $e');
     }
+    return postIds;
   }
 
   // 게시글 생성
@@ -56,20 +56,28 @@ class FirestoreService {
     }
   }
 
-  Future<List<PostModel>> readAllPost() async {
+  Future<List<PostModel>> readAllPost({required String postId, int limit = 10, PostModel? lastPosts}) async {
     final _postCollection = _fs.collection('posts');
+    List<PostModel> returnData = [];
+
     try {
-      QuerySnapshot querySnapshot = await _postCollection.get();
-      final allData = querySnapshot.docs
-          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-      print('fetching posts: $allData');
-      return allData;
+      Query<Map<String, dynamic>> query = _postCollection
+          .where('postId', isEqualTo: postId)
+          .orderBy('createdAt')
+          .limit(limit);
+      if(lastPosts != null){
+        query = query.startAfter([lastPosts.createdAt.millisecondsSinceEpoch, lastPosts.postId]);
+      }
+      final QuerySnapshot<Map<String,dynamic>> querySnapshot = await query.get();
+      for(final QueryDocumentSnapshot<Map<String,dynamic>> doc in querySnapshot.docs){
+        returnData.add(PostModel.fromMap(doc.data()));
+      }
     } catch (e) {
-      print('Error fetching posts: $e');
-      return [];
+      throw Exception('fetch error');
     }
+    return returnData;
   }
+
 
   // 전체
   Future<List<PostModel>> fetchMyPosts({required String uid}) async {
@@ -78,12 +86,12 @@ class FirestoreService {
 
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await _postCollection.where('uid', isEqualTo: uid).get();
+          await _postCollection.where('uid', isEqualTo: uid).get();
 
       final queryDocumentSnapshot = querySnapshot.docs;
 
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in queryDocumentSnapshot) {
+          in queryDocumentSnapshot) {
         returnData.add(PostModel.fromMap(doc.data()));
       }
       print('fetching my posts: $returnData');

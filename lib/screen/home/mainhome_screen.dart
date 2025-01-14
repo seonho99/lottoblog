@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_event.dart';
+import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/screen/home/bottom_loader.dart';
 import 'package:lottoblog/screen/home/post_tile.dart';
 
@@ -16,18 +17,29 @@ class MainhomeScreen extends StatefulWidget {
 
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
-
+  final int limit = 10;
+  String? postId;
+  
   @override
   void initState() {
     super.initState();
 
-    Future.microtask(() {
-      context.read<PostBloc>().add(ReadAllPosts());
+    final postId = context.read<PostRepository>().getAllPostIds(postId: postId);
+
+    Future.microtask(()  {
+      context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
 
       _scrollController.addListener(_onScroll);
     });
-
   }
+  void updatePostId(String newPostId) {
+    setState(() {
+      postId = newPostId; 
+    });
+
+    context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +108,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   }
 
   void _onScroll() {
-    if (_isBottom) context.read<PostBloc>().add(ReadAllPosts());
+    if (_isBottom) context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
   }
 
   bool get _isBottom {

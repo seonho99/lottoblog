@@ -13,6 +13,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     return authRepository.getUid();
   }
 
+  // String? getPostId(){
+  //   return postRepository.getPostId();
+  // }
+
   final PostRepository postRepository;
   final AuthRepository authRepository;
 
@@ -22,7 +26,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     on<FetchMyPosts>((event, emit) async {
       try {
-        final posts = await postRepository.fetchAllPosts(uid: event.uid);
+        final posts = await postRepository.fetchMyPosts(uid: event.uid);
         emit(PostLoaded(posts));
       } catch (e){
         emit(PostFailure(errorMessage: e.toString()));
@@ -47,7 +51,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     on<ReadAllPosts>((event, emit) async {
       try {
-        final postLists = await postRepository.readAllPosts();
+        final postLists = await postRepository.readAllPosts(postId: event.postId,limit: event.limit,lastPosts: event.lastPosts);
         emit(PostLoaded(postLists));
       } catch (e) {
         emit(PostFailure(errorMessage: e.toString()));
