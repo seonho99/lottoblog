@@ -14,10 +14,6 @@ class FirestoreService {
   //   }
   // }
 
-
-
-
-
   // 게시글 생성
   Future<void> createPost(PostModel postModel) async {
     final postCollection = _fs.collection('posts');
@@ -43,52 +39,69 @@ class FirestoreService {
     }
   }
 
-  Future<List<String>> getAllPostIds(List<PostModel> posts) async {
-    final postCollection = FirebaseFirestore.instance.collection('posts');
-    List<String> postIds = [];
+  // Future<List<String>> getAllPostIds(List<PostModel> posts) async {
+  //   final postCollection = FirebaseFirestore.instance.collection('posts');
+  //   List<String> postIds = [];
+  //
+  //   try {
+  //     for (var post in posts) {
+  //       final querySnapshot = await postCollection
+  //           .where('postId', isEqualTo: post.postId)
+  //           .get();
+  //
+  //       for (var doc in querySnapshot.docs) {
+  //         postIds.add(doc.data()['postId']);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     throw Exception('fetch error: $e');
+  //   }
+  //
+  //   return postIds;
+  // }
 
-    try {
-      for (var post in posts) {
-        final querySnapshot = await postCollection
-            .where('postId', isEqualTo: post.postId)
-            .get();
 
-        for (var doc in querySnapshot.docs) {
-          postIds.add(doc.data()['postId']);
-        }
-      }
-    } catch (e) {
-      throw Exception('fetch error: $e');
-    }
+  // Future<List<PostModel>> readAllPost({required String postId, int limit = 10, PostModel? lastPosts}) async {
+  //   final _postCollection = _fs.collection('posts');
+  //   List<PostModel> returnData = [];
+  //
+  //   try {
+  //     Query<Map<String, dynamic>> query = _postCollection
+  //         .where('postId', isEqualTo: postId)
+  //         .orderBy('createdAt')
+  //         .limit(limit);
+  //     if(lastPosts != null){
+  //       query = query.startAfter([lastPosts.createdAt.millisecondsSinceEpoch, lastPosts.postId]);
+  //     }
+  //     final QuerySnapshot<Map<String,dynamic>> querySnapshot = await query.get();
+  //     for(final QueryDocumentSnapshot<Map<String,dynamic>> doc in querySnapshot.docs){
+  //       returnData.add(PostModel.fromMap(doc.data()));
+  //     }
+  //   } catch (e) {
+  //     throw Exception('fetch error');
+  //   }
+  //   return returnData;
+  // }
 
-    return postIds;
-  }
-
-
-  Future<List<PostModel>> readAllPost({required String postId, int limit = 10, PostModel? lastPosts}) async {
+  Future<List<PostModel>> readAllPost() async {
     final _postCollection = _fs.collection('posts');
-    List<PostModel> returnData = [];
-
     try {
-      Query<Map<String, dynamic>> query = _postCollection
-          .where('postId', isEqualTo: postId)
-          .orderBy('createdAt')
-          .limit(limit);
-      if(lastPosts != null){
-        query = query.startAfter([lastPosts.createdAt.millisecondsSinceEpoch, lastPosts.postId]);
-      }
-      final QuerySnapshot<Map<String,dynamic>> querySnapshot = await query.get();
-      for(final QueryDocumentSnapshot<Map<String,dynamic>> doc in querySnapshot.docs){
-        returnData.add(PostModel.fromMap(doc.data()));
-      }
+      QuerySnapshot querySnapshot = await _postCollection.get();
+      final allData = querySnapshot.docs
+          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      print('fetching posts: $allData');
+      return allData;
     } catch (e) {
-      throw Exception('fetch error');
+      print('Error fetching posts: $e');
+      return [];
     }
-    return returnData;
   }
 
 
-  // 전체
+
+  // 자신의 포스트
   Future<List<PostModel>> fetchMyPosts({required String uid}) async {
     final _postCollection = _fs.collection('posts');
     List<PostModel> returnData = [];

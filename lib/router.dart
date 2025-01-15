@@ -18,32 +18,28 @@ import 'screen/home/mainhome_screen.dart';
 import 'screen/personal_screen.dart';
 import 'screen/home/home_post_screen.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _articleNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'articleTab');
-final GlobalKey<NavigatorState> _homeNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'homeTab');
-final GlobalKey<NavigatorState> _settingsTabNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'settingTab');
-final GlobalKey<NavigatorState> _loginTabNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'loginTab');
+
+final GlobalKey<NavigatorState> _mainTabNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _homeTabNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _loginTabNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _personalTabNavigatorKey = GlobalKey<NavigatorState>();
+
 
 final GoRouter router = GoRouter(
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: _mainTabNavigatorKey,
   routes: <RouteBase>[
     GoRoute(
       path: '/',
       builder: (context, state) => LandingScreen(),
     ),
     StatefulShellRoute.indexedStack(
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: _mainTabNavigatorKey,
       builder: (context, state, navigationShell) {
         return FramScreen(navigationShell: navigationShell);
       },
       branches: [
         StatefulShellBranch(
-          navigatorKey: _articleNavigatorKey,
+          navigatorKey: _mainTabNavigatorKey,
           routes: [
             GoRoute(
               path: '/mainhome',
@@ -62,7 +58,7 @@ final GoRouter router = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          navigatorKey: _homeNavigatorKey,
+          navigatorKey: _homeTabNavigatorKey,
           routes: [
             GoRoute(
               path: '/dayofweek',
@@ -81,7 +77,7 @@ final GoRouter router = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          navigatorKey: _settingsTabNavigatorKey,
+          navigatorKey: _loginTabNavigatorKey,
           routes: [
             GoRoute(
               path: '/login',
@@ -114,7 +110,7 @@ final GoRouter router = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          navigatorKey: _loginTabNavigatorKey,
+          navigatorKey: _personalTabNavigatorKey,
           routes: [
             GoRoute(
               path: '/personal',

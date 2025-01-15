@@ -29,17 +29,25 @@ class PostRepository {
     }
   }
 
-  Future<List<String>> getAllPostIds(List<PostModel> posts) async {
-    try {
-      return await _firestoreService.getAllPostIds(posts);
-    } catch (e) {
-      throw Exception('포스트 아이디들을 읽어오는데 실패했습니다.: $e');
-    }
-  }
+  // Future<List<String>> getAllPostIds(List<PostModel> posts) async {
+  //   try {
+  //     return await _firestoreService.getAllPostIds(posts);
+  //   } catch (e) {
+  //     throw Exception('포스트 아이디들을 읽어오는데 실패했습니다.: $e');
+  //   }
+  // }
 
-  Future<List<PostModel>> readAllPosts({required String postId, int limit = 10, PostModel? lastPosts}) async {
+  // Future<List<PostModel>> readAllPosts({required String postId, int limit = 10, PostModel? lastPosts}) async {
+  //   try {
+  //     return await _firestoreService.readAllPost(postId: postId,limit: limit,lastPosts: lastPosts);
+  //   } catch (e) {
+  //     throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
+  //   }
+  // }
+
+  Future<List<PostModel>> readAllPosts() async {
     try {
-      return await _firestoreService.readAllPost(postId: postId,limit: limit,lastPosts: lastPosts);
+      return await _firestoreService.readAllPost();
     } catch (e) {
       throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
     }

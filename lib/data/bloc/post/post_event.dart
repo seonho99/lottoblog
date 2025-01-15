@@ -37,13 +37,22 @@ final class ReadPost extends PostEvent {
   ReadPost({required this.postId});
 }
 
-final class ReadAllPosts extends PostEvent {
-  final String postId;
-  final int limit;
-  final PostModel? lastPosts;
 
-  ReadAllPosts({required this.postId, required this.limit, this.lastPosts});
+final class ReadAllPosts extends PostEvent {
+  // final String postId;
+  //
+  // ReadAllPosts({required this.postId});
 }
+
+// final class ReadAllPosts extends PostEvent {
+//   final String postId;
+//   final int limit;
+//   final PostModel? lastPosts;
+//
+//   ReadAllPosts({required this.postId, required this.limit, this.lastPosts});
+// }
+
+
 
 final class FetchMyPosts extends PostEvent {
   final String uid;

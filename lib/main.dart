@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
+import 'package:lottoblog/data/bloc/tab_navigation/tab_navigation_bloc.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
 import 'package:lottoblog/service/firestore_service.dart';
@@ -17,6 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
   final EmailResetPasswordBloc emailResetPasswordBloc;
   final PostRepository postRepository;
   final PostBloc postBloc;
+  final TabNavigationBloc tabNavigationBloc;
 
   MyApp({
     super.key,
@@ -34,19 +38,19 @@ class MyApp extends StatelessWidget {
     EmailResetPasswordBloc? emailResetPasswordBloc,
     PostRepository? postRepository,
     PostBloc? postBloc,
-  })
-      : authRepository = authRepository ??
-      AuthRepository(FirebaseAuthService()),
+    TabNavigationBloc? tabNavigationBloc,
+  })  : authRepository =
+            authRepository ?? AuthRepository(FirebaseAuthService()),
         loginBloc = loginBloc ??
             LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         emailResetPasswordBloc = emailResetPasswordBloc ??
             EmailResetPasswordBloc(
                 authRepository ?? AuthRepository(FirebaseAuthService())),
-
         postRepository = postRepository ?? PostRepository(FirestoreService()),
-        postBloc = postBloc ?? PostBloc(
-            postRepository ?? PostRepository(FirestoreService()),
-            authRepository ?? AuthRepository(FirebaseAuthService()));
+        postBloc = postBloc ??
+            PostBloc(postRepository ?? PostRepository(FirestoreService()),
+                authRepository ?? AuthRepository(FirebaseAuthService())),
+        tabNavigationBloc = TabNavigationBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +71,11 @@ class MyApp extends StatelessWidget {
           BlocProvider<EmailResetPasswordBloc>(
             create: (context) => emailResetPasswordBloc,
           ),
-
           BlocProvider<PostBloc>(
             create: (context) => postBloc,
+          ),
+          BlocProvider<TabNavigationBloc>(
+            create: (context) => tabNavigationBloc,
           ),
         ],
         child: MaterialApp.router(

@@ -21,6 +21,8 @@ final class PostModel {
     createdAt,
   }):createdAt=createdAt??DateTime.now();
 
+
+
   Map<String, dynamic> toMap() {
     return {
       'title': title,
@@ -45,5 +47,9 @@ final class PostModel {
       likeCount: map['likeCount'] ?? 0,
       reportCount: map['reportCount'] ?? 0,
     );
+  }
+  @override
+  String toString() {
+    return 'PostModel(postId: $postId, title: $title, content: $content, imageUrls: $imageUrls, createdAt: $createdAt, uid: $uid, likeCount: $likeCount, reportCount: $reportCount)';
   }
 }

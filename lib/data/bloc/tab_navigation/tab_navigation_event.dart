@@ -1,9 +1,10 @@
-sealed class TabNavigationEvent {
-  const TabNavigationEvent();
+import 'tab_navigation_state.dart';
+
+sealed class TabNavigationEvent {}
+
+final class TabChanged extends TabNavigationEvent {
+  final NavItem selectedItem;
+
+  TabChanged(this.selectedItem);
 }
 
-final class TabChangedEvent extends TabNavigationEvent {
-  final int index;
-
-  TabChangedEvent(this.index);
-}

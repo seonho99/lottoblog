@@ -24,15 +24,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
 
 
-    on<FetchMyPosts>((event, emit) async {
-      try {
-        final posts = await postRepository.fetchMyPosts(uid: event.uid);
-        emit(PostLoaded(posts));
-      } catch (e){
-        emit(PostFailure(errorMessage: e.toString()));
-      }
-    });
-
     on<CreatePost>((event, emit) async {
       List<PostModel> posts = state.posts;
       postRepository.createPost(event.posts);
@@ -49,9 +40,27 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     });
 
+    // on<ReadAllPosts>((event, emit) async {
+    //   try {
+    //     final postLists = await postRepository.readAllPosts(postId: event.postId,limit: event.limit,lastPosts: event.lastPosts);
+    //     emit(PostLoaded(postLists));
+    //   } catch (e) {
+    //     emit(PostFailure(errorMessage: e.toString()));
+    //   }
+    // });
+
+    on<FetchMyPosts>((event, emit) async {
+      try {
+        final posts = await postRepository.fetchMyPosts(uid: event.uid);
+        emit(PostLoaded(posts));
+      } catch (e){
+        emit(PostFailure(errorMessage: e.toString()));
+      }
+    });
+
     on<ReadAllPosts>((event, emit) async {
       try {
-        final postLists = await postRepository.readAllPosts(postId: event.postId,limit: event.limit,lastPosts: event.lastPosts);
+        final postLists = await postRepository.readAllPosts();
         emit(PostLoaded(postLists));
       } catch (e) {
         emit(PostFailure(errorMessage: e.toString()));

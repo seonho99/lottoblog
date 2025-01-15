@@ -1,9 +1,18 @@
-sealed class TabNavigationState{}
+enum NavItem{
+  main,home,login,personal
+}
 
-final class TabInitialState extends TabNavigationState {}
+sealed class TabNavigationState {
+  final NavItem selectedItem;
 
-final class TabChangedState extends TabNavigationState {
-  final int selectedIndex;
+  TabNavigationState(this.selectedItem);
+}
 
-  TabChangedState(this.selectedIndex);
+final class TabInitial extends TabNavigationState {
+ TabInitial() : super(NavItem.main);
+}
+
+final class TabLoaded extends TabNavigationState {
+
+  TabLoaded(NavItem selected) : super(selected);
 }
