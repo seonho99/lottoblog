@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/post_model.dart';
-import '../models/user_model.dart';
 
 class FirestoreService {
   FirebaseFirestore _fs = FirebaseFirestore.instance;
@@ -15,21 +14,9 @@ class FirestoreService {
   //   }
   // }
 
-  Future<List<String>> getAllPostIds(String postId) async{
-    final postCollection = _fs.collection('posts');
-    final querySnapshot = await postCollection.get();
 
-    List<String> postIds = [];
 
-    for (var doc in querySnapshot.docs){
-      final data = doc.data() as Map<String, dynamic>;
-      final postId = data['postId'] as String?;
-      if(postId != null){
-        postIds.add(postId);
-      }
-    }
-    return postIds;
-  }
+
 
   // 게시글 생성
   Future<void> createPost(PostModel postModel) async {
@@ -55,6 +42,28 @@ class FirestoreService {
       throw Exception('게시글을 읽어오는데 실패 했습니다.');
     }
   }
+
+  Future<List<String>> getAllPostIds(List<PostModel> posts) async {
+    final postCollection = FirebaseFirestore.instance.collection('posts');
+    List<String> postIds = [];
+
+    try {
+      for (var post in posts) {
+        final querySnapshot = await postCollection
+            .where('postId', isEqualTo: post.postId)
+            .get();
+
+        for (var doc in querySnapshot.docs) {
+          postIds.add(doc.data()['postId']);
+        }
+      }
+    } catch (e) {
+      throw Exception('fetch error: $e');
+    }
+
+    return postIds;
+  }
+
 
   Future<List<PostModel>> readAllPost({required String postId, int limit = 10, PostModel? lastPosts}) async {
     final _postCollection = _fs.collection('posts');

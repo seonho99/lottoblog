@@ -7,6 +7,7 @@ import 'package:lottoblog/screen/home/bottom_loader.dart';
 import 'package:lottoblog/screen/home/post_tile.dart';
 
 import '../../data/bloc/post/post_state.dart';
+import '../../models/post_model.dart';
 
 class MainhomeScreen extends StatefulWidget {
   MainhomeScreen({super.key});
@@ -19,25 +20,60 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
   final int limit = 10;
   String? postId;
+  List<PostModel> posts = [];
   
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final postId = context.read<PostRepository>().getAllPostIds();
+  //
+  //   Future.microtask(()  {
+  //     context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
+  //
+  //     _scrollController.addListener(_onScroll);
+  //   });
+  // }
+  // void updatePostId(String newPostId) {
+  //   setState(() {
+  //     postId = newPostId;
+  //   });
+  //
+  //   context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
+  // }
+
   @override
   void initState() {
     super.initState();
 
-    final postId = context.read<PostRepository>().getAllPostIds(postId: postId);
+    _fetchPostId();
 
-    Future.microtask(()  {
-      context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
-
-      _scrollController.addListener(_onScroll);
-    });
+    _scrollController.addListener(_onScroll);
   }
+
+  Future<void> _fetchPostId() async {
+    try {
+      List<String> postIds = await context.read<PostRepository>().getAllPostIds(posts);
+      if (postIds.isNotEmpty) {
+        setState(() {
+          postId = postIds.first;
+        });
+
+        context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
+      }
+    } catch (e) {
+      print('포스트 아이디를 가져오는 데 실패했습니다: $e');
+    }
+  }
+
   void updatePostId(String newPostId) {
     setState(() {
-      postId = newPostId; 
+      postId = newPostId;
     });
 
-    context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
+
+    if (postId != null) {
+      context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
+    }
   }
 
 
@@ -108,8 +144,15 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   }
 
   void _onScroll() {
-    if (_isBottom) context.read<PostBloc>().add(ReadAllPosts(postId: postId, limit: limit));
+    if (_isBottom) {
+      if (postId != null) {
+        context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
+      } else {
+        print('postId가 null입니다.');
+      }
+    }
   }
+
 
   bool get _isBottom {
     if (_scrollController.hasClients) return false;
