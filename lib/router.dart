@@ -8,7 +8,7 @@ import 'data/bloc/login/login_state.dart';
 
 import 'screen/dayofweek_screen.dart';
 import 'screen/editprofile_screen.dart';
-import 'screen/fram_screen.dart';
+import 'screen/frame_screen.dart';
 import 'screen/landing_screen.dart';
 import 'screen/login/email/email_login_screen.dart';
 import 'screen/login/email/signup_email_screen.dart';
@@ -18,7 +18,7 @@ import 'screen/home/mainhome_screen.dart';
 import 'screen/personal_screen.dart';
 import 'screen/home/home_post_screen.dart';
 
-
+final GlobalKey<NavigatorState> _rootTabNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _mainTabNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _homeTabNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _loginTabNavigatorKey = GlobalKey<NavigatorState>();
@@ -26,16 +26,16 @@ final GlobalKey<NavigatorState> _personalTabNavigatorKey = GlobalKey<NavigatorSt
 
 
 final GoRouter router = GoRouter(
-  navigatorKey: _mainTabNavigatorKey,
+  navigatorKey: _rootTabNavigatorKey,
   routes: <RouteBase>[
     GoRoute(
       path: '/',
       builder: (context, state) => LandingScreen(),
     ),
     StatefulShellRoute.indexedStack(
-      parentNavigatorKey: _mainTabNavigatorKey,
+      parentNavigatorKey: _rootTabNavigatorKey,
       builder: (context, state, navigationShell) {
-        return FramScreen(navigationShell: navigationShell);
+        return FrameScreen(navigationShell: navigationShell);
       },
       branches: [
         StatefulShellBranch(
@@ -119,8 +119,8 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'postwriting',
-                  builder: (BuildContext context, GoRouterState state) {
+                    path: 'postwriting',
+                    builder: (BuildContext context, GoRouterState state) {
                       return PostwritingScreen();
                     }
                 ),

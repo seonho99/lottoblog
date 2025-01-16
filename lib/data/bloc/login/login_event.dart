@@ -6,7 +6,7 @@ final class LoginWithEmail extends LoginEvent {
   final String email;
   final String password;
 
-  LoginWithEmail( this.email, this.password);
+  LoginWithEmail(this.email, this.password);
 }
 
 final class SignUpEmail extends LoginEvent{

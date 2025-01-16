@@ -1,5 +1,6 @@
 enum NavItem{
-  main,home,login,personal
+  main,home,login,
+  // personal
 }
 
 sealed class TabNavigationState {
