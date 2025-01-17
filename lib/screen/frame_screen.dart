@@ -27,7 +27,7 @@ class FrameScreen extends StatelessWidget {
                 navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
               }
             },
-              destinations: [
+              destinations: const [
                 NavigationDestination(
                   selectedIcon: Icon(Icons.article),
                   icon: Icon(Icons.article_outlined),

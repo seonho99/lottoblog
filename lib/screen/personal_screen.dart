@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 
+import '../data/bloc/login/login_bloc.dart';
 import '../data/bloc/post/post_bloc.dart';
 import '../data/bloc/post/post_event.dart';
 import '../data/bloc/post/post_state.dart';
@@ -24,7 +25,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   void initState() {
     super.initState();
 
-    final uid = context.read<PostBloc>().getUid();
+    final uid = context.read<LoginBloc>().getUid();
 
     if (uid != null) {
       context.read<PostBloc>().add(FetchMyPosts(uid: uid));
@@ -32,6 +33,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
       print('uid is null');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,20 +114,18 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 builder: (context, state) {
                   if (state is PostInitial) {
                     return Center(child: Text('초기 상태'));
-                  } else if (state is PostLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (state is PostLoaded) {
+                  } else if (state is MyPosts) {
                     return Expanded(
                       child: ListView.builder(
-                        itemCount: state.posts.length,
+                        itemCount: state.myPosts.length,
                         itemBuilder: (context, index) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               MyPostTile(
-                                imageUrl: state.posts[index].imageUrls[0],
-                                title: state.posts[index].title,
-                                postId: state.posts[index].postId,
+                                imageUrl: state.myPosts[index].imageUrls[0],
+                                title: state.myPosts[index].title,
+                                postId: state.myPosts[index].postId,
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 16),

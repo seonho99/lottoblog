@@ -99,8 +99,6 @@ class FirestoreService {
     }
   }
 
-
-
   // 자신의 포스트
   Future<List<PostModel>> fetchMyPosts({required String uid}) async {
     final _postCollection = _fs.collection('posts');

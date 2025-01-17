@@ -104,25 +104,29 @@ class FirebaseAuthService {
     }
   }
 
-  Future<Map<String, dynamic>?> getUserData() async {
-    try {
-      final user = _auth.currentUser;
-      if (user == null) {
-        throw Exception('로그인된 사용자가 없습니다.');
-      }
-
-      DocumentSnapshot docSnapshot = await _fs.collection('users').doc(user.uid)
-          .get();
-
-      if (docSnapshot.exists) {
-        return docSnapshot.data() as Map<String, dynamic>?;
-      } else {
-        throw Exception('사용자 정보가 Firestore에 없습니다.');
-      }
-    } catch (e) {
-      throw Exception('사용자 데이터를 가져오는 데 실패했습니다: ${e.toString()}');
-    }
+  String? getUid(){
+    return _auth.currentUser?.uid;
   }
+
+  // Future<Map<String, dynamic>?> getUserData() async {
+  //   try {
+  //     final user = _auth.currentUser;
+  //     if (user == null) {
+  //       throw Exception('로그인된 사용자가 없습니다.');
+  //     }
+  //
+  //     DocumentSnapshot docSnapshot = await _fs.collection('users').doc(user.uid)
+  //         .get();
+  //
+  //     if (docSnapshot.exists) {
+  //       return docSnapshot.data() as Map<String, dynamic>?;
+  //     } else {
+  //       throw Exception('사용자 정보가 Firestore에 없습니다.');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('사용자 데이터를 가져오는 데 실패했습니다: ${e.toString()}');
+  //   }
+  // }
 
   // 로그아웃
   Future<void> signOut() async {

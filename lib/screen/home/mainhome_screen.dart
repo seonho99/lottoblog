@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_event.dart';
-import 'package:lottoblog/data/repository/post_repository.dart';
-import 'package:lottoblog/screen/home/bottom_loader.dart';
 import 'package:lottoblog/screen/home/post_tile.dart';
 
+import '../../data/bloc/login/login_bloc.dart';
+import '../../data/bloc/login/login_state.dart';
 import '../../data/bloc/post/post_state.dart';
-import '../../models/post_model.dart';
 
 class MainhomeScreen extends StatefulWidget {
   MainhomeScreen({super.key});
@@ -18,20 +17,36 @@ class MainhomeScreen extends StatefulWidget {
 
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
-  // final int limit = 10;
-  // String? postId;
-  // List<PostModel> posts = [];
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   context.read<PostBloc>().add(ReadAllPosts());
+  //   _scrollController.addListener(_onScroll);
+  // }
 
   @override
   void initState() {
     super.initState();
 
-    Future.microtask(() {
-      context.read<PostBloc>().add(ReadAllPosts());
+    // 초기 데이터 로드
+    _initializePosts();
 
-      _scrollController.addListener(_onScroll);
-    });
+    // 스크롤 이벤트 추가
+    _scrollController.addListener(_onScroll);
+  }
 
+  /// 초기 데이터를 불러오는 메서드
+  void _initializePosts() {
+    print('초기 데이터를 불러옵니다.');
+    context.read<PostBloc>().add(ReadAllPosts());
+  }
+
+  /// 로그인 후 데이터를 다시 불러오는 메서드
+  void _loadPostsAfterLogin() {
+    print('로그인 후 데이터를 다시 불러옵니다.');
+    context.read<PostBloc>().add(ReadAllPosts());
   }
 
   // @override
@@ -69,42 +84,52 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   //   }
   // }
 
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostBloc, PostState>(
-      builder: (context, state) {
-        if (state is PostInitial) {
-          return Container();
-        } else if (state is PostLoading) {
-          return BottomLoader();
-        } else if (state is PostLoaded) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: Text(
-                      '커뮤니티',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w800),
+    return BlocListener<LoginBloc, LoginState>(
+      listenWhen: (previousState, currentState) {
+        print('Previous State: $previousState');
+        print('Current State: $currentState');
+
+        return currentState is LoginAuthenticated;
+      },
+      listener: (context, state) {
+        print("로그인 인증됨: ReadAllPosts 이벤트 실행");
+        if (state is LoginAuthenticated) {
+          context.read<PostBloc>().add(ReadAllPosts());
+        }
+      },
+      child: BlocBuilder<PostBloc, PostState>(
+        builder: (context, state) {
+          if (state is PostInitial) {
+            return Container();
+          } else if (state is OpenPosts) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Text(
+                        '커뮤니티',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.w800),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: state.posts.length,
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: state.openPosts.length,
                         itemBuilder: (context, index) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               PostTile(
-                                imageUrl: state.posts[index].imageUrls[0],
-                                title: state.posts[index].title,
+                                imageUrl: state.openPosts[index].imageUrls[0],
+                                title: state.openPosts[index].title,
                                 // userName: state.,
                               ),
                               Padding(
@@ -116,17 +141,19 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                               ),
                             ],
                           );
-                        }),
-                  ),
-                ],
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        } else if (state is PostFailure) {
-          return Center(child: Text('실패: ${state.errorMessage}'));
-        }
-        return Center();
-      },
+            );
+          } else if (state is PostFailure) {
+            return Center(child: Text('실패: ${state.errorMessage}'));
+          }
+          return Center();
+        },
+      ),
     );
   }
 
@@ -149,7 +176,6 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   void _onScroll() {
     if (_isBottom) context.read<PostBloc>().add(ReadAllPosts());
   }
-
 
   bool get _isBottom {
     if (_scrollController.hasClients) return false;

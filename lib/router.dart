@@ -48,7 +48,7 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'post/:postId',
+                  path: 'post',
                   builder: (context, state) {
                     return HomePostScreen();
                   },

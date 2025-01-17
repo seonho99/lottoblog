@@ -8,6 +8,10 @@ import 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthRepository _authRepository;
 
+  String? getUid() {
+    return _authRepository.getUid();
+  }
+
   LoginBloc(this._authRepository) : super(LoginUnAuthenticated()) {
     on<SignUpEmail>((event, emit) async {
       try {

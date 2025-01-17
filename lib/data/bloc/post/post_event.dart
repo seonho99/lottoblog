@@ -38,11 +38,7 @@ final class ReadPost extends PostEvent {
 }
 
 
-final class ReadAllPosts extends PostEvent {
-  // final String postId;
-  //
-  // ReadAllPosts({required this.postId});
-}
+final class ReadAllPosts extends PostEvent {}
 
 // final class ReadAllPosts extends PostEvent {
 //   final String postId;
