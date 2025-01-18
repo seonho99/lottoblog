@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-
 import '../data/bloc/login/login_bloc.dart';
 import '../data/bloc/post/post_bloc.dart';
 import '../data/bloc/post/post_event.dart';
@@ -20,7 +19,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
   String? uid;
 
-
   @override
   void initState() {
     super.initState();
@@ -28,12 +26,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
     final uid = context.read<LoginBloc>().getUid();
 
     if (uid != null) {
-      context.read<PostBloc>().add(FetchMyPosts(uid: uid));
+    context.read<PostBloc>().add(FetchMyPosts(uid: uid));
     } else {
       print('uid is null');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +66,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       context.go('/personal/editprofile');
                     },
                     child: Column(
@@ -91,7 +88,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     color: Colors.grey.shade300,
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       context.go('/personal/postwriting');
                     },
                     child: Column(
@@ -128,7 +125,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                 postId: state.myPosts[index].postId,
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 child: Divider(
                                   color: Colors.grey.shade300,
                                   thickness: 1.0,
@@ -151,14 +149,15 @@ class _PersonalScreenState extends State<PersonalScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll(){
-    if(_isBottom && uid != null){
+  void _onScroll() {
+    if (_isBottom && uid != null) {
       context.read<PostBloc>().add(FetchMyPosts(uid: uid!));
     }
   }

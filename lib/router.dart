@@ -18,12 +18,16 @@ import 'screen/home/mainhome_screen.dart';
 import 'screen/personal_screen.dart';
 import 'screen/home/home_post_screen.dart';
 
-final GlobalKey<NavigatorState> _rootTabNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> _mainTabNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> _homeTabNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> _loginTabNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> _personalTabNavigatorKey = GlobalKey<NavigatorState>();
-
+final GlobalKey<NavigatorState> _rootTabNavigatorKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _mainTabNavigatorKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _homeTabNavigatorKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _loginTabNavigatorKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _personalTabNavigatorKey =
+    GlobalKey<NavigatorState>();
 
 final GoRouter router = GoRouter(
   navigatorKey: _rootTabNavigatorKey,
@@ -122,8 +126,7 @@ final GoRouter router = GoRouter(
                     path: 'postwriting',
                     builder: (BuildContext context, GoRouterState state) {
                       return PostwritingScreen();
-                    }
-                ),
+                    }),
                 GoRoute(
                   path: 'editprofile',
                   builder: (BuildContext context, GoRouterState state) {
@@ -137,7 +140,6 @@ final GoRouter router = GoRouter(
       ],
     ),
   ],
-
   redirect: (context, state) {
     final loginBloc = context.read<LoginBloc>();
     final currentState = loginBloc.state;
@@ -149,5 +151,15 @@ final GoRouter router = GoRouter(
         state.uri.path.contains('/login')) {
       return '/personal';
     }
+
+    // final loginState = BlocProvider.of<LoginBloc>(context).state;
+    //
+    // final bool loggedIn = loginState is LoginAuthenticated;
+    // final bool loggingIn = state.uri.path.contains('/login');
+    //
+    // if(!loggedIn && loggingIn){
+    //   return '/login';
+    // }
+    // return null;
   },
 );

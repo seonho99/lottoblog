@@ -18,36 +18,16 @@ class MainhomeScreen extends StatefulWidget {
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   context.read<PostBloc>().add(ReadAllPosts());
-  //   _scrollController.addListener(_onScroll);
-  // }
-
   @override
   void initState() {
     super.initState();
 
-    // 초기 데이터 로드
-    _initializePosts();
-
-    // 스크롤 이벤트 추가
+    context.read<PostBloc>().add(ReadAllPosts());
     _scrollController.addListener(_onScroll);
   }
 
-  /// 초기 데이터를 불러오는 메서드
-  void _initializePosts() {
-    print('초기 데이터를 불러옵니다.');
-    context.read<PostBloc>().add(ReadAllPosts());
-  }
 
-  /// 로그인 후 데이터를 다시 불러오는 메서드
-  void _loadPostsAfterLogin() {
-    print('로그인 후 데이터를 다시 불러옵니다.');
-    context.read<PostBloc>().add(ReadAllPosts());
-  }
+
 
   // @override
   // void initState() {
@@ -88,22 +68,24 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listenWhen: (previousState, currentState) {
-        print('Previous State: $previousState');
-        print('Current State: $currentState');
+        // print('Previous State: $previousState');
+        // print('Current State: $currentState');
 
         return currentState is LoginAuthenticated;
       },
       listener: (context, state) {
-        print("로그인 인증됨: ReadAllPosts 이벤트 실행");
         if (state is LoginAuthenticated) {
+          print('LoginAuthenticated 상태 감지됨. ReadAllPosts 이벤트 호출');
           context.read<PostBloc>().add(ReadAllPosts());
+          // print("ReadAllPosts 이벤트 추가됨");
         }
       },
       child: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
           if (state is PostInitial) {
             return Container();
-          } else if (state is OpenPosts) {
+          } else if (state is OpenPosts || state is LoginAuthenticated) {
+            print('openPosts: ${state.openPosts}');
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -134,7 +116,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                const EdgeInsets.symmetric(vertical: 16),
                                 child: Divider(
                                     color: Colors.grey.shade300,
                                     thickness: 1.0),
@@ -151,7 +133,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
           } else if (state is PostFailure) {
             return Center(child: Text('실패: ${state.errorMessage}'));
           }
-          return Center();
+          return Center(child: Text('데이터 불러오기 실패'),);
         },
       ),
     );

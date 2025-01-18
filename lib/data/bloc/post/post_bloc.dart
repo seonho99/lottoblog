@@ -73,6 +73,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<ReadAllPosts>((event, emit) async {
       try {
         final readAllPosts = await postRepository.readAllPosts();
+        print('Fetched openPosts: $readAllPosts');
+
         emit(OpenPosts(readAllPosts));
       } catch (e) {
         emit(PostFailure(errorMessage: e.toString()));
