@@ -62,9 +62,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
         final myPosts = await postRepository.fetchMyPosts(uid: event.uid);
 
-        emit(MyPosts(
-            // readAllPosts,
-            myPosts));
+        emit(MyPosts(myPosts));
       } catch (e) {
         emit(PostFailure(errorMessage: e.toString()));
       }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/login/login_event.dart';
+import 'package:lottoblog/data/bloc/login/login_state.dart';
 
 import '../data/bloc/login/login_bloc.dart';
 import '../data/bloc/post/post_bloc.dart';
@@ -19,18 +21,19 @@ class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
   String? uid;
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   context.read<LoginBloc>().add(FetchUid());
 
-    final uid = context.read<LoginBloc>().getUid();
-
-    if (uid != null) {
-    context.read<PostBloc>().add(FetchMyPosts(uid: uid));
-    } else {
-      print('uid is null');
-    }
-  }
+    // final uid = context.read<LoginBloc>().getUid();
+    // if (uid != null) {
+    // context.read<PostBloc>().add(FetchMyPosts(uid: uid));
+    // } else {
+    //   print('uid is null');
+    // }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,41 +110,57 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 ],
               ),
               SizedBox(height: 40),
-              BlocBuilder<PostBloc, PostState>(
-                builder: (context, state) {
-                  if (state is PostInitial) {
-                    return Center(child: Text('초기 상태'));
-                  } else if (state is MyPosts) {
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: state.myPosts.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyPostTile(
-                                imageUrl: state.myPosts[index].imageUrls[0],
-                                title: state.myPosts[index].title,
-                                postId: state.myPosts[index].postId,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Divider(
-                                  color: Colors.grey.shade300,
-                                  thickness: 1.0,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  } else if (state is PostFailure) {
-                    return Center(child: Text('실패: ${state.errorMessage}'));
-                  }
-                  return Center();
+              BlocListener<LoginBloc,LoginState>(
+                listenWhen: (previousState, currentState) {
+                  // print('Previous State: $previousState');
+                  // print('Current State: $currentState');
+
+                  return currentState is LoginAuthenticated;
                 },
+                listener: (context, state) {
+                  if (state is LoginAuthenticated) {
+                    final uid = state.uid;
+                    print('LoginAuthenticated 상태 감지됨. UID: $uid');
+                    context.read<PostBloc>().add(FetchMyPosts(uid: uid));
+                    print("FetchMyPosts 이벤트 호출");
+                  }
+                },
+                child: BlocBuilder<PostBloc, PostState>(
+                  builder: (context, state) {
+                    if (state is PostInitial) {
+                      return Center(child: Text('초기 상태'));
+                    } else if (state is MyPosts) {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: state.myPosts.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                MyPostTile(
+                                  imageUrl: state.myPosts[index].imageUrls[0],
+                                  title: state.myPosts[index].title,
+                                  postId: state.myPosts[index].postId,
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Divider(
+                                    color: Colors.grey.shade300,
+                                    thickness: 1.0,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      );
+                    } else if (state is PostFailure) {
+                      return Center(child: Text('실패: ${state.errorMessage}'));
+                    }
+                    return Center(child: Text('데이터 불러오기 실패'),);
+                  },
+                ),
               ),
             ],
           ),
@@ -156,16 +175,16 @@ class _PersonalScreenState extends State<PersonalScreen> {
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_isBottom && uid != null) {
-      context.read<PostBloc>().add(FetchMyPosts(uid: uid!));
-    }
-  }
-
-  bool get _isBottom {
-    if (_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
-  }
+  // void _onScroll() {
+  //   if (_isBottom && uid != null) {
+  //     context.read<PostBloc>().add(FetchMyPosts(uid: uid!));
+  //   }
+  // }
+  //
+  // bool get _isBottom {
+  //   if (_scrollController.hasClients) return false;
+  //   final maxScroll = _scrollController.position.maxScrollExtent;
+  //   final currentScroll = _scrollController.offset;
+  //   return currentScroll >= (maxScroll * 0.9);
+  // }
 }

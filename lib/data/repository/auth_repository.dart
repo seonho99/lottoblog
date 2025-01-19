@@ -8,10 +8,10 @@ class AuthRepository {
 
   AuthRepository(this._firebaseAuthService);
 
-  String? getUid() {
+  Future<String?> getUid() async {
     try {
-      return _firebaseAuthService.user?.uid;
-    } catch (e){
+      return await _firebaseAuthService.getUid();
+    } catch (e) {
       rethrow;
     }
   }

@@ -4,20 +4,19 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/user_model.dart';
 
-
-
 class FirebaseAuthService {
   final FirebaseAuth _auth;
   final FirebaseFirestore _fs = FirebaseFirestore.instance;
 
-
-  FirebaseAuthService():_auth = FirebaseAuth.instance{
+  FirebaseAuthService() : _auth = FirebaseAuth.instance {
     _auth.setLanguageCode('kr');
   }
 
   User? get user => _auth.currentUser;
 
   final storageRef = FirebaseStorage.instance.ref();
+
+
 
   // 회원가입 코드
   Future<void> signUpWithEmail({
@@ -27,10 +26,11 @@ class FirebaseAuthService {
   }) async {
     String? errorMessage;
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       User? user = _auth.currentUser;
 
-      if( user!= null) {
+      if (user != null) {
         await _auth.currentUser?.updateDisplayName(name);
         await _auth.currentUser?.sendEmailVerification();
 
@@ -43,10 +43,7 @@ class FirebaseAuthService {
         );
 
         await _fs.collection('users').doc(user.uid).set(userModel.toMap());
-
       }
-
-
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'weak-password':
@@ -72,6 +69,19 @@ class FirebaseAuthService {
   // 로그인 확인
   bool isLoggedIn() {
     return _auth.currentUser != null;
+  }
+
+  Future<String?> getUid() async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        return currentUser.uid;
+      } else {
+        throw Exception('현재 로그인된 사용자가 없습니다.');
+      }
+    } catch (e) {
+      throw Exception('사용자 UID 가져오기 실패: $e');
+    }
   }
 
   // 로그인
@@ -104,10 +114,6 @@ class FirebaseAuthService {
     }
   }
 
-  String? getUid(){
-    return _auth.currentUser?.uid;
-  }
-
   // Future<Map<String, dynamic>?> getUserData() async {
   //   try {
   //     final user = _auth.currentUser;
@@ -136,8 +142,6 @@ class FirebaseAuthService {
       throw Exception('로그아웃 실패: ${e.toString()}');
     }
   }
-
-
 
   // 비밀번호 재설정
   Future<void> resetPassword({
@@ -174,6 +178,8 @@ class FirebaseAuthService {
       throw Exception('수정 실패:$e');
     }
   }
+
+
 
   // 유저 사진 변경
   Future<void> updatePhotoUrl(String? url) async {
