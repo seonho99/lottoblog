@@ -29,37 +29,49 @@ import '../../../models/post_model.dart';
 
 sealed class PostState {
   final List<PostModel> myPosts;
-  final List<PostModel> openPosts;
 
-  PostState({required this.myPosts, required this.openPosts});
+  PostState({required this.myPosts});
+
+  // @override
+  // String toString() {
+  //   return 'PostState(myPosts: ${myPosts.length}, openPosts: ${openPosts.length}';
+  // }
 }
 
 // 초기 상태
 final class PostInitial extends PostState {
-  PostInitial() : super(myPosts: [], openPosts: []);
+  PostInitial() : super(myPosts: []);
+
+  // @override
+  // String toString() {
+  //   return 'PostInitial(myPosts: ${myPosts.length}';
+  // }
 }
 
 // 사용자 게시글 상태
 final class MyPosts extends PostState {
-  MyPosts(List<PostModel> myPosts
-      // ,List<PostModel> openPosts
-      ) : super(myPosts: myPosts, openPosts: []);
+  MyPosts(List<PostModel> myPosts) : super(myPosts: myPosts);
+
+  // @override
+  // String toString() {
+  //   return 'MyPosts(myPosts: ${myPosts.map((post) => post.toMap()).toList()})';
+  // }
 }
 
-// 공개 게시글 상태
-final class OpenPosts extends PostState {
-  OpenPosts(List<PostModel> openPosts)
-      : super(myPosts: [], openPosts: openPosts);
-}
 
 // 게시글 갱신 상태
 final class PostsLoaded extends PostState {
-  PostsLoaded(List<PostModel> myPosts, List<PostModel> openPosts) : super(myPosts: myPosts, openPosts: openPosts);
+  PostsLoaded(List<PostModel> myPosts) : super(myPosts: myPosts);
+
+  // @override
+  // String toString() {
+  //   return 'PostsLoaded(myPosts: ${myPosts.map((post) => post.toMap()).toList()}, openPosts: ${openPosts.map((post) => post.toMap()).toList()})';
+  // }
 }
 
 // 에러 상태
 final class PostFailure extends PostState {
   final String errorMessage;
 
-  PostFailure({required this.errorMessage}) : super(myPosts: [], openPosts: []);
+  PostFailure({required this.errorMessage}) : super (myPosts: []);
 }

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/post_model.dart';
 
 class FirestoreService {
-  FirebaseFirestore _fs = FirebaseFirestore.instance;
+  final FirebaseFirestore _fs = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Future<void> getUserModeltoFS(UserModel userModel) async {
   //   try {
@@ -91,36 +93,61 @@ class FirestoreService {
           .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      print('fetching posts: $allData');
+      // print('fetching posts: $allData');
       return allData;
     } catch (e) {
-      print('Error fetching posts: $e');
-      return [];
+      // print('Error fetching posts: $e');
+      throw Exception('게시글 목록을 가져오는데 실패 했습니다.');
     }
   }
 
   // 자신의 포스트
-  Future<List<PostModel>> fetchMyPosts({required String uid}) async {
-    final _postCollection = _fs.collection('posts');
-    List<PostModel> returnData = [];
+  Future<List<PostModel>> fetchUserPosts() async{
+    final postCollection = _fs.collection('posts');
+    List<PostModel> myPosts = [];
 
     try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _postCollection.where('uid', isEqualTo: uid).get();
-
-      final queryDocumentSnapshot = querySnapshot.docs;
-
-      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-          in queryDocumentSnapshot) {
-        returnData.add(PostModel.fromMap(doc.data()));
+      final User? user = _auth.currentUser;
+      if(user == null){
+        throw Exception('로그인이 되어 있지 않습니다.');
       }
-      print('fetching my posts: $returnData');
-    } catch (e) {
-      print('Firestore fetch error: $e');
-      throw Exception('게시글을 가져오는데 실패 했습니다.');
+      final String uid = user.uid;
+
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await postCollection.where('uid',isEqualTo: uid).get();
+      final queryDocumentSnapshot = querySnapshot.docs;
+      for(QueryDocumentSnapshot<Map<String, dynamic>> docs in queryDocumentSnapshot){
+        myPosts.add(PostModel.fromMap(docs.data()));
+
+      }
+    } catch (e){
+      throw Exception('fetch error');
     }
-    return returnData;
+    return myPosts;
   }
+
+  // Future<List<PostModel>> fetchMyPosts() async {
+  //   final _postCollection = _fs.collection('posts');
+  //   List<PostModel> returnData = [];
+  //
+  //   try {
+  //     final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+  //         await _postCollection.where('uid', isEqualTo: uid).get();
+  //
+  //     final queryDocumentSnapshot = querySnapshot.docs;
+  //
+  //     for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+  //         in queryDocumentSnapshot) {
+  //       print('returnData: $returnData');
+  //       returnData.add(PostModel.fromMap(doc.data()));
+  //     }
+  //     // print('fetching my posts: $returnData');
+  //   } catch (e) {
+  //     // print('Firestore fetch error: $e');
+  //     throw Exception('게시글을 가져오는데 실패 했습니다.');
+  //   }
+  //   print('returnData: $returnData');
+  //   return returnData;
+  // }
 
   Future<void> updatePost(PostModel posts) async {
     final _postCollection = _fs.collection('posts');

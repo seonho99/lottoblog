@@ -53,13 +53,12 @@ class PostRepository {
     }
   }
 
-  Future<List<PostModel>> fetchMyPosts({required String uid}) async {
+  Future<List<PostModel>> fetchUserPosts() async {
     try {
-      return await _firestoreService.fetchMyPosts(uid: uid);
+      return await _firestoreService.fetchUserPosts();
     }catch(e){
-      throw Exception('게시글을 가져오는데 실패했습니다.: $e');
+      throw Exception('내 게시글을 가져오는데 실패했습니다.: $e');
     }
-
   }
 
 

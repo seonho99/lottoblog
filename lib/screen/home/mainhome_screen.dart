@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/post/post_bloc.dart';
-import 'package:lottoblog/data/bloc/post/post_event.dart';
+import 'package:lottoblog/data/bloc/read_posts/read_posts_event.dart';
 import 'package:lottoblog/screen/home/post_tile.dart';
 
 import '../../data/bloc/login/login_bloc.dart';
 import '../../data/bloc/login/login_state.dart';
-import '../../data/bloc/post/post_state.dart';
+import '../../data/bloc/read_posts/read_posts_bloc.dart';
+import '../../data/bloc/read_posts/read_posts_state.dart';
 
 class MainhomeScreen extends StatefulWidget {
   MainhomeScreen({super.key});
@@ -22,11 +22,9 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   void initState() {
     super.initState();
 
-    context.read<PostBloc>().add(ReadAllPosts());
+    context.read<ReadPostsBloc>().add(FetchAllPosts());
     _scrollController.addListener(_onScroll);
   }
-
-
 
 
   // @override
@@ -66,26 +64,28 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listenWhen: (previousState, currentState) {
-        // print('Previous State: $previousState');
-        // print('Current State: $currentState');
-
-        return currentState is LoginAuthenticated;
-      },
-      listener: (context, state) {
-        if (state is LoginAuthenticated) {
-          print('LoginAuthenticated 상태 감지됨. ReadAllPosts 이벤트 호출');
-          context.read<PostBloc>().add(ReadAllPosts());
-          // print("ReadAllPosts 이벤트 추가됨");
-        }
-      },
-      child: BlocBuilder<PostBloc, PostState>(
+    return
+      // BlocListener<LoginBloc, LoginState>(
+      // listenWhen: (previousState, currentState) {
+      //   // print('Previous State: $previousState');
+      //   // print('Current State: $currentState');
+      //
+      //   return currentState is LoginAuthenticated;
+      // },
+      // listener: (context, state) {
+      //   if (state is LoginAuthenticated) {
+      //     // print('LoginAuthenticated 상태 감지됨. ReadAllPosts 이벤트 호출');
+      //     context.read<ReadPostsBloc>().add(FetchAllPosts());
+      //     // print("ReadAllPosts 이벤트 추가됨");
+      //   }
+      // },
+      // child:
+      BlocBuilder<ReadPostsBloc, ReadPostsState>(
         builder: (context, state) {
-          if (state is PostInitial) {
+          if (state is ReadPostsInitial) {
             return Container();
-          } else if (state is OpenPosts || state is LoginAuthenticated) {
-            print('openPosts: ${state.openPosts}');
+          } else if (state is ReadAllPosts) {
+            print('ReadAllPosts: $state');
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -104,14 +104,14 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                     ),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: state.openPosts.length,
+                        itemCount: state.readAllPosts.length,
                         itemBuilder: (context, index) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               PostTile(
-                                imageUrl: state.openPosts[index].imageUrls[0],
-                                title: state.openPosts[index].title,
+                                imageUrl: state.readAllPosts[index].imageUrls[0],
+                                title: state.readAllPosts[index].title,
                                 // userName: state.,
                               ),
                               Padding(
@@ -130,12 +130,12 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                 ),
               ),
             );
-          } else if (state is PostFailure) {
+          } else if (state is ReadPostsFailure) {
             return Center(child: Text('실패: ${state.errorMessage}'));
           }
           return Center(child: Text('데이터 불러오기 실패'),);
         },
-      ),
+      // ),
     );
   }
 
@@ -156,7 +156,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   // }
 
   void _onScroll() {
-    if (_isBottom) context.read<PostBloc>().add(ReadAllPosts());
+    if (_isBottom) context.read<ReadPostsBloc>().add(FetchAllPosts());
   }
 
   bool get _isBottom {

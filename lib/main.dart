@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
+import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
 import 'package:lottoblog/data/bloc/tab_navigation/tab_navigation_bloc.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/router.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   final EmailResetPasswordBloc emailResetPasswordBloc;
   final PostRepository postRepository;
   final PostBloc postBloc;
+  final ReadPostsBloc readPostsBloc;
   final TabNavigationBloc tabNavigationBloc;
 
   MyApp({
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
     EmailResetPasswordBloc? emailResetPasswordBloc,
     PostRepository? postRepository,
     PostBloc? postBloc,
+    ReadPostsBloc? readPostsBloc,
     TabNavigationBloc? tabNavigationBloc,
   })  : authRepository =
             authRepository ?? AuthRepository(FirebaseAuthService()),
@@ -50,6 +53,8 @@ class MyApp extends StatelessWidget {
         postBloc = postBloc ??
             PostBloc(postRepository ?? PostRepository(FirestoreService()),
                 authRepository ?? AuthRepository(FirebaseAuthService())),
+        readPostsBloc = readPostsBloc ??
+            ReadPostsBloc(postRepository ?? PostRepository(FirestoreService())),
         tabNavigationBloc = TabNavigationBloc();
 
   @override
@@ -73,6 +78,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<PostBloc>(
             create: (context) => postBloc,
+          ),
+          BlocProvider<ReadPostsBloc>(
+            create: (context) => readPostsBloc,
           ),
           BlocProvider<TabNavigationBloc>(
             create: (context) => tabNavigationBloc,

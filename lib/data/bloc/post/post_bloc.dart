@@ -30,7 +30,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<CreatePost>((event, emit) async {
       try {
         await postRepository.createPost(event.posts);
-        emit(PostsLoaded(state.myPosts, state.openPosts));
+        emit(PostsLoaded(state.myPosts));
       } catch(e) {
         emit(PostFailure(errorMessage: e.toString()));
       }
@@ -58,9 +58,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
     on<FetchMyPosts>((event, emit) async {
       try {
-        // final readAllPosts = await postRepository.readAllPosts();
-
-        final myPosts = await postRepository.fetchMyPosts(uid: event.uid);
+        final myPosts = await postRepository.fetchUserPosts();
 
         emit(MyPosts(myPosts));
       } catch (e) {
@@ -68,16 +66,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     });
 
-    on<ReadAllPosts>((event, emit) async {
-      try {
-        final readAllPosts = await postRepository.readAllPosts();
-        print('Fetched openPosts: $readAllPosts');
 
-        emit(OpenPosts(readAllPosts));
-      } catch (e) {
-        emit(PostFailure(errorMessage: e.toString()));
-      }
-    });
 
     // on<UpdatePost>((event, emit) async {
     //   List<PostModel> postLists = await postRepository.updatePost(postmodel);

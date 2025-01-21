@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/login/login_event.dart';
 import 'package:lottoblog/data/bloc/login/login_state.dart';
+import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
 
 import '../data/bloc/login/login_bloc.dart';
 import '../data/bloc/post/post_bloc.dart';
@@ -19,21 +20,13 @@ class PersonalScreen extends StatefulWidget {
 
 class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
-  String? uid;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   context.read<LoginBloc>().add(FetchUid());
+ @override
+  void initState() {
+   super.initState();
 
-    // final uid = context.read<LoginBloc>().getUid();
-    // if (uid != null) {
-    // context.read<PostBloc>().add(FetchMyPosts(uid: uid));
-    // } else {
-    //   print('uid is null');
-    // }
-  // }
+   context.read<PostBloc>().add(FetchMyPosts());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,25 +103,28 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 ],
               ),
               SizedBox(height: 40),
+
+              // 2. BloC Listner와 Bloc Login도 똑같이 사용하는지
+
               BlocListener<LoginBloc,LoginState>(
                 listenWhen: (previousState, currentState) {
-                  // print('Previous State: $previousState');
-                  // print('Current State: $currentState');
+                  print('Previous State: $previousState');
+                  print('Current State: $currentState');
 
                   return currentState is LoginAuthenticated;
                 },
                 listener: (context, state) {
                   if (state is LoginAuthenticated) {
-                    final uid = state.uid;
-                    print('LoginAuthenticated 상태 감지됨. UID: $uid');
-                    context.read<PostBloc>().add(FetchMyPosts(uid: uid));
-                    print("FetchMyPosts 이벤트 호출");
+                    context.read<PostBloc>().add(FetchMyPosts());
                   }
                 },
-                child: BlocBuilder<PostBloc, PostState>(
+                child:
+                BlocBuilder<PostBloc, PostState>(
                   builder: (context, state) {
-                    if (state is PostInitial) {
+                    print('state: $state');
+                    if (state is LoginAuthenticated) {
                       return Center(child: Text('초기 상태'));
+                      // 1. myPosts에 데이터가 뭐가 들었는지 확인
                     } else if (state is MyPosts) {
                       return Expanded(
                         child: ListView.builder(
