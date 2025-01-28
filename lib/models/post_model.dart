@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// PostModel 객체 추가 시 화면이 안나옴
+// firestore collection 삭제 후
+// create에 PostModel 객체 추가 재작성 시 성공
+
 final class PostModel {
   String? postId; // 포스트 ID
   String title; // 글 제목
@@ -7,6 +11,7 @@ final class PostModel {
   List<String> imageUrls; // 이미지 URL 목록
   DateTime createdAt; // 작성 시간
   String? uid; // 작성자 ID
+  List<String> likePostUid;
   int likeCount; // 좋아요 개수
   int reportCount; // 신고 횟수
 
@@ -16,6 +21,7 @@ final class PostModel {
     required this.content,
     this.imageUrls = const [],
     this.uid,
+    this.likePostUid = const [],
     this.likeCount = 0,
     this.reportCount = 0,
     createdAt,
@@ -30,6 +36,7 @@ final class PostModel {
       'imageUrls': imageUrls,
       'createdAt': createdAt,
       'uid': uid,
+      'likePostUid': likePostUid,
       'likeCount': likeCount,
       'reportCount': reportCount,
       'postId': postId,
@@ -44,12 +51,13 @@ final class PostModel {
       imageUrls: List<String>.from(map['imageUrls'] as List),
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       uid: map['uid'],
+      likePostUid: List<String>.from(map['likePostUid'] as List),
       likeCount: map['likeCount'] ?? 0,
       reportCount: map['reportCount'] ?? 0,
     );
   }
   @override
   String toString() {
-    return 'PostModel(postId: $postId, title: $title, content: $content, imageUrls: $imageUrls, createdAt: $createdAt, uid: $uid, likeCount: $likeCount, reportCount: $reportCount)';
+    return 'PostModel(postId: $postId, title: $title, content: $content, imageUrls: $imageUrls, createdAt: $createdAt, uid: $uid, likePostUid: $likePostUid ,likeCount: $likeCount, reportCount: $reportCount)';
   }
 }

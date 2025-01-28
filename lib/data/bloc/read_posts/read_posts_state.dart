@@ -12,16 +12,24 @@ final class ReadPostsInitial extends ReadPostsState{
 }
 
 // 공개 게시글 상태
-final class ReadAllPosts extends ReadPostsState {
+final class ReadAllPostsState extends ReadPostsState {
 
-  ReadAllPosts(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
+  ReadAllPostsState(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
+}
+
+final class PostUpdatedState extends ReadPostsState{
+  final PostModel updatedPost;
+
+  PostUpdatedState({
+    required List<PostModel> readAllPosts,
+    required this.updatedPost}) : super(readAllPosts: readAllPosts);
 }
 
 // 신고, 차단 할 때
-final class ReadPostsLoaded extends ReadPostsState {
-
-  ReadPostsLoaded(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
-}
+// final class ReadPostsLoaded extends ReadPostsState {
+//
+//   ReadPostsLoaded(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
+// }
 
 // 에러 상태
 final class ReadPostsFailure extends ReadPostsState {

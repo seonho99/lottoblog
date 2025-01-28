@@ -7,11 +7,11 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
   final PostRepository postRepository;
 
   ReadPostsBloc(this.postRepository) : super (ReadPostsInitial()) {
-    on<FetchAllPosts>((event, emit) async {
+    on<FetchAllPostsEvent>((event, emit) async {
       try {
         final readAllPosts = await postRepository.readAllPosts();
 
-        emit(ReadAllPosts(readAllPosts));
+        emit(ReadAllPostsState(readAllPosts));
       } catch (e) {
         emit(ReadPostsFailure(errorMessage: e.toString()));
       }

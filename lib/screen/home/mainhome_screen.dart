@@ -22,7 +22,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   void initState() {
     super.initState();
 
-    context.read<ReadPostsBloc>().add(FetchAllPosts());
+    context.read<ReadPostsBloc>().add(FetchAllPostsEvent());
     _scrollController.addListener(_onScroll);
   }
 
@@ -64,27 +64,11 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      // BlocListener<LoginBloc, LoginState>(
-      // listenWhen: (previousState, currentState) {
-      //   // print('Previous State: $previousState');
-      //   // print('Current State: $currentState');
-      //
-      //   return currentState is LoginAuthenticated;
-      // },
-      // listener: (context, state) {
-      //   if (state is LoginAuthenticated) {
-      //     // print('LoginAuthenticated 상태 감지됨. ReadAllPosts 이벤트 호출');
-      //     context.read<ReadPostsBloc>().add(FetchAllPosts());
-      //     // print("ReadAllPosts 이벤트 추가됨");
-      //   }
-      // },
-      // child:
-      BlocBuilder<ReadPostsBloc, ReadPostsState>(
+    return BlocBuilder<ReadPostsBloc, ReadPostsState>(
         builder: (context, state) {
           if (state is ReadPostsInitial) {
             return Container();
-          } else if (state is ReadAllPosts) {
+          } else if (state is ReadAllPostsState) {
             print('ReadAllPosts: $state');
             return SafeArea(
               child: Padding(
@@ -156,7 +140,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   // }
 
   void _onScroll() {
-    if (_isBottom) context.read<ReadPostsBloc>().add(FetchAllPosts());
+    if (_isBottom) context.read<ReadPostsBloc>().add(FetchAllPostsEvent());
   }
 
   bool get _isBottom {

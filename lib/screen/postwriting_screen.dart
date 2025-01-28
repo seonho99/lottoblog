@@ -123,12 +123,14 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       return ;
     }
 
+
     final posts = PostModel(
       title: _textControllerTitle.text.trim(),
       content: _textControllerContents.text.trim(),
       imageUrls: imageUrls,
       createdAt: DateTime.now(),
       uid: uid,
+      likePostUid: [],
       likeCount: 0,
       reportCount: 0,
       postId: '',
