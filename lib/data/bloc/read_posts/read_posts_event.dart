@@ -6,8 +6,6 @@ final class FetchAllPostsEvent extends ReadPostsEvent{}
 final class LikePostEvent extends ReadPostsEvent {
   final String? postId;
   final String? uid;
-  final List<String>? likePostUid;
-  final bool? isLiked;
 
-  LikePostEvent(this.postId, this.uid, this.likePostUid, this.isLiked);
+  LikePostEvent({required this.postId,required this.uid});
 }

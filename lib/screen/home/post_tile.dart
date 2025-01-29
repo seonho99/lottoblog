@@ -11,6 +11,7 @@ class PostTile extends StatefulWidget {
   final String? imageUrl;
   final String title;
   final bool initialLiked;
+  final int initialLikeCount;
   final VoidCallback? onTap;
 
   PostTile({
@@ -18,6 +19,7 @@ class PostTile extends StatefulWidget {
     this.imageUrl,
     required this.title,
     this.initialLiked = false,
+    this.initialLikeCount = 0,
     this.onTap,
   });
 
@@ -27,15 +29,22 @@ class PostTile extends StatefulWidget {
 
 class _PostTileState extends State<PostTile> {
   late bool isLiked;
+  late int likeCount;
 
   @override
   void initState() {
     super.initState();
     isLiked = widget.initialLiked;
+    likeCount = widget.initialLikeCount;
   }
 
   void toggleLike() {
     setState(() {
+      if(isLiked){
+        likeCount--;
+      } else {
+        likeCount++;
+      }
       isLiked = !isLiked;
     });
   }
@@ -98,6 +107,10 @@ class _PostTileState extends State<PostTile> {
                     LikeWidget(
                       isLiked,
                       toggleLike,
+                    ),
+                    const SizedBox(width: 8),
+                    Text('$likeCount',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
