@@ -27,6 +27,44 @@ class FirestoreService {
     }
   }
 
+
+  Future<PostModel?> likeState(String postId) async {
+    final postCollection = _fs.collection('posts');
+    try {
+      DocumentReference postRef = postCollection.doc(postId);
+      DocumentSnapshot postSnapshot = await postRef.get();
+
+      if(!postSnapshot.exists){
+        throw Exception('게시글이 존재하지 않습니다.');
+      }
+
+      final Map<String, dynamic> data = postSnapshot.data() as Map<String, dynamic>;
+
+      List<String> likeUsers = List<String>.from(data['likePostUid']?? []);
+      int likeCount = data['likeCount'] ?? 0;
+      String uid = _auth.currentUser!.uid;
+
+      if(likeUsers.contains(uid)){
+        await postRef.update({
+          'likePostUid': FieldValue.arrayRemove([uid]),
+          'likeCount': FieldValue.increment(-1),
+        });
+      } else {
+       await postRef.update({
+         'likePostUid': FieldValue.arrayUnion([uid]),
+         'likeCount': FieldValue.increment(1),
+       });
+      }
+
+
+
+      final updatedSnapshot = await postRef.get();
+      return PostModel.fromMap(updatedSnapshot.data() as Map<String, dynamic>);
+    } catch (e) {
+      throw Exception('좋아요 업데이트 실패: $e');
+    }
+  }
+
   Future<PostModel> readPost(String postId) async {
     final postCollection = _fs.collection('posts');
     try {

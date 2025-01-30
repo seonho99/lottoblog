@@ -17,14 +17,18 @@ final class ReadAllPostsState extends ReadPostsState {
   ReadAllPostsState(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
 }
 
-final class PostUpdatedState extends ReadPostsState{
+final class PostUpdatedState extends ReadPostsState {
   final PostModel updatedPost;
 
   PostUpdatedState({
     required List<PostModel> readAllPosts,
-    required this.updatedPost}) : super(readAllPosts: readAllPosts);
+    required this.updatedPost,
+  }) : super(readAllPosts: readAllPosts);
 }
 
+final class LikePostLoading extends ReadPostsState {
+  LikePostLoading({required List<PostModel> readAllPosts}) : super(readAllPosts: readAllPosts);
+}
 // 신고, 차단 할 때
 // final class ReadPostsLoaded extends ReadPostsState {
 //

@@ -29,6 +29,13 @@ class PostRepository {
     }
   }
 
+  Future<PostModel?> likeState(String postId) async{
+    try {
+      return await _firestoreService.likeState(postId);
+    } catch (e) {
+      throw Exception('좋아요 기능을 실패했습니다.: $e');
+    }
+  }
   // Future<List<String>> getAllPostIds(List<PostModel> posts) async {
   //   try {
   //     return await _firestoreService.getAllPostIds(posts);
