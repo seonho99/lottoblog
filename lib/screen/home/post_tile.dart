@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
-import 'package:lottoblog/data/bloc/read_posts/read_posts_state.dart';
-import 'package:lottoblog/screen/home/like_widget.dart';
 
-import '../../widget/popupmenubotton_widget.dart';
+
 
 class PostTile extends StatefulWidget {
   final String? imageUrl;
@@ -40,7 +36,7 @@ class _PostTileState extends State<PostTile> {
 
   void toggleLike() {
     setState(() {
-      if(isLiked){
+      if (isLiked) {
         likeCount--;
       } else {
         likeCount++;
@@ -52,7 +48,8 @@ class _PostTileState extends State<PostTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap ?? () {
+      onTap: widget.onTap ??
+          () {
             context.go('/mainhome/post/');
             //postId 이용 이동일듯
           },
@@ -67,7 +64,7 @@ class _PostTileState extends State<PostTile> {
                 image: widget.imageUrl != null && widget.imageUrl!.isNotEmpty
                     ? NetworkImage(widget.imageUrl!)
                     : const AssetImage('assets/placeholder.png')
-                as ImageProvider,
+                        as ImageProvider,
                 fit: BoxFit.cover,
               ),
               border: Border.all(width: 1, color: Colors.grey.shade300),
@@ -79,38 +76,29 @@ class _PostTileState extends State<PostTile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 40),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
-                            height: 1.6,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                Container(
+                  height: 90,
+                  child: Text(
+                    widget.title,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          height: 1.6,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ),
-                      // PopupMenuButtonWidget(),
-                    ],
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                // 좋아요 버튼
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    LikeWidget(
-                      isLiked,
-                      toggleLike,
-                    ),
+
                     const SizedBox(width: 8),
-                    Text('$likeCount',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                    Text(
+                      '$likeCount',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

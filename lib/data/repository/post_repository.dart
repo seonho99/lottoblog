@@ -29,13 +29,27 @@ class PostRepository {
     }
   }
 
-  Future<PostModel?> likeState(String postId) async{
+  Future<PostModel> likePost({
+    required String postId,
+    required List<String> likePostUid,
+    required String uid,
+    required List<String> userLikePost,
+}) async {
     try {
-      return await _firestoreService.likeState(postId);
+      return await _firestoreService.likePost(postId: postId, likePostUid: likePostUid, uid: uid, userLikePost: userLikePost);
     } catch (e) {
-      throw Exception('좋아요 기능을 실패했습니다.: $e');
+      throw Exception('좋아요를 실패 했습니다.: $e');
     }
   }
+
+  // Future<PostModel?> likeState(String postId) async{
+  //   try {
+  //     return await _firestoreService.likeState(postId);
+  //   } catch (e) {
+  //     throw Exception('좋아요 기능을 실패했습니다.: $e');
+  //   }
+  // }
+
   // Future<List<String>> getAllPostIds(List<PostModel> posts) async {
   //   try {
   //     return await _firestoreService.getAllPostIds(posts);
