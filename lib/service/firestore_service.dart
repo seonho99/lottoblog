@@ -31,90 +31,60 @@ class FirestoreService {
   Future<List<PostModel>> getPostList() async {
     final postCollection = _fs.collection('posts');
     QuerySnapshot snapshot = await postCollection.get();
-    return snapshot.docs.map((doc) => PostModel.fromMap(doc.data() as Map<String,dynamic>)).toList();
-
+    return snapshot.docs
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
-  Future<PostModel> likePost({
-    required String postId,
-    required List<String> likePostUid,
-    required String uid,
-    required List<String> userLikePost,
-}) async {
+  Future<int> likePost({required String postId, required String uid}) async {
     final postCollection = _fs.collection('posts');
-    DocumentReference postRef = postCollection.doc('postId');
-    DocumentSnapshot snapshot = await postRef.get();
+    final userCollection = _fs.collection('users');
 
-    if(snapshot.exists) throw Exception('게시글이 존재하지 않습니다.');
+    QuerySnapshot postSnapshot = await postCollection.get();
+    QuerySnapshot userSnapshot = await userCollection.get();
 
-    await _fs.runTransaction((transaction) async {
-      bool isLiked = userLikePost.contains(uid);
+    List<String> likePostUid = List<String>.from(postSnapshot.data()?['likePostUid'] ?? []);
+    List<String> userLikePost = List<String>.from(userSnapshot.data()?['userLikePost'] ?? []);
 
-      transaction.update(postRef, {
-        'likePostUid' : isLiked ? FieldValue.arrayRemove([uid]) : FieldValue.arrayUnion([uid]),
-        'likeCount' : isLiked ? FieldValue.increment(-1) : FieldValue.increment(1),
-      });
-    });
-
-    DocumentSnapshot updatedSnapShot = await postRef.get();
-    return PostModel.fromMap(updatedSnapShot.data() as Map<String, dynamic>);
   }
 
-  // Future<PostModel?> likeState(String postId) async {
-  //
-  //   if (user == null) {
-  //     throw Exception('로그인이 안되었습니다.');
-  //   }
-  //
+  // Future<PostModel> likePost({
+  //   required String postId,
+  //   required String uid,
+  // }) async {
   //   final postCollection = _fs.collection('posts');
+  //   DocumentReference postRef = await postCollection.doc('postId');
+  //   final userCollection = _fs.collection('users');
+  //   DocumentReference userRef = await userCollection.doc('uid');
   //
-  //   try {
-  //     DocumentReference postRef = postCollection.doc(postId);
-  //     DocumentSnapshot postSnapshot = await postRef.get();
   //
-  //     if (!postSnapshot.exists) {
-  //       throw Exception('게시글이 존재하지 않습니다.');
-  //     }
-
-
-      // final Map<String, dynamic> data = postSnapshot.data() as Map<String, dynamic>
-      // List<String> likeUsers = List<String>.from(data['likePostUid']?? []);
-      // int likeCount = data['likeCount'] ?? 0;
-
-      // String uid = _auth.currentUser!.uid;
-      //
-      // if(likeUsers.contains(uid)){
-      //   await postRef.update({
-      //     'likePostUid': FieldValue.arrayRemove([uid]),
-      //     'likeCount': FieldValue.increment(-1),
-      //   });
-      // } else {
-      //  await postRef.update({
-      //    'likePostUid': FieldValue.arrayUnion([uid]),
-      //    'likeCount': FieldValue.increment(1),
-      //  });
-
-      // List<dynamic> likeUsers = postSnapshot['likePostUid'] ?? [];
-      //
-      //
-      // if (likeUsers.contains(user)) {
-      //   await postRef.update({
-      //   'likePostUid':FieldValue.arrayRemove([user]),
-      //     'likeCount': FieldValue.increment(-1),
-      //   });
-      // } else {
-      //   await postRef.update({
-      //   'likePostUid':FieldValue.arrayUnion([user]),
-      //     'likeCount': FieldValue.increment(1),
-      //   });
-      //
-      // }
-
-      // final updatedSnapshot = await postRef.get();
-      // return PostModel.fromMap(updatedSnapshot.data() as Map<String, dynamic>);
-  //   } catch (e) {
-  //     throw Exception('좋아요 업데이트 실패: $e');
-  //   }
+  //   await FirebaseFirestore.instance.runTransaction((transaction) async {
+  //     DocumentSnapshot postSnapshot = await transaction.get(postRef);
+  //     DocumentSnapshot userSnapshot = await transaction.get(userRef);
+  //
+  //     if (!postSnapshot.exists) throw Exception('게시글이 존재하지 않습니다.');
+  //     if (!userSnapshot.exists) throw Exception('사용자가 존재하지 않습니다.');
+  //
+  //     final postData = postSnapshot.data() as Map<String, dynamic>;
+  //     final userData = userSnapshot.data() as Map<String, dynamic>;
+  //
+  //     List<String> likePostUid = List<String>.from(postData['likePostUid'] ?? []);
+  //     List<String> userLikePost = List<String>.from(userData['userLikePost'] ?? []);
+  //
+  //     bool isLiked = likePostUid.contains(uid);
+  //
+  //     transaction.update(postRef, {
+  //       'likePostUid': isLiked ? FieldValue.arrayRemove([uid]) : FieldValue.arrayUnion([uid]),
+  //       'likeCount': isLiked ? FieldValue.increment(-1) : FieldValue.increment(1),
+  //     });
+  //
+  //     transaction.update(userRef, {
+  //       'userLikePost': isLiked ? FieldValue.arrayRemove([postId]) : FieldValue.arrayUnion([postId]),
+  //     });
+  //   });
+  //
+  //   DocumentSnapshot updatedSnapshot = await postRef.get();
+  //   return PostModel.fromMap(updatedSnapshot.data() as Map<String, dynamic>);
   // }
 
   Future<PostModel> readPost(String postId) async {
@@ -130,50 +100,6 @@ class FirestoreService {
       throw Exception('게시글을 읽어오는데 실패 했습니다.');
     }
   }
-
-  // Future<List<String>> getAllPostIds(List<PostModel> posts) async {
-  //   final postCollection = FirebaseFirestore.instance.collection('posts');
-  //   List<String> postIds = [];
-  //
-  //   try {
-  //     for (var post in posts) {
-  //       final querySnapshot = await postCollection
-  //           .where('postId', isEqualTo: post.postId)
-  //           .get();
-  //
-  //       for (var doc in querySnapshot.docs) {
-  //         postIds.add(doc.data()['postId']);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw Exception('fetch error: $e');
-  //   }
-  //
-  //   return postIds;
-  // }
-
-
-  // Future<List<PostModel>> readAllPost({required String postId, int limit = 10, PostModel? lastPosts}) async {
-  //   final _postCollection = _fs.collection('posts');
-  //   List<PostModel> returnData = [];
-  //
-  //   try {
-  //     Query<Map<String, dynamic>> query = _postCollection
-  //         .where('postId', isEqualTo: postId)
-  //         .orderBy('createdAt')
-  //         .limit(limit);
-  //     if(lastPosts != null){
-  //       query = query.startAfter([lastPosts.createdAt.millisecondsSinceEpoch, lastPosts.postId]);
-  //     }
-  //     final QuerySnapshot<Map<String,dynamic>> querySnapshot = await query.get();
-  //     for(final QueryDocumentSnapshot<Map<String,dynamic>> doc in querySnapshot.docs){
-  //       returnData.add(PostModel.fromMap(doc.data()));
-  //     }
-  //   } catch (e) {
-  //     throw Exception('fetch error');
-  //   }
-  //   return returnData;
-  // }
 
   Future<List<PostModel>> readAllPost() async {
     final _postCollection = _fs.collection('posts');
@@ -203,12 +129,11 @@ class FirestoreService {
       }
       final String uid = user.uid;
 
-      final QuerySnapshot<
-          Map<String, dynamic>> querySnapshot = await postCollection.where(
-          'uid', isEqualTo: uid).get();
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await postCollection.where('uid', isEqualTo: uid).get();
       final queryDocumentSnapshot = querySnapshot.docs;
-      for (QueryDocumentSnapshot<
-          Map<String, dynamic>> docs in queryDocumentSnapshot) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> docs
+          in queryDocumentSnapshot) {
         myPosts.add(PostModel.fromMap(docs.data()));
       }
     } catch (e) {
@@ -216,7 +141,6 @@ class FirestoreService {
     }
     return myPosts;
   }
-
 
   // Future<List<PostModel>> fetchMyPosts() async {
   //   final _postCollection = _fs.collection('posts');

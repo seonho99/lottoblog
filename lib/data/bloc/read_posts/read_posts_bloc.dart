@@ -21,33 +21,20 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
 
     on<LikePostEvent>((event, emit) async {
       try {
-        User? user = FirebaseAuth.instance.currentUser;
-        if (user == null) {
-          emit(ReadPostsFailure(errorMessage: '로그인이 필요합니다.'));
-          return;
-        }
-        final currentState = state;
-        if (currentState is ReadAllPostsState) {
-          emit(LikePostLoading(readAllPosts: currentState.readAllPosts));
+        final updatedPost = await postRepository.likePost(
+          postId: event.postId,
+          uid: event.uid,
+        );
 
-          final updatedPost = await postRepository.likePost(
-            postId: event.postId,
-            likePostUid: event.likePostUid,
-            uid: event.uid,
-            userLikePost: event.userLikePost,
-          );
+        if (state is ReadAllPostsState) {
+          final updatedPosts = (state as ReadAllPostsState).readAllPosts.map((post) {
+            return post.postId == event.postId ? updatedPost! : post;
+          }).toList();
 
-          if(updatedPost != null){
-            final updatedPosts = currentState.readAllPosts.map((post) {
-              return post.postId == event.postId ? updatedPost : post;
-            }).toList();
-            emit(PostUpdatedState(readAllPosts: updatedPosts, updatedPost: updatedPost));
-          } else {
-            emit(ReadPostsFailure(errorMessage: '좋아요 업데이트 실패'));
-          }
+          emit(ReadAllPostsState(readAllPosts: updatedPosts));
         }
       } catch (e) {
-        emit(ReadPostsFailure(errorMessage: e.toString()));
+        emit(ReadPostsFailure(errorMessage: "좋아요 업데이트 실패: $e"));
       }
     });
   }

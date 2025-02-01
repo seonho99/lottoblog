@@ -31,12 +31,10 @@ class PostRepository {
 
   Future<PostModel> likePost({
     required String postId,
-    required List<String> likePostUid,
     required String uid,
-    required List<String> userLikePost,
 }) async {
     try {
-      return await _firestoreService.likePost(postId: postId, likePostUid: likePostUid, uid: uid, userLikePost: userLikePost);
+      return await _firestoreService.likePost(postId: postId,  uid: uid,);
     } catch (e) {
       throw Exception('좋아요를 실패 했습니다.: $e');
     }
