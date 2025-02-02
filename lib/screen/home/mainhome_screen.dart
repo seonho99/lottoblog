@@ -96,8 +96,8 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                               PostTile(
                                 imageUrl: state.readAllPosts[index].imageUrls[0],
                                 title: state.readAllPosts[index].title,
-                                initialLiked: false,
-                                initialLikeCount: 0,
+                                initialLiked: state.readAllPosts[index].likePostUid.contains(currentUserUid),
+                                initialLikeCount: state.readAllPosts[index].likeCount,
                                 // userName: state.,
                               ),
                               Padding(

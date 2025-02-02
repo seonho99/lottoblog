@@ -18,12 +18,13 @@ final class ReadAllPostsState extends ReadPostsState {
 }
 
 final class PostUpdatedState extends ReadPostsState {
-  final PostModel updatedPost;
+  final bool isLiked;
+  final int likeCount;
 
   PostUpdatedState({
-    required List<PostModel> readAllPosts,
-    required this.updatedPost,
-  }) : super(readAllPosts: readAllPosts);
+    required this.isLiked,
+    required this.likeCount,
+  })
 }
 
 final class LikePostLoading extends ReadPostsState {

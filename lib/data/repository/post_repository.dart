@@ -8,9 +8,11 @@ class PostRepository {
 
   PostRepository(this._firestoreService);
 
-  // String getPostId(String postId){
-  //   return _firestoreService.getPostId(postId);
-  // }
+  String? getCurrentUserUid(){
+    return _firestoreService.getCurrentUserUid();
+  }
+
+
 
   // 게시글 생성
   Future<void> createPost(PostModel posts) async {
@@ -29,12 +31,9 @@ class PostRepository {
     }
   }
 
-  Future<PostModel> likePost({
-    required String postId,
-    required String uid,
-}) async {
+  Future<int> likePost({required postId, required uid}) async {
     try {
-      return await _firestoreService.likePost(postId: postId,  uid: uid,);
+      return await _firestoreService.likePost(postId: postId, uid: uid);
     } catch (e) {
       throw Exception('좋아요를 실패 했습니다.: $e');
     }

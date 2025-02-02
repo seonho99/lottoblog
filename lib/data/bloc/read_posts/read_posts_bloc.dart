@@ -8,6 +8,7 @@ import 'package:lottoblog/service/firebase_auth_service.dart';
 class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
   final PostRepository postRepository;
 
+
   ReadPostsBloc(this.postRepository) : super(ReadPostsInitial()) {
     on<FetchAllPostsEvent>((event, emit) async {
       try {
@@ -21,18 +22,6 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
 
     on<LikePostEvent>((event, emit) async {
       try {
-        final updatedPost = await postRepository.likePost(
-          postId: event.postId,
-          uid: event.uid,
-        );
-
-        if (state is ReadAllPostsState) {
-          final updatedPosts = (state as ReadAllPostsState).readAllPosts.map((post) {
-            return post.postId == event.postId ? updatedPost! : post;
-          }).toList();
-
-          emit(ReadAllPostsState(readAllPosts: updatedPosts));
-        }
       } catch (e) {
         emit(ReadPostsFailure(errorMessage: "좋아요 업데이트 실패: $e"));
       }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-
-
 class PostTile extends StatefulWidget {
   final String? imageUrl;
   final String title;
@@ -91,13 +89,10 @@ class _PostTileState extends State<PostTile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-
                     const SizedBox(width: 8),
                     Text(
                       '$likeCount',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
+                      style: Theme.of(context).textTheme.titleLarge
                           ?.copyWith(fontWeight: FontWeight.w600),
                     ),
                   ],

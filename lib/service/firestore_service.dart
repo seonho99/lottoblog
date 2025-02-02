@@ -8,14 +8,9 @@ class FirestoreService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final user = FirebaseAuth.instance.currentUser;
 
-  // Future<void> getUserModeltoFS(UserModel userModel) async {
-  //   try {
-  //     final userCollection = _fs.collection('users');
-  //     await userCollection.doc(userModel.uid).set(userModel.toMap());
-  //   } catch (e) {
-  //     throw Exception('저장 실패 : $e');
-  //   }
-  // }
+  String? getCurrentUserUid() {
+    return user?.uid;
+  }
 
   // 게시글 생성
   Future<void> createPost(PostModel postModel) async {
@@ -28,24 +23,41 @@ class FirestoreService {
     }
   }
 
-  Future<List<PostModel>> getPostList() async {
-    final postCollection = _fs.collection('posts');
-    QuerySnapshot snapshot = await postCollection.get();
-    return snapshot.docs
-        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
-        .toList();
-  }
+  // Future<List<PostModel>> getPostList() async {
+  //   final postCollection = _fs.collection('posts');
+  //   QuerySnapshot snapshot = await postCollection.get();
+  //   return snapshot.docs
+  //       .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+  //       .toList();
+  // }
 
   Future<int> likePost({required String postId, required String uid}) async {
-    final postCollection = _fs.collection('posts');
-    final userCollection = _fs.collection('users');
+    final postRef = _fs.collection('posts').doc(postId);
+    // final userCollection = _fs.collection('users');
 
-    QuerySnapshot postSnapshot = await postCollection.get();
-    QuerySnapshot userSnapshot = await userCollection.get();
+    DocumentSnapshot postSnapshot = await postRef.get();
+    // QuerySnapshot userSnapshot = await userCollection.get();
 
-    List<String> likePostUid = List<String>.from(postSnapshot.data()?['likePostUid'] ?? []);
-    List<String> userLikePost = List<String>.from(userSnapshot.data()?['userLikePost'] ?? []);
+    final postData = postSnapshot.data() as Map<String, dynamic>;
 
+    List<String> likes = List<String>.from(postData['likePostUid'] ?? []);
+
+    if (likes.contains(uid)) {
+      await postRef.update({
+        'likePostUid': FieldValue.arrayRemove([uid])
+      });
+    } else {
+      await postRef.update({
+        'likePostUid': FieldValue.arrayUnion([uid])
+      });
+    }
+    DocumentSnapshot<Map<String, dynamic>> updatedDoc = await postRef.get();
+    final updatedData = updatedDoc.data() as Map<String, dynamic>;
+
+    int likeCount = (updatedData['likePostUid'] as List<dynamic>?)?.length ?? 0;
+    await postRef.update({'likeCount': likeCount});
+
+    return likeCount;
   }
 
   // Future<PostModel> likePost({
