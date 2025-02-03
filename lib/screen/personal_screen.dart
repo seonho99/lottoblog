@@ -108,8 +108,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
               BlocListener<LoginBloc,LoginState>(
                 listenWhen: (previousState, currentState) {
-                  print('Previous State: $previousState');
-                  print('Current State: $currentState');
 
                   return currentState is LoginAuthenticated;
                 },
@@ -121,7 +119,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 child:
                 BlocBuilder<PostBloc, PostState>(
                   builder: (context, state) {
-                    print('state: $state');
+
                     if (state is LoginAuthenticated) {
                       return Center(child: Text('초기 상태'));
                       // 1. myPosts에 데이터가 뭐가 들었는지 확인

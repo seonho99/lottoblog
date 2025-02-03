@@ -43,6 +43,7 @@ class EmailLoginScreen extends StatelessWidget {
                 // 이메일 입력
                 TextFormField(
                   controller: _emailController,
+                  //initialValue: 'pandapad10@naver.com',
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -62,6 +63,7 @@ class EmailLoginScreen extends StatelessWidget {
                 // 비밀번호 입력
                 TextFormField(
                   controller: _passwordController,
+                  //initialValue: '11111111',
                   keyboardType: TextInputType.text,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -106,6 +108,8 @@ class EmailLoginScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
+                      _emailController.text='pandapad10@naver.com';
+                      _passwordController.text='11111111';
                       if (_formKey.currentState?.validate() ?? false) {
                         final email = _emailController.text;
                         final password = _passwordController.text;

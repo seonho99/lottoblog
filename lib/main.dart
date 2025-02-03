@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
             PostBloc(postRepository ?? PostRepository(FirestoreService()),
                 authRepository ?? AuthRepository(FirebaseAuthService())),
         readPostsBloc = readPostsBloc ??
-            ReadPostsBloc(postRepository ?? PostRepository(FirestoreService())),
+            ReadPostsBloc(postRepository ?? PostRepository(FirestoreService()),AuthRepository(FirebaseAuthService())),
         tabNavigationBloc = TabNavigationBloc();
 
   @override

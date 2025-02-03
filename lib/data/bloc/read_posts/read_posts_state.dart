@@ -17,19 +17,20 @@ final class ReadAllPostsState extends ReadPostsState {
   ReadAllPostsState(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
 }
 
-final class PostUpdatedState extends ReadPostsState {
-  final bool isLiked;
-  final int likeCount;
+// final class PostUpdatedState extends ReadPostsState {
+//   final bool isLiked;
+//   final int likeCount;
+//
+//   PostUpdatedState({
+//     required this.isLiked,
+//     required this.likeCount,
+//     required List<PostModel> readAllPosts,
+//   }) : super(readAllPosts: readAllPosts);
+// }
 
-  PostUpdatedState({
-    required this.isLiked,
-    required this.likeCount,
-  })
-}
-
-final class LikePostLoading extends ReadPostsState {
-  LikePostLoading({required List<PostModel> readAllPosts}) : super(readAllPosts: readAllPosts);
-}
+// final class LikePostLoading extends ReadPostsState {
+//   LikePostLoading({required List<PostModel> readAllPosts}) : super(readAllPosts: readAllPosts);
+// }
 // 신고, 차단 할 때
 // final class ReadPostsLoaded extends ReadPostsState {
 //

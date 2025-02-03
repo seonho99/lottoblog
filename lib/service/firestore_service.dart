@@ -43,10 +43,12 @@ class FirestoreService {
     List<String> likes = List<String>.from(postData['likePostUid'] ?? []);
 
     if (likes.contains(uid)) {
+      print('update remove');
       await postRef.update({
         'likePostUid': FieldValue.arrayRemove([uid])
       });
     } else {
+      print('update add');
       await postRef.update({
         'likePostUid': FieldValue.arrayUnion([uid])
       });
@@ -98,6 +100,7 @@ class FirestoreService {
   //   DocumentSnapshot updatedSnapshot = await postRef.get();
   //   return PostModel.fromMap(updatedSnapshot.data() as Map<String, dynamic>);
   // }
+
 
   Future<PostModel> readPost(String postId) async {
     final postCollection = _fs.collection('posts');

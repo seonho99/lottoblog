@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/login/login_bloc.dart';
+import 'package:lottoblog/data/bloc/login/login_state.dart';
+
+import '../../data/bloc/post/post_bloc.dart';
+import '../../data/bloc/read_posts/read_posts_bloc.dart';
+import '../../data/bloc/read_posts/read_posts_event.dart';
 
 class PostTile extends StatefulWidget {
   final String? imageUrl;
   final String title;
-  final bool initialLiked;
+  final List<String> initialLiked;
   final int initialLikeCount;
   final VoidCallback? onTap;
+  final String postId;
 
   PostTile({
     super.key,
     this.imageUrl,
     required this.title,
-    this.initialLiked = false,
+    required this.initialLiked,
     this.initialLikeCount = 0,
     this.onTap,
+    required this.postId,
   });
 
   @override
@@ -22,25 +31,28 @@ class PostTile extends StatefulWidget {
 }
 
 class _PostTileState extends State<PostTile> {
-  late bool isLiked;
   late int likeCount;
 
   @override
   void initState() {
     super.initState();
-    isLiked = widget.initialLiked;
+
     likeCount = widget.initialLikeCount;
   }
 
-  void toggleLike() {
+  void toggleLike(bool isLiked) {
     setState(() {
       if (isLiked) {
         likeCount--;
       } else {
         likeCount++;
       }
-      isLiked = !isLiked;
     });
+
+    context.read<ReadPostsBloc>().add(
+          LikePostEvent(
+              isLiked: !isLiked, likeCount: likeCount, postId: widget.postId),
+        );
   }
 
   @override
@@ -61,8 +73,7 @@ class _PostTileState extends State<PostTile> {
               image: DecorationImage(
                 image: widget.imageUrl != null && widget.imageUrl!.isNotEmpty
                     ? NetworkImage(widget.imageUrl!)
-                    : const AssetImage('assets/placeholder.png')
-                        as ImageProvider,
+                    : const AssetImage('') as ImageProvider,
                 fit: BoxFit.cover,
               ),
               border: Border.all(width: 1, color: Colors.grey.shade300),
@@ -86,17 +97,41 @@ class _PostTileState extends State<PostTile> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const SizedBox(width: 8),
-                    Text(
-                      '$likeCount',
-                      style: Theme.of(context).textTheme.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
+                BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+                  bool isLiked = widget.initialLiked.contains(state.user?.uid);
+                  bool likeEnabled = true;
+                  if (state.user?.uid == null) {
+                    likeEnabled = false;
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (likeEnabled) toggleLike(isLiked);
+                        },
+                        child: (likeEnabled)
+                            ? Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 24,
+                              )
+                            : Icon(
+                                Icons.favorite_border,
+                                color: Colors.grey,
+                                size: 24,
+                              ),
+                      ),
+                      Text(
+                        '$likeCount',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  );
+                }),
               ],
             ),
           ),

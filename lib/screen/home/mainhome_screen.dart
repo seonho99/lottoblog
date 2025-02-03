@@ -18,6 +18,7 @@ class MainhomeScreen extends StatefulWidget {
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
 
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +70,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
           if (state is ReadPostsInitial) {
             return Container();
           } else if (state is ReadAllPostsState) {
-            print('ReadAllPosts: $state');
+            // print('ReadAllPosts: ${state.readAllPosts[1]}');
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -96,8 +97,9 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                               PostTile(
                                 imageUrl: state.readAllPosts[index].imageUrls[0],
                                 title: state.readAllPosts[index].title,
-                                initialLiked: state.readAllPosts[index].likePostUid.contains(currentUserUid),
+                                initialLiked: state.readAllPosts[index].likePostUid,
                                 initialLikeCount: state.readAllPosts[index].likeCount,
+                                postId: state.readAllPosts[index].postId!,
                                 // userName: state.,
                               ),
                               Padding(
