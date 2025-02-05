@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/data/bloc/login/login_event.dart';
-import 'package:lottoblog/data/bloc/login/login_state.dart';
-import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
 
-import '../data/bloc/login/login_bloc.dart';
-import '../data/bloc/post/post_bloc.dart';
-import '../data/bloc/post/post_event.dart';
-import '../data/bloc/post/post_state.dart';
+import '../../data/bloc/my_post/my_post_bloc.dart';
+import '../../data/bloc/my_post/my_post_event.dart';
+import '../../data/bloc/my_post/my_post_state.dart';
 import 'my_post_tile.dart';
 
 class PersonalScreen extends StatefulWidget {
@@ -25,7 +21,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   void initState() {
    super.initState();
 
-   context.read<PostBloc>().add(FetchMyPosts());
+   context.read<MyPostBloc>().add(FetchMyPostsEvent());
   }
 
   @override
@@ -57,7 +53,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 ],
               ),
               SizedBox(height: 30),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -103,27 +98,12 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 ],
               ),
               SizedBox(height: 40),
-
-              // 2. BloC Listner와 Bloc Login도 똑같이 사용하는지
-
-              BlocListener<LoginBloc,LoginState>(
-                listenWhen: (previousState, currentState) {
-
-                  return currentState is LoginAuthenticated;
-                },
-                listener: (context, state) {
-                  if (state is LoginAuthenticated) {
-                    context.read<PostBloc>().add(FetchMyPosts());
-                  }
-                },
-                child:
-                BlocBuilder<PostBloc, PostState>(
+                BlocBuilder<MyPostBloc, MyPostState>(
                   builder: (context, state) {
-
-                    if (state is LoginAuthenticated) {
-                      return Center(child: Text('초기 상태'));
-                      // 1. myPosts에 데이터가 뭐가 들었는지 확인
-                    } else if (state is MyPosts) {
+                    if (state is MyPostInitial) {
+                      return Center(child: Text('초기 상태'),);
+                    } else if (state is MyPostSuccess) {
+                      print('MyPostSuccess: ${state.myPosts}');
                       return Expanded(
                         child: ListView.builder(
                           itemCount: state.myPosts.length,
@@ -134,7 +114,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                 MyPostTile(
                                   imageUrl: state.myPosts[index].imageUrls[0],
                                   title: state.myPosts[index].title,
-                                  postId: state.myPosts[index].postId,
+                                  postId: state.myPosts[index].postId ?? '',
+                                  likeCount: state.myPosts[index].likeCount,
                                 ),
                                 Padding(
                                   padding:
@@ -149,13 +130,12 @@ class _PersonalScreenState extends State<PersonalScreen> {
                           },
                         ),
                       );
-                    } else if (state is PostFailure) {
+                    } else if (state is MyPostFailure) {
                       return Center(child: Text('실패: ${state.errorMessage}'));
                     }
                     return Center(child: Text('데이터 불러오기 실패'),);
                   },
                 ),
-              ),
             ],
           ),
         ),

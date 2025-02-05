@@ -1,18 +1,14 @@
-
 import '../../models/post_model.dart';
 import '../../service/firestore_service.dart';
-
 
 class PostRepository {
   final FirestoreService _firestoreService;
 
   PostRepository(this._firestoreService);
 
-  String? getCurrentUserUid(){
+  String? getCurrentUserUid() {
     return _firestoreService.getCurrentUserUid();
   }
-
-
 
   // 게시글 생성
   Future<void> createPost(PostModel posts) async {
@@ -28,6 +24,14 @@ class PostRepository {
       return await _firestoreService.readPost(postId);
     } catch (e) {
       throw Exception('게시글을 읽어오는데 실패했습니다.: $e');
+    }
+  }
+
+  Future<int> likeCount({required postId}) async {
+    try {
+      return await _firestoreService.likeCount(postId: postId);
+    } catch (e) {
+      throw Exception('좋아요 수를 못 읽어왔습니다.: $e');
     }
   }
 
@@ -74,11 +78,10 @@ class PostRepository {
   Future<List<PostModel>> fetchUserPosts() async {
     try {
       return await _firestoreService.fetchUserPosts();
-    }catch(e){
+    } catch (e) {
       throw Exception('내 게시글을 가져오는데 실패했습니다.: $e');
     }
   }
-
 
 // 게시글 수정
   Future<void> updatePost(PostModel posts) async {
@@ -89,10 +92,9 @@ class PostRepository {
     }
   }
 
-
 // 게시글 삭제
   Future<void> deletePost(String postId) async {
-    if (postId.isEmpty){
+    if (postId.isEmpty) {
       throw Exception('삭제할 게시글 ID가 없습니다.');
     }
     try {

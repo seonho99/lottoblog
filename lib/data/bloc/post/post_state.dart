@@ -28,9 +28,9 @@ import '../../../models/post_model.dart';
 // }
 
 sealed class PostState {
-  final List<PostModel> myPosts;
+  final List<PostModel> posts;
 
-  PostState({required this.myPosts});
+  PostState({required this.posts});
 
   // @override
   // String toString() {
@@ -40,7 +40,7 @@ sealed class PostState {
 
 // 초기 상태
 final class PostInitial extends PostState {
-  PostInitial() : super(myPosts: []);
+  PostInitial() : super(posts: []);
 
   // @override
   // String toString() {
@@ -49,19 +49,19 @@ final class PostInitial extends PostState {
 }
 
 // 사용자 게시글 상태
-final class MyPosts extends PostState {
-  MyPosts(List<PostModel> myPosts) : super(myPosts: myPosts);
+// final class MyPosts extends PostState {
+//   MyPosts(List<PostModel> posts) : super(posts: posts);
 
   // @override
   // String toString() {
   //   return 'MyPosts(myPosts: ${myPosts.map((post) => post.toMap()).toList()})';
   // }
-}
+// }
 
 
 // 게시글 갱신 상태
-final class PostsLoaded extends PostState {
-  PostsLoaded(List<PostModel> myPosts) : super(myPosts: myPosts);
+final class PostsSuccess extends PostState {
+  PostsSuccess(List<PostModel> posts) : super(posts: posts);
 
   // @override
   // String toString() {
@@ -73,5 +73,5 @@ final class PostsLoaded extends PostState {
 final class PostFailure extends PostState {
   final String errorMessage;
 
-  PostFailure({required this.errorMessage}) : super (myPosts: []);
+  PostFailure({required this.errorMessage}) : super (posts: []);
 }

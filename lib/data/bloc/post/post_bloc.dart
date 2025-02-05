@@ -7,15 +7,6 @@ import 'post_state.dart';
 
 
 class PostBloc extends Bloc<PostEvent, PostState> {
-
-  // String? getUid(){
-  //   return authRepository.getUid();
-  // }
-
-  // String? getPostId(){
-  //   return postRepository.getPostId();
-  // }
-
   final PostRepository postRepository;
   final AuthRepository authRepository;
 
@@ -30,7 +21,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<CreatePost>((event, emit) async {
       try {
         await postRepository.createPost(event.posts);
-        emit(PostsLoaded(state.myPosts));
+        emit(PostsSuccess(state.posts));
       } catch(e) {
         emit(PostFailure(errorMessage: e.toString()));
       }
@@ -55,16 +46,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     //     emit(PostFailure(errorMessage: e.toString()));
     //   }
     // });
-
-    on<FetchMyPosts>((event, emit) async {
-      try {
-        final myPosts = await postRepository.fetchUserPosts();
-
-        emit(MyPosts(myPosts));
-      } catch (e) {
-        emit(PostFailure(errorMessage: e.toString()));
-      }
-    });
 
 
 

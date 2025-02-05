@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
+import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
 import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
 import 'package:lottoblog/data/bloc/tab_navigation/tab_navigation_bloc.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
   final PostBloc postBloc;
   final ReadPostsBloc readPostsBloc;
   final TabNavigationBloc tabNavigationBloc;
+  final MyPostBloc myPostBloc;
 
   MyApp({
     super.key,
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
     PostBloc? postBloc,
     ReadPostsBloc? readPostsBloc,
     TabNavigationBloc? tabNavigationBloc,
+    MyPostBloc? myPostBloc,
   })  : authRepository =
             authRepository ?? AuthRepository(FirebaseAuthService()),
         loginBloc = loginBloc ??
@@ -54,8 +57,12 @@ class MyApp extends StatelessWidget {
             PostBloc(postRepository ?? PostRepository(FirestoreService()),
                 authRepository ?? AuthRepository(FirebaseAuthService())),
         readPostsBloc = readPostsBloc ??
-            ReadPostsBloc(postRepository ?? PostRepository(FirestoreService()),AuthRepository(FirebaseAuthService())),
-        tabNavigationBloc = TabNavigationBloc();
+            ReadPostsBloc(postRepository ?? PostRepository(FirestoreService()),
+                AuthRepository(FirebaseAuthService())),
+        tabNavigationBloc = TabNavigationBloc(),
+        myPostBloc = myPostBloc ??
+            MyPostBloc(postRepository ?? PostRepository(FirestoreService()),
+                authRepository ?? AuthRepository(FirebaseAuthService()));
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +91,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<TabNavigationBloc>(
             create: (context) => tabNavigationBloc,
+          ),
+          BlocProvider<MyPostBloc>(
+            create: (context) => myPostBloc,
           ),
         ],
         child: MaterialApp.router(

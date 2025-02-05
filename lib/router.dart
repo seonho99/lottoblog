@@ -15,7 +15,7 @@ import 'screen/login/email/signup_email_screen.dart';
 import 'screen/login/email/email_resetpassword_screen.dart';
 import 'screen/login/login_screen.dart';
 import 'screen/home/mainhome_screen.dart';
-import 'screen/personal_screen.dart';
+import 'screen/my_post/personal_screen.dart';
 import 'screen/home/home_post_screen.dart';
 
 final GlobalKey<NavigatorState> _rootTabNavigatorKey =

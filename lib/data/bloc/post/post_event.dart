@@ -46,8 +46,3 @@ final class ReadPost extends PostEvent {
 // }
 
 
-final class FetchMyPosts extends PostEvent {
-  // final String uid;
-  //
-  // FetchMyPosts({required this.uid});
-}
