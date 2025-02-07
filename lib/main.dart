@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
+import 'package:lottoblog/data/bloc/login/login_bloc.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
+import 'package:lottoblog/data/bloc/profile/profile_bloc.dart';
 import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
 import 'package:lottoblog/data/bloc/tab_navigation/tab_navigation_bloc.dart';
+import 'package:lottoblog/data/repository/auth_repository.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
+import 'package:lottoblog/data/repository/user_repo.dart';
 import 'package:lottoblog/router.dart';
 import 'package:lottoblog/service/firestore_service.dart';
 
-import 'data/bloc/login/login_bloc.dart';
-import 'data/repository/auth_repository.dart';
+
 import 'service/firebase_auth_service.dart';
 import 'service/firebase_options.dart';
 
@@ -27,42 +30,53 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
+  final PostRepository postRepository;
+  final UserRepo userRepo;
+
   final LoginBloc loginBloc;
   final EmailResetPasswordBloc emailResetPasswordBloc;
-  final PostRepository postRepository;
   final PostBloc postBloc;
   final ReadPostsBloc readPostsBloc;
   final TabNavigationBloc tabNavigationBloc;
   final MyPostBloc myPostBloc;
+  final ProfileBloc profileBloc;
 
   MyApp({
     super.key,
     AuthRepository? authRepository,
+    PostRepository? postRepository,
+    UserRepo? userRepo,
+
     LoginBloc? loginBloc,
     EmailResetPasswordBloc? emailResetPasswordBloc,
-    PostRepository? postRepository,
     PostBloc? postBloc,
     ReadPostsBloc? readPostsBloc,
     TabNavigationBloc? tabNavigationBloc,
     MyPostBloc? myPostBloc,
+    ProfileBloc? profileBloc,
   })  : authRepository =
             authRepository ?? AuthRepository(FirebaseAuthService()),
+        postBloc = postBloc ??
+            PostBloc(postRepository ?? PostRepository(FirestoreService()),
+                authRepository ?? AuthRepository(FirebaseAuthService())),
+        userRepo = userRepo ?? UserRepo(FirestoreService()),
+
         loginBloc = loginBloc ??
             LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         emailResetPasswordBloc = emailResetPasswordBloc ??
             EmailResetPasswordBloc(
                 authRepository ?? AuthRepository(FirebaseAuthService())),
         postRepository = postRepository ?? PostRepository(FirestoreService()),
-        postBloc = postBloc ??
-            PostBloc(postRepository ?? PostRepository(FirestoreService()),
-                authRepository ?? AuthRepository(FirebaseAuthService())),
+
         readPostsBloc = readPostsBloc ??
             ReadPostsBloc(postRepository ?? PostRepository(FirestoreService()),
                 AuthRepository(FirebaseAuthService())),
         tabNavigationBloc = TabNavigationBloc(),
         myPostBloc = myPostBloc ??
             MyPostBloc(postRepository ?? PostRepository(FirestoreService()),
-                authRepository ?? AuthRepository(FirebaseAuthService()));
+                authRepository ?? AuthRepository(FirebaseAuthService())),
+        profileBloc = profileBloc ??
+            ProfileBloc(userRepo ?? UserRepo(FirestoreService()));
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +87,9 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<PostRepository>(
           create: (context) => postRepository,
+        ),
+        RepositoryProvider<UserRepo>(
+            create: (context) => userRepo,
         ),
       ],
       child: MultiBlocProvider(
@@ -94,6 +111,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<MyPostBloc>(
             create: (context) => myPostBloc,
+          ),
+          BlocProvider<ProfileBloc>(
+              create: (context) => profileBloc,
           ),
         ],
         child: MaterialApp.router(

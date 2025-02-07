@@ -7,7 +7,7 @@ import 'data/bloc/login/login_bloc.dart';
 import 'data/bloc/login/login_state.dart';
 
 import 'screen/dayofweek_screen.dart';
-import 'screen/editprofile_screen.dart';
+import 'screen/edit_profile/editprofile_screen.dart';
 import 'screen/frame_screen.dart';
 import 'screen/landing_screen.dart';
 import 'screen/login/email/email_login_screen.dart';

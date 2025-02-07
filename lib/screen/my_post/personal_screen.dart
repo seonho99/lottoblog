@@ -1,28 +1,43 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/profile/profile_event.dart';
+import 'package:lottoblog/data/bloc/profile/profile_state.dart';
 
 import '../../data/bloc/my_post/my_post_bloc.dart';
 import '../../data/bloc/my_post/my_post_event.dart';
 import '../../data/bloc/my_post/my_post_state.dart';
+import '../../data/bloc/profile/profile_bloc.dart';
 import 'my_post_tile.dart';
 
 class PersonalScreen extends StatefulWidget {
-  PersonalScreen({super.key});
-
   @override
   State<PersonalScreen> createState() => _PersonalScreenState();
 }
 
 class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
+  late String uid;
+  late String userName;
+  late String profileImageUrl;
 
- @override
+  @override
   void initState() {
-   super.initState();
+    super.initState();
 
-   context.read<MyPostBloc>().add(FetchMyPostsEvent());
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      uid = user.uid;
+
+      context.read<ProfileBloc>().add(UpdateProfileEvent(
+          uid: uid,
+          userName: userName,
+          profileImageUrl: profileImageUrl));
+      context.read<MyPostBloc>().add(FetchMyPostsEvent());
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,23 +50,29 @@ class _PersonalScreenState extends State<PersonalScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 사용자 정보 Row
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 45,
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      '사용자',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(fontWeight: FontWeight.w800),
+              BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+                return Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 45,
+                      backgroundImage: state.profileImageUrl != null
+                          ? NetworkImage(state.profileImageUrl)
+                          : const AssetImage(
+                              'assets/profile_dummy/profile_01.png'),
                     ),
-                  ),
-                ],
-              ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        '${state.userName}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                );
+              }),
               SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -98,44 +119,48 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 ],
               ),
               SizedBox(height: 40),
-                BlocBuilder<MyPostBloc, MyPostState>(
-                  builder: (context, state) {
-                    if (state is MyPostInitial) {
-                      return Center(child: Text('초기 상태'),);
-                    } else if (state is MyPostSuccess) {
-                      print('MyPostSuccess: ${state.myPosts}');
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount: state.myPosts.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MyPostTile(
-                                  imageUrl: state.myPosts[index].imageUrls[0],
-                                  title: state.myPosts[index].title,
-                                  postId: state.myPosts[index].postId ?? '',
-                                  likeCount: state.myPosts[index].likeCount,
+              BlocBuilder<MyPostBloc, MyPostState>(
+                builder: (context, state) {
+                  if (state is MyPostInitial) {
+                    return Center(
+                      child: Text('초기 상태'),
+                    );
+                  } else if (state is MyPostSuccess) {
+                    print('MyPostSuccess: ${state.myPosts}');
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: state.myPosts.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MyPostTile(
+                                imageUrl: state.myPosts[index].imageUrls[0],
+                                title: state.myPosts[index].title,
+                                postId: state.myPosts[index].postId ?? '',
+                                likeCount: state.myPosts[index].likeCount,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Divider(
+                                  color: Colors.grey.shade300,
+                                  thickness: 1.0,
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  child: Divider(
-                                    color: Colors.grey.shade300,
-                                    thickness: 1.0,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    } else if (state is MyPostFailure) {
-                      return Center(child: Text('실패: ${state.errorMessage}'));
-                    }
-                    return Center(child: Text('데이터 불러오기 실패'),);
-                  },
-                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  } else if (state is MyPostFailure) {
+                    return Center(child: Text('실패: ${state.errorMessage}'));
+                  }
+                  return Center(
+                    child: Text('데이터 불러오기 실패'),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -149,16 +174,16 @@ class _PersonalScreenState extends State<PersonalScreen> {
     super.dispose();
   }
 
-  // void _onScroll() {
-  //   if (_isBottom && uid != null) {
-  //     context.read<PostBloc>().add(FetchMyPosts(uid: uid!));
-  //   }
-  // }
-  //
-  // bool get _isBottom {
-  //   if (_scrollController.hasClients) return false;
-  //   final maxScroll = _scrollController.position.maxScrollExtent;
-  //   final currentScroll = _scrollController.offset;
-  //   return currentScroll >= (maxScroll * 0.9);
-  // }
+// void _onScroll() {
+//   if (_isBottom && uid != null) {
+//     context.read<PostBloc>().add(FetchMyPosts(uid: uid!));
+//   }
+// }
+//
+// bool get _isBottom {
+//   if (_scrollController.hasClients) return false;
+//   final maxScroll = _scrollController.position.maxScrollExtent;
+//   final currentScroll = _scrollController.offset;
+//   return currentScroll >= (maxScroll * 0.9);
+// }
 }

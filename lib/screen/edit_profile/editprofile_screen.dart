@@ -4,11 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottoblog/data/bloc/login/login_event.dart';
 import 'package:lottoblog/data/bloc/login/login_state.dart';
+import 'package:lottoblog/screen/edit_profile/edit_image_picker.dart';
 import 'package:lottoblog/service/firebase_auth_service.dart';
 import 'package:lottoblog/service/firebase_storage_service.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
-import '../data/bloc/login/login_bloc.dart';
+import '../../data/bloc/login/login_bloc.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -24,35 +25,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? name;
   String? email;
   String? profileImageURL;
-  bool _isUploading = false;
 
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickImage() async {
-    setState(() {
-      _isUploading = true;
-    });
-
-    String? downloadURL;
-
-    try {
-      XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        downloadURL = await storage.uploadProfileImage(
-            await pickedFile.readAsBytes(), pickedFile.path, auth.user?.uid);
-      }
-
-      setState(() {
-        profileImageURL = downloadURL;
-      });
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-
-    setState(() {
-      _isUploading = false;
-    });
-  }
 
   @override
   void initState() {
@@ -68,11 +41,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('프로필 수정',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        title: Text(
+          '프로필 수정',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
         centerTitle: true,
         elevation: 0,
       ),
@@ -84,59 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Flexible(
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: _pickImage,
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: profileImageURL != null
-                              ? NetworkImage(profileImageURL!)
-                              : const AssetImage(
-                                  'assets/profile_dummy/profile_01.png'),
-                          child: _isUploading
-                              ? CircularProgressIndicator()
-                              : Icon(Icons.camera_alt,
-                                  size: 30, color: Colors.white),
-                          onBackgroundImageError: (_, __) {
-                            setState(() {
-                              profileImageURL = null;
-                            });
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              color: Colors.grey, shape: BoxShape.circle),
-                          child: Center(
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: Icon(Icons.close, color: Colors.white),
-                              onPressed: () async {
-                                try {
-                                  await auth.deletePhotoUrl();
-                                  await storage
-                                      .deleteProfileImage(auth.user?.uid);
-                                } catch (e) {
-                                  showSnackBar(context, e.toString());
-                                }
-                                setState(() {
-                                  profileImageURL = null;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                EditImagePicker(),
                 TextFormField(
                   initialValue: name,
                   decoration: InputDecoration(
@@ -225,10 +147,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                        onPressed: (){
-                          context.read<LoginBloc>().add(Logout());
-                        }, child: Text('로그아웃',
-                        style: Theme.of(context).textTheme.titleSmall),
+                      onPressed: () {
+                        context.read<LoginBloc>().add(Logout());
+                      },
+                      child: Text('로그아웃',
+                          style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Text('|'),
                     TextButton(
@@ -247,14 +170,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                     BlocListener<LoginBloc, LoginState>(
-                        listener: (context, state) {
-                          if (state is LoginUnAuthenticated){
-                            context.go('/login');
-                          }
-                          if (state is LoginError) {
-                            showSnackBar(context, state.message);
-                          }
-                        },
+                      listener: (context, state) {
+                        if (state is LoginUnAuthenticated) {
+                          context.go('/login');
+                        }
+                        if (state is LoginError) {
+                          showSnackBar(context, state.message);
+                        }
+                      },
                       child: Container(),
                     ),
                   ],

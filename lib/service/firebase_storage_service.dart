@@ -8,6 +8,7 @@ class FirebaseStorageService {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final storageRef = FirebaseStorage.instance.ref();
 
+
   Future<String> uploadProfileImage(Uint8List bytes, String path, String? uid) async {
     if (uid == null) throw Exception('잘못된 접근 입니다');
     try {
@@ -58,4 +59,5 @@ class FirebaseStorageService {
 
     return imageUrls;
   }
+
 }

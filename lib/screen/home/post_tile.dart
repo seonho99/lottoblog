@@ -105,8 +105,8 @@ class _PostTileState extends State<PostTile> {
                   ),
                 ),
               ),
-
-              BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+              BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, state) {
                 bool isLiked = widget.initialLiked.contains(state.user?.uid);
                 bool likeEnabled = true;
                 if (state.user?.uid == null) {
