@@ -78,7 +78,6 @@ class FirestoreService {
     return likeCount;
   }
 
-
   Future<PostModel> readPost(String postId) async {
     final postCollection = _fs.collection('posts');
     try {
@@ -137,12 +136,19 @@ class FirestoreService {
   Future<UserModel?> fetchProfile({required String uid}) async {
     try {
       DocumentSnapshot userDoc = await _fs.collection('users').doc(uid).get();
-     if(userDoc.exists){
-       String userName = userDoc['userName'];
-       String profileImageUrl = userDoc['profileImageUrl'];
+      if (userDoc.exists) {
+        String userName = userDoc['userName'];
+        String profileImageUrl = userDoc['profileImageUrl'];
+        // print('userModel:${UserModel(userName: userName,profileImageUrl: profileImageUrl,email: '')}');
 
-     }
-
+        return UserModel(
+          userName: userName,
+          profileImageUrl: profileImageUrl,
+          email: '',
+        );
+      } else {
+        return null;
+      }
     } catch (e) {
       throw Exception('fetch error');
     }

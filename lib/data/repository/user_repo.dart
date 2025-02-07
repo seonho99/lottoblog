@@ -8,12 +8,14 @@ class UserRepo {
   
   Future<UserModel?> fetchProfile({required String uid}) async {
     try {
-      await _firestoreService.fetchProfile(uid: uid);
+      UserModel? userModel = await _firestoreService.fetchProfile(uid: uid);
+      // print('Fetched userName: ${userModel?.userName}');
+      // print('Fetched profileImageUrl: ${userModel?.profileImageUrl}');
+      return userModel;
     } catch (e) {
       throw Exception('게시글 생성에 실패했습니다.: $e');
     }
-  } 
-
+  }
 }
 
 

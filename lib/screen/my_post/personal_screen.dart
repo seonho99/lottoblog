@@ -19,21 +19,23 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
   late String uid;
-  late String userName;
-  late String profileImageUrl;
+  late String userName = '';
+  late String profileImageUrl = '';
 
   @override
   void initState() {
     super.initState();
 
     final user = FirebaseAuth.instance.currentUser;
+
     if (user != null) {
       uid = user.uid;
-
+      print('uid:$uid');
       context.read<ProfileBloc>().add(UpdateProfileEvent(
           uid: uid,
-          userName: userName,
-          profileImageUrl: profileImageUrl));
+          // userName: userName,
+          // profileImageUrl: profileImageUrl,
+      ));
       context.read<MyPostBloc>().add(FetchMyPostsEvent());
     }
   }
@@ -50,20 +52,22 @@ class _PersonalScreenState extends State<PersonalScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 사용자 정보 Row
-              BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+              BlocBuilder<ProfileBloc, ProfileState>(
+                  builder: (context, state) {
+                    // print('userName: ${state.userName}');
+                    // print('profileImageUrl: ${state.profileImageUrl}');
                 return Row(
                   children: [
                     CircleAvatar(
                       radius: 45,
-                      backgroundImage: state.profileImageUrl != null
-                          ? NetworkImage(state.profileImageUrl)
-                          : const AssetImage(
-                              'assets/profile_dummy/profile_01.png'),
+                      backgroundImage: (state.profileImageUrl == null || state.profileImageUrl.isEmpty)
+                          ? const AssetImage('assets/profile_dummy/profile_01.png')
+                          : NetworkImage(state.profileImageUrl) as ImageProvider,
                     ),
                     SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        '${state.userName}',
+                        state.userName,
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall
@@ -72,7 +76,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     ),
                   ],
                 );
-              }),
+              },
+              ),
               SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -126,7 +131,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       child: Text('초기 상태'),
                     );
                   } else if (state is MyPostSuccess) {
-                    print('MyPostSuccess: ${state.myPosts}');
+                    // print('MyPostSuccess: ${state.myPosts}');
                     return Expanded(
                       child: ListView.builder(
                         itemCount: state.myPosts.length,

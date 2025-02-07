@@ -12,8 +12,8 @@ class UserModel {
     required this.userName,
     required this.email,
     this.profileImageUrl = '',
-    required this.createdAt,
-  });
+    createdAt,
+  }):createdAt=createdAt??DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -33,5 +33,9 @@ class UserModel {
       profileImageUrl: map['profileImageUrl'] ?? '',
       createdAt: (map['createdAt'] as Timestamp).toDate(),
     );
+  }
+  @override
+  String toString() {
+    return 'UserModel(uid:$uid, userName: $userName,email:$email,profileImageUrl:$profileImageUrl,createdAt:$createdAt )';
   }
 }
