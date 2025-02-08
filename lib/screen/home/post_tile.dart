@@ -94,8 +94,11 @@ class _PostTileState extends State<PostTile> {
                       Expanded(
                         child: Text(
                           widget.title,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(height: 1.6,fontWeight: FontWeight.w600),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                  height: 1.6, fontWeight: FontWeight.w600),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -106,41 +109,42 @@ class _PostTileState extends State<PostTile> {
                 ),
               ),
               BlocBuilder<LoginBloc, LoginState>(
-                  builder: (context, state) {
-                bool isLiked = widget.initialLiked.contains(state.user?.uid);
-                bool likeEnabled = true;
-                if (state.user?.uid == null) {
-                  likeEnabled = false;
-                }
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        if (likeEnabled) toggleLike(isLiked);
-                      },
-                      child: (likeEnabled)
-                          ? Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 24,
-                            )
-                          : Icon(
-                              Icons.favorite_border,
-                              color: Colors.grey,
-                              size: 24,
-                            ),
-                    ),
-                    Text(
-                      '$likeCount',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                );
-              }),
+                builder: (context, state) {
+                  bool isLiked = widget.initialLiked.contains(state.user?.uid);
+                  bool likeEnabled = true;
+                  if (state.user?.uid == null) {
+                    likeEnabled = false;
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (likeEnabled) toggleLike(isLiked);
+                        },
+                        child: (likeEnabled)
+                            ? Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 24,
+                              )
+                            : Icon(
+                                Icons.favorite_border,
+                                color: Colors.grey,
+                                size: 24,
+                              ),
+                      ),
+                      Text(
+                        '$likeCount',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ],

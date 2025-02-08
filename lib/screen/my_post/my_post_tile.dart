@@ -42,7 +42,7 @@ class _MyPostTileState extends State<MyPostTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/mainhome/post_screen/${widget.postId}');
+        context.go('/personal/${widget.postId}');
         //postId 이용 이동일듯,
       },
       child: Row(

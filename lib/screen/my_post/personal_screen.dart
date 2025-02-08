@@ -30,7 +30,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
     if (user != null) {
       uid = user.uid;
-      print('uid:$uid');
+      // print('uid:$uid');
       context.read<ProfileBloc>().add(UpdateProfileEvent(
           uid: uid,
           // userName: userName,

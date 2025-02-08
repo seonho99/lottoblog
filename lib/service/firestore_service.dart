@@ -100,7 +100,7 @@ class FirestoreService {
           .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      // print('fetching posts: $allData');
+      print('fetching posts: $allData');
       return allData;
     } catch (e) {
       // print('Error fetching posts: $e');
