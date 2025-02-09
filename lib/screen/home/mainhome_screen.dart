@@ -18,7 +18,6 @@ class MainhomeScreen extends StatefulWidget {
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
 
-
   @override
   void initState() {
     super.initState();
@@ -27,41 +26,6 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
     _scrollController.addListener(_onScroll);
   }
 
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   _fetchPostId();
-  //
-  //   _scrollController.addListener(_onScroll);
-  // }
-  //
-  // Future<void> _fetchPostId() async {
-  //   try {
-  //     List<String> postIds = await context.read<PostRepository>().getAllPostIds(posts);
-  //     if (postIds.isNotEmpty) {
-  //       setState(() {
-  //         postId = postIds.first;
-  //       });
-  //
-  //       context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
-  //     }
-  //   } catch (e) {
-  //     print('포스트 아이디를 가져오는 데 실패했습니다: $e');
-  //   }
-  // }
-  //
-  // void updatePostId(String newPostId) {
-  //   setState(() {
-  //     postId = newPostId;
-  //   });
-  //
-  //
-  //   if (postId != null) {
-  //     context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +45,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                       padding: const EdgeInsets.only(bottom: 30),
                       child: Text(
                         '커뮤니티',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
+                        style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.w800),
                       ),
                     ),
