@@ -6,6 +6,7 @@ import 'package:lottoblog/screen/postwriting_screen.dart';
 import 'data/bloc/login/login_bloc.dart';
 import 'data/bloc/login/login_state.dart';
 
+
 import 'screen/dayofweek_screen.dart';
 import 'screen/edit_profile/editprofile_screen.dart';
 import 'screen/frame_screen.dart';
@@ -52,9 +53,10 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'post',
+                  path: ':postId',
                   builder: (context, state) {
-                    return PostScreen();
+                    final postId = state.pathParameters['postId']!;
+                    return PostScreen(postId:postId);
                   },
                 ),
               ],
@@ -71,9 +73,10 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'post',
+                  path: ':postId',
                   builder: (BuildContext context, GoRouterState state) {
-                    return PostScreen();
+                    final postId = state.pathParameters['postId']!;
+                    return PostScreen(postId: postId);
                   },
                 ),
               ],

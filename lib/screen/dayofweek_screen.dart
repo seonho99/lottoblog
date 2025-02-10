@@ -148,7 +148,7 @@ class DayofweekScreen extends StatelessWidget {
 
                 GestureDetector(
                   onTap: (){
-                    context.go('/dayofweek/post_screen');
+                    context.go('/dayofweek/:postId');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

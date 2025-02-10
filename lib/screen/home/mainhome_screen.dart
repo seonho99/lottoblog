@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/read_posts/read_posts_event.dart';
 import 'package:lottoblog/screen/home/post_tile.dart';
 
-import '../../data/bloc/login/login_bloc.dart';
-import '../../data/bloc/login/login_state.dart';
+
 import '../../data/bloc/read_posts/read_posts_bloc.dart';
 import '../../data/bloc/read_posts/read_posts_state.dart';
 
@@ -56,13 +56,18 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              PostTile(
-                                imageUrl: state.readAllPosts[index].imageUrls[0],
-                                title: state.readAllPosts[index].title,
-                                initialLiked: state.readAllPosts[index].likePostUid,
-                                initialLikeCount: state.readAllPosts[index].likeCount,
-                                postId: state.readAllPosts[index].postId!,
-                                // userName: state.,
+                              GestureDetector(
+                                onTap: (){
+                                  final postId = state.readAllPosts[index].postId!;
+                                  context.go('/mainhome/$postId}');
+                                },
+                                child: PostTile(
+                                  imageUrl: state.readAllPosts[index].imageUrls[0],
+                                  title: state.readAllPosts[index].title,
+                                  initialLiked: state.readAllPosts[index].likePostUid,
+                                  initialLikeCount: state.readAllPosts[index].likeCount,
+                                  postId: state.readAllPosts[index].postId!,
+                                ),
                               ),
                               Padding(
                                 padding:
