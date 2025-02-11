@@ -59,7 +59,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                               GestureDetector(
                                 onTap: (){
                                   final postId = state.readAllPosts[index].postId!;
-                                  context.go('/mainhome/$postId}');
+                                  context.go('/mainhome/$postId');
                                 },
                                 child: PostTile(
                                   imageUrl: state.readAllPosts[index].imageUrls[0],

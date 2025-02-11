@@ -59,15 +59,15 @@ class PostRepository {
   //   }
   // }
 
-  // Future<List<PostModel>> readAllPosts({required String postId, int limit = 10, PostModel? lastPosts}) async {
-  //   try {
-  //     return await _firestoreService.readAllPost(postId: postId,limit: limit,lastPosts: lastPosts);
-  //   } catch (e) {
-  //     throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
-  //   }
-  // }
+  Future<List<PostModel>> fetchPostId(String postId) async {
+    try {
+      return await _firestoreService.fetchPostId(postId);
+    } catch (e) {
+      throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
+    }
+  }
 
-  Future<List<PostModel>> readAllPosts() async {
+    Future<List<PostModel>> readAllPosts() async {
     try {
       return await _firestoreService.readAllPost();
     } catch (e) {

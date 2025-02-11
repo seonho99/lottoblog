@@ -17,7 +17,7 @@ import 'screen/login/email/email_resetpassword_screen.dart';
 import 'screen/login/login_screen.dart';
 import 'screen/home/mainhome_screen.dart';
 import 'screen/my_post/personal_screen.dart';
-import 'screen/post_screen.dart';
+import 'screen/post_screen/post_screen.dart';
 
 final GlobalKey<NavigatorState> _rootTabNavigatorKey =
     GlobalKey<NavigatorState>();
@@ -47,16 +47,15 @@ final GoRouter router = GoRouter(
           navigatorKey: _mainTabNavigatorKey,
           routes: [
             GoRoute(
-              path: '/mainhome',
+              path: '/mainhome/:postId',
               builder: (context, state) {
                 return MainhomeScreen();
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: ':postId',
+                  path: 'post',
                   builder: (context, state) {
-                    final postId = state.pathParameters['postId']!;
-                    return PostScreen(postId:postId);
+                    return PostScreen();
                   },
                 ),
               ],
@@ -76,7 +75,7 @@ final GoRouter router = GoRouter(
                   path: ':postId',
                   builder: (BuildContext context, GoRouterState state) {
                     final postId = state.pathParameters['postId']!;
-                    return PostScreen(postId: postId);
+                    return PostScreen();
                   },
                 ),
               ],
