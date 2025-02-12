@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/read_posts/read_posts_event.dart';
 import 'package:lottoblog/screen/home/post_tile.dart';
 
@@ -9,6 +10,7 @@ import '../../data/bloc/read_posts/read_posts_bloc.dart';
 import '../../data/bloc/read_posts/read_posts_state.dart';
 
 class MainhomeScreen extends StatefulWidget {
+
   MainhomeScreen({super.key});
 
   @override
@@ -28,40 +30,6 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
   }
 
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   _fetchPostId();
-  //
-  //   _scrollController.addListener(_onScroll);
-  // }
-  //
-  // Future<void> _fetchPostId() async {
-  //   try {
-  //     List<String> postIds = await context.read<PostRepository>().getAllPostIds(posts);
-  //     if (postIds.isNotEmpty) {
-  //       setState(() {
-  //         postId = postIds.first;
-  //       });
-  //
-  //       context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
-  //     }
-  //   } catch (e) {
-  //     print('포스트 아이디를 가져오는 데 실패했습니다: $e');
-  //   }
-  // }
-  //
-  // void updatePostId(String newPostId) {
-  //   setState(() {
-  //     postId = newPostId;
-  //   });
-  //
-  //
-  //   if (postId != null) {
-  //     context.read<PostBloc>().add(ReadAllPosts(postId: postId!, limit: limit));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -91,25 +59,32 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                       child: ListView.builder(
                         itemCount: state.readAllPosts.length,
                         itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              PostTile(
-                                imageUrl: state.readAllPosts[index].imageUrls[0],
-                                title: state.readAllPosts[index].title,
-                                initialLiked: state.readAllPosts[index].likePostUid,
-                                initialLikeCount: state.readAllPosts[index].likeCount,
-                                postId: state.readAllPosts[index].postId!,
-                                // userName: state.,
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 16),
-                                child: Divider(
-                                    color: Colors.grey.shade300,
-                                    thickness: 1.0),
-                              ),
-                            ],
+                          final post = state.readAllPosts[index];
+                          return GestureDetector(
+                            onTap: (){
+                              final postId = post.postId;
+                              context.go('/mainhome/post/$postId');
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                PostTile(
+                                  imageUrl: state.readAllPosts[index].imageUrls[0],
+                                  title: state.readAllPosts[index].title,
+                                  initialLiked: state.readAllPosts[index].likePostUid,
+                                  initialLikeCount: state.readAllPosts[index].likeCount,
+                                  postId: state.readAllPosts[index].postId!,
+                                  // userName: state.,
+                                ),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 16),
+                                  child: Divider(
+                                      color: Colors.grey.shade300,
+                                      thickness: 1.0),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),

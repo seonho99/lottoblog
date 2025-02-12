@@ -28,7 +28,7 @@ class _LandingScreenState extends State<LandingScreen> {
         child: Center(
           child: Container(
             child:
-            const Image(image: AssetImage('assets/logo/lottoblog_300_300.jpeg'),
+            const Image(image: AssetImage('assets/logo/lottoblog_300_300.jpeg'),fit: BoxFit.cover,
             ),
           ),
         ),

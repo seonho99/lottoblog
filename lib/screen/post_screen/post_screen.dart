@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:lottoblog/screen/post_screen/post_screen_tile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottoblog/data/bloc/post_screen/post_screen_bloc.dart';
+import 'package:lottoblog/data/bloc/post_screen/post_screen_state.dart';
+import '../../models/post_model.dart';
 import '../../widget/popupmenubotton_widget.dart';
+import 'post_screen_tile.dart';
 
 class PostScreen extends StatelessWidget {
-  PostScreen({super.key});
+  String postId;
+  PostScreen({super.key,required this.postId});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +81,29 @@ class PostScreen extends StatelessWidget {
                     thickness: 1.0,
                   ),
                   SizedBox(height: 30),
-                 // PostScreenTile(postId: postId, title: title, content: content, imageUrls: imageUrls)
+                 BlocBuilder<PostScreenBloc,PostScreenState>(
+                   builder: (context,state) {
+                     // final post = state.selectedPost.firstWhere(
+                     //       (p) => p.postId == postId,
+                     //   orElse: () => null,  // Return null if not found
+                     // );
+                     //
+                     // if (post == null) {
+                     //   return Center(child: Text('Post not found'));
+                     // }
+                     final post = state.selectedPost.firstWhere(
+                           (p) => p.postId == postId,
+                       orElse: () => PostModel(  // Return a default PostModel if not found
+                         postId: 'defaultId',
+                         title: 'Default Post',
+                         content: 'No content available.',
+                         imageUrls: [],
+                       ),
+                     );
+
+                     return PostScreenTile(postId: postId, title: post.title, content: post.content, imageUrls: post.imageUrls);
+                   },
+                 ),
                 ],
               ),
             ),

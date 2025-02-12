@@ -6,6 +6,7 @@ import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bl
 import 'package:lottoblog/data/bloc/login/login_bloc.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
+import 'package:lottoblog/data/bloc/post_screen/post_screen_bloc.dart';
 import 'package:lottoblog/data/bloc/profile/profile_bloc.dart';
 import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
 import 'package:lottoblog/data/bloc/tab_navigation/tab_navigation_bloc.dart';
@@ -13,8 +14,8 @@ import 'package:lottoblog/data/repository/auth_repository.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
 import 'package:lottoblog/data/repository/user_repo.dart';
 import 'package:lottoblog/router.dart';
+import 'package:lottoblog/screen/post_screen/post_screen.dart';
 import 'package:lottoblog/service/firestore_service.dart';
-
 
 import 'service/firebase_auth_service.dart';
 import 'service/firebase_options.dart';
@@ -40,13 +41,13 @@ class MyApp extends StatelessWidget {
   final TabNavigationBloc tabNavigationBloc;
   final MyPostBloc myPostBloc;
   final ProfileBloc profileBloc;
+  final PostScreenBloc postScreenBloc;
 
   MyApp({
     super.key,
     AuthRepository? authRepository,
     PostRepository? postRepository,
     UserRepo? userRepo,
-
     LoginBloc? loginBloc,
     EmailResetPasswordBloc? emailResetPasswordBloc,
     PostBloc? postBloc,
@@ -54,20 +55,19 @@ class MyApp extends StatelessWidget {
     TabNavigationBloc? tabNavigationBloc,
     MyPostBloc? myPostBloc,
     ProfileBloc? profileBloc,
+    PostScreenBloc? postScreenBloc,
   })  : authRepository =
             authRepository ?? AuthRepository(FirebaseAuthService()),
         postBloc = postBloc ??
             PostBloc(postRepository ?? PostRepository(FirestoreService()),
                 authRepository ?? AuthRepository(FirebaseAuthService())),
         userRepo = userRepo ?? UserRepo(FirestoreService()),
-
         loginBloc = loginBloc ??
             LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
         emailResetPasswordBloc = emailResetPasswordBloc ??
             EmailResetPasswordBloc(
                 authRepository ?? AuthRepository(FirebaseAuthService())),
         postRepository = postRepository ?? PostRepository(FirestoreService()),
-
         readPostsBloc = readPostsBloc ??
             ReadPostsBloc(postRepository ?? PostRepository(FirestoreService()),
                 AuthRepository(FirebaseAuthService())),
@@ -76,7 +76,10 @@ class MyApp extends StatelessWidget {
             MyPostBloc(postRepository ?? PostRepository(FirestoreService()),
                 authRepository ?? AuthRepository(FirebaseAuthService())),
         profileBloc = profileBloc ??
-            ProfileBloc(userRepo ?? UserRepo(FirestoreService()));
+            ProfileBloc(userRepo ?? UserRepo(FirestoreService())),
+        postScreenBloc = postScreenBloc ??
+            PostScreenBloc(
+                postRepository ?? PostRepository(FirestoreService()));
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +92,7 @@ class MyApp extends StatelessWidget {
           create: (context) => postRepository,
         ),
         RepositoryProvider<UserRepo>(
-            create: (context) => userRepo,
+          create: (context) => userRepo,
         ),
       ],
       child: MultiBlocProvider(
@@ -113,7 +116,10 @@ class MyApp extends StatelessWidget {
             create: (context) => myPostBloc,
           ),
           BlocProvider<ProfileBloc>(
-              create: (context) => profileBloc,
+            create: (context) => profileBloc,
+          ),
+          BlocProvider<PostScreenBloc>(
+            create: (context) => postScreenBloc,
           ),
         ],
         child: MaterialApp.router(

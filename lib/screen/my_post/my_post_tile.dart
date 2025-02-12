@@ -101,7 +101,7 @@ class _MyPostTileState extends State<MyPostTile> {
                   ),
                   const SizedBox(width: 14,),
                   Text(
-                    '${likeCount}',
+                    '$likeCount',
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
