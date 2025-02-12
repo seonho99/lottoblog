@@ -83,6 +83,14 @@ class PostRepository {
     }
   }
 
+  Future<List<PostModel>> fetchPostId(String postId) async {
+    try {
+      return await _firestoreService.fetchPostId(postId);
+    } catch (e) {
+      throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
+    }
+  }
+
 // 게시글 수정
   Future<void> updatePost(PostModel posts) async {
     try {
