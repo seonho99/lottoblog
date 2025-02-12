@@ -92,22 +92,30 @@ class FirestoreService {
     }
   }
 
-  Future<List<PostModel>> fetchPostId(String postId) async {
-    try {
-      DocumentSnapshot snapshot = await _fs.collection('posts').doc(postId).get();
+  // Future<List<PostModel>> fetchPostId(String postId) async {
+  //   try {
+  //     DocumentSnapshot snapshot = await _fs.collection('posts').doc(postId).get();
+  //
+  //     if (snapshot.exists) {
+  //       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  //       return [PostModel.fromMap(data)];
+  //     } else {
+  //       throw Exception('게시글을 찾을 수 없습니다.');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('게시글들을 읽어오는데 실패했습니다: ${e.toString()}');
+  //   }
+  // }
 
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-        return [PostModel.fromMap(data)];
-      } else {
-        throw Exception('게시글을 찾을 수 없습니다.');
-      }
+  Future<List<PostModel>> fetchPostId(String postId) async {
+    QuerySnapshot querySnapshot = await _fs.collection('posts').where('postId', isEqualTo: postId).get();
+
+    try {
+      return querySnapshot.docs.map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
     } catch (e) {
-      throw Exception('게시글들을 읽어오는데 실패했습니다: ${e.toString()}');
+      throw Exception("Error fetching posts: $e");
     }
   }
-
-
 
   Future<List<PostModel>> readAllPost() async {
     final _postCollection = _fs.collection('posts');
@@ -124,8 +132,6 @@ class FirestoreService {
       throw Exception('게시글 목록을 가져오는데 실패 했습니다.');
     }
   }
-
-
 
   // 자신의 포스트
   Future<List<PostModel>> fetchUserPosts() async {
@@ -151,8 +157,6 @@ class FirestoreService {
     }
     return myPosts;
   }
-
-
 
   Future<UserModel?> fetchProfile({required String uid}) async {
     try {

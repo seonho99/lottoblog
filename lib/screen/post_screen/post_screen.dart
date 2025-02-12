@@ -9,12 +9,13 @@ import '../../models/post_model.dart';
 import '../../widget/popupmenubotton_widget.dart';
 
 class PostScreen extends StatefulWidget {
+  final String postId;
+
   // DateTime createdAt;
 
   PostScreen({
     super.key,
-
-    // required this.createdAt,
+    required this.postId,
   });
 
   @override
@@ -35,70 +36,83 @@ class _PostScreenState extends State<PostScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border:
-                            Border.all(width: 1, color: Colors.grey.shade300),
-                        image: DecorationImage(
-                          image:
-                              AssetImage('assets/profile_dummy/profile_01.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
                         width: 80,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 12),
-                            Text(
-                              '함께 분석해봐요',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              '2024 .10 .02',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ],
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(width: 1, color: Colors.grey.shade300),
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/profile_dummy/profile_01.png'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    PopupmenubottonWidget(),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Divider(
-                  color: Colors.grey.shade300,
-                  thickness: 1.0,
-                ),
-                SizedBox(height: 30),
-                BlocBuilder<PostScreenBloc, PostScreenState>(
-                    builder: (context, state){
-                      return PostScreenTile(
-                        postId: postId,
-                        title: title,
-                        content: content,
-                        imageUrls: imageUrls,
-                      );
-                    }),
-              ],
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Container(
+                          width: 80,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 12),
+                              Text(
+                                '함께 분석해봐요',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '2024 .10 .02',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      PopupmenubottonWidget(),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Divider(
+                    color: Colors.grey.shade300,
+                    thickness: 1.0,
+                  ),
+                  SizedBox(height: 30),
+                  BlocBuilder<PostScreenBloc, PostScreenState>(
+                      builder: (context, state) {
+                    final selectedPosts = state.selectedPost;
+
+                    if (selectedPosts == null || selectedPosts.isEmpty) {
+                      throw Exception('No post available');
+                    }
+
+                    final postId = selectedPosts['postId']?.postId;
+                    if (postId == null) {
+                      throw Exception('postId cannot be null');
+                    }
+
+                    return PostScreenTile(
+                      postId: postId,
+                      title: title,
+                      content: content,
+                      imageUrls: imageUrls,
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         ),

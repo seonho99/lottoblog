@@ -28,7 +28,7 @@ class _PostScreenTileState extends State<PostScreenTile> {
   @override
   void initState() {
     super.initState();
-    context.read<PostScreenBloc>().add(FetchPost(postId: widget.postId, title: widget.title, content: widget.content, imageUrls: widget.imageUrls));
+    context.read<PostScreenBloc>().add(FetchPost(postId: widget.postId, title: widget.title, content: widget.content, imageUrls: widget.imageUrls,),);
   }
 
   @override
