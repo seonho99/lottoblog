@@ -13,3 +13,9 @@ final class FetchPost extends PostScreenEvent {
     required this.imageUrls,
   });
 }
+
+final class FetchTime extends PostScreenEvent{
+  String createdAt;
+
+  FetchTime({required this.createdAt});
+}

@@ -10,7 +10,8 @@ class PostScreenTile extends StatefulWidget {
   String content;
   List<String> imageUrls;
 
-  PostScreenTile({super.key,
+  PostScreenTile({
+    super.key,
     required this.postId,
     required this.title,
     required this.content,
@@ -21,49 +22,73 @@ class PostScreenTile extends StatefulWidget {
   State<PostScreenTile> createState() => _PostScreenTileState();
 }
 
-
-
 class _PostScreenTileState extends State<PostScreenTile> {
-
   @override
   void initState() {
     super.initState();
-    context.read<PostScreenBloc>().add(FetchPost(postId: widget.postId, title: widget.title, content: widget.content, imageUrls: widget.imageUrls,),);
+    context.read<PostScreenBloc>().add(
+          FetchPost(
+            postId: widget.postId,
+            title: widget.title,
+            content: widget.content,
+            imageUrls: widget.imageUrls,
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      // mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           widget.title,
-          style: Theme.of(context).textTheme.displaySmall
+          style: Theme.of(context)
+              .textTheme
+              .displayMedium
               ?.copyWith(height: 1.6, fontWeight: FontWeight.w700),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 40),
         Container(
           width: MediaQuery.of(context).size.width * 1,
-          height: 300,
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Colors.grey.shade300),
           ),
-          child: ListView.builder(
-              itemCount: widget.imageUrls.length,
-              itemBuilder: (context, index){
-                return Image(image: NetworkImage(widget.imageUrls[index]),
-                  fit: BoxFit.cover,);
+          child:
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: 6,
+            itemBuilder: (context, index) {
+              int imageIndex = index ~/ 2;
+
+              if (index.isEven) {
+                return widget.imageUrls.length > imageIndex
+                    ? Image.network(
+                  widget.imageUrls[imageIndex],
+                  fit: BoxFit.cover,
+                )
+                    : Container();
+              } else {
+                return SizedBox(height: 10);
               }
+            },
           ),
+          // ListView.builder(
+          //   itemCount: widget.imageUrls.length,
+          //   itemBuilder: (context, index) {
+          //     return Image(
+          //       image: NetworkImage(widget.imageUrls[index]),
+          //       fit: BoxFit.cover,
+          //     );
+          //   },
+          // ),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Text(
-            widget.content,
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(height: 1.6),
-          ),
+        SizedBox(height: 40),
+        Text(
+          widget.content,
+          style:
+              Theme.of(context).textTheme.headlineMedium?.copyWith(height: 1.6),
         ),
       ],
     );

@@ -2,13 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/post_screen/post_screen_bloc.dart';
 import 'package:lottoblog/data/bloc/post_screen/post_screen_state.dart';
+import 'package:lottoblog/data/bloc/profile/profile_bloc.dart';
+import 'package:lottoblog/data/bloc/profile/profile_event.dart';
+import 'package:lottoblog/screen/post_screen/post_screen_user.dart';
+import '../../data/bloc/profile/profile_state.dart';
 import '../../models/post_model.dart';
-import '../../widget/popupmenubotton_widget.dart';
 import 'post_screen_tile.dart';
 
-class PostScreen extends StatelessWidget {
+class PostScreen extends StatefulWidget {
   String postId;
-  PostScreen({super.key,required this.postId});
+  String uid;
+
+  PostScreen({super.key, required this.postId,required this.uid});
+
+  @override
+  State<PostScreen> createState() => _PostScreenState();
+}
+
+class _PostScreenState extends State<PostScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +34,6 @@ class PostScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        actions: [
-          PopupmenubottonWidget(),
-        ],
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -30,50 +44,10 @@ class PostScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(width: 1, color: Colors.grey.shade300),
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/profile_dummy/profile_01.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Container(
-                          width: 80,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 12),
-                              Text(
-                                '함께 분석해봐요',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge
-                                    ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '2024 .10 .02',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      PopupmenubottonWidget(),
-                    ],
+                  BlocBuilder<ProfileBloc,ProfileState>(
+                    builder: (context, state) {
+                      return PostScreenUser(profileImageUrl: state.profileImageUrl, userName: state.userName);
+                    }
                   ),
                   SizedBox(height: 20),
                   Divider(
@@ -81,29 +55,27 @@ class PostScreen extends StatelessWidget {
                     thickness: 1.0,
                   ),
                   SizedBox(height: 30),
-                 BlocBuilder<PostScreenBloc,PostScreenState>(
-                   builder: (context,state) {
-                     // final post = state.selectedPost.firstWhere(
-                     //       (p) => p.postId == postId,
-                     //   orElse: () => null,  // Return null if not found
-                     // );
-                     //
-                     // if (post == null) {
-                     //   return Center(child: Text('Post not found'));
-                     // }
-                     final post = state.selectedPost.firstWhere(
-                           (p) => p.postId == postId,
-                       orElse: () => PostModel(  // Return a default PostModel if not found
-                         postId: 'defaultId',
-                         title: 'Default Post',
-                         content: 'No content available.',
-                         imageUrls: [],
-                       ),
-                     );
+                  BlocBuilder<PostScreenBloc, PostScreenState>(
+                    builder: (context, state) {
+                      final post = state.selectedPost.firstWhere(
+                        (p) => p.postId == widget.postId,
+                        orElse: () => PostModel(
+                          // Return a default PostModel if not found
+                          postId: 'defaultId',
+                          title: 'Default Post',
+                          content: 'No content available.',
+                          imageUrls: [],
+                        ),
+                      );
 
-                     return PostScreenTile(postId: postId, title: post.title, content: post.content, imageUrls: post.imageUrls);
-                   },
-                 ),
+                      return PostScreenTile(
+                          postId: widget.postId,
+                          title: post.title,
+                          content: post.content,
+                          imageUrls: post.imageUrls,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

@@ -55,7 +55,10 @@ final GoRouter router = GoRouter(
                   path: '/post/:postId',
                   builder: (context, state) {
                     final postId = state.uri.pathSegments.last;
-                    return PostScreen(postId:postId);
+                    // final uid = state.uri.pathSegments.last;
+                    return PostScreen(postId:postId,
+                      // uid: uid,
+                    );
                   },
                 ),
               ],
@@ -75,7 +78,10 @@ final GoRouter router = GoRouter(
                   path: '/post/:postId',
                   builder: (context, state) {
                     final postId = state.uri.pathSegments.last;
-                    return PostScreen(postId:postId);
+                    // final uid = state.uri.pathSegments.last;
+                    return PostScreen(postId:postId,
+                      // uid: uid,
+                    );
                   },
                 ),
               ],

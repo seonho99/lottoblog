@@ -12,15 +12,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<UpdateProfileEvent>((event, emit) async {
       try {
         UserModel? userModel = await userRepo.fetchProfile(uid: event.uid);
-        if(userModel != null){
+        if (userModel != null) {
           // print('userName: ${userModel.userName}');
           // print('profileImageUrl: ${userModel.profileImageUrl}');
 
           emit(ProfileUpdated(userModel.userName, userModel.profileImageUrl));
         }
-      }catch(e){
+      } catch (e) {
         ProfileFailure(errorMessage: e.toString());
       }
     });
+
   }
 }
