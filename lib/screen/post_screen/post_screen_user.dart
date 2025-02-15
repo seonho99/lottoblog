@@ -7,15 +7,14 @@ import '../../data/bloc/profile/profile_event.dart';
 import '../../widget/popupmenubotton_widget.dart';
 
 class PostScreenUser extends StatefulWidget {
-  // String createdAt;
-  String profileImageUrl;
   String userName;
+  String profileImageUrl;
+
 
   PostScreenUser({
     super.key,
-    // required this.createdAt,
-    required this.profileImageUrl,
     required this.userName,
+    required this.profileImageUrl,
   });
 
   @override

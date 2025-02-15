@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/profile/profile_event.dart';
 import 'package:lottoblog/data/bloc/profile/profile_state.dart';
+import 'package:lottoblog/screen/my_post/personal_tile.dart';
 
 import '../../data/bloc/my_post/my_post_bloc.dart';
 import '../../data/bloc/my_post/my_post_event.dart';
@@ -19,8 +20,7 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
   late String uid;
-  late String userName = '';
-  late String profileImageUrl = '';
+
 
   @override
   void initState() {
@@ -32,14 +32,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
       uid = user.uid;
       print('uid:$uid');
       context.read<ProfileBloc>().add(UpdateProfileEvent(
-          uid: uid,
-          // userName: userName,
-          // profileImageUrl: profileImageUrl,
-      ));
+            uid: uid,
+            // userName: userName,
+            // profileImageUrl: profileImageUrl,
+          ));
       context.read<MyPostBloc>().add(FetchMyPostsEvent());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -53,30 +52,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
             children: [
               // 사용자 정보 Row
               BlocBuilder<ProfileBloc, ProfileState>(
-                  builder: (context, state) {
-                    // print('userName: ${state.userName}');
-                    // print('profileImageUrl: ${state.profileImageUrl}');
-                return Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 45,
-                      backgroundImage: (state.profileImageUrl == null || state.profileImageUrl.isEmpty)
-                          ? const AssetImage('assets/profile_dummy/profile_01.png')
-                          : NetworkImage(state.profileImageUrl) as ImageProvider,
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        state.userName,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall
-                            ?.copyWith(fontWeight: FontWeight.w800),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                builder: (context, state) {
+                  // print('userName: ${state.userName}');
+                  // print('profileImageUrl: ${state.profileImageUrl}');
+                  return PersonalTile(profileImageUrl: state.profileImageUrl, userName: state.userName);
+                },
               ),
               SizedBox(height: 30),
               Row(

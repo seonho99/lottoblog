@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/post_screen/post_screen_bloc.dart';
 import 'package:lottoblog/data/bloc/post_screen/post_screen_state.dart';
 import 'package:lottoblog/data/bloc/profile/profile_bloc.dart';
-import 'package:lottoblog/data/bloc/profile/profile_event.dart';
 import 'package:lottoblog/screen/post_screen/post_screen_user.dart';
 import '../../data/bloc/profile/profile_state.dart';
 import '../../models/post_model.dart';
@@ -11,22 +10,14 @@ import 'post_screen_tile.dart';
 
 class PostScreen extends StatefulWidget {
   String postId;
-  String uid;
 
-  PostScreen({super.key, required this.postId,required this.uid});
+  PostScreen({super.key, required this.postId});
 
   @override
   State<PostScreen> createState() => _PostScreenState();
 }
 
 class _PostScreenState extends State<PostScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +35,13 @@ class _PostScreenState extends State<PostScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BlocBuilder<ProfileBloc,ProfileState>(
-                    builder: (context, state) {
-                      return PostScreenUser(profileImageUrl: state.profileImageUrl, userName: state.userName);
-                    }
-                  ),
+                  BlocBuilder<ProfileBloc, ProfileState>(
+                      builder: (context, state) {
+                    return PostScreenUser(
+                      profileImageUrl: state.profileImageUrl,
+                      userName: state.userName,
+                    );
+                  }),
                   SizedBox(height: 20),
                   Divider(
                     color: Colors.grey.shade300,
@@ -65,14 +58,15 @@ class _PostScreenState extends State<PostScreen> {
                           title: 'Default Post',
                           content: 'No content available.',
                           imageUrls: [],
+                          // uid: '',
                         ),
                       );
-
                       return PostScreenTile(
-                          postId: widget.postId,
-                          title: post.title,
-                          content: post.content,
-                          imageUrls: post.imageUrls,
+                        postId: widget.postId,
+                        title: post.title,
+                        content: post.content,
+                        imageUrls: post.imageUrls,
+                        // uid: post.uid,
                       );
                     },
                   ),

@@ -9,6 +9,7 @@ class PostScreenTile extends StatefulWidget {
   String title;
   String content;
   List<String> imageUrls;
+  String? uid;
 
   PostScreenTile({
     super.key,
@@ -16,6 +17,7 @@ class PostScreenTile extends StatefulWidget {
     required this.title,
     required this.content,
     required this.imageUrls,
+    // required this.uid,
   });
 
   @override
@@ -55,8 +57,7 @@ class _PostScreenTileState extends State<PostScreenTile> {
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Colors.grey.shade300),
           ),
-          child:
-          ListView.builder(
+          child: ListView.builder(
             shrinkWrap: true,
             itemCount: 6,
             itemBuilder: (context, index) {
@@ -65,9 +66,9 @@ class _PostScreenTileState extends State<PostScreenTile> {
               if (index.isEven) {
                 return widget.imageUrls.length > imageIndex
                     ? Image.network(
-                  widget.imageUrls[imageIndex],
-                  fit: BoxFit.cover,
-                )
+                        widget.imageUrls[imageIndex],
+                        fit: BoxFit.cover,
+                      )
                     : Container();
               } else {
                 return SizedBox(height: 10);
