@@ -9,7 +9,7 @@ class PostScreenTile extends StatefulWidget {
   String title;
   String content;
   List<String> imageUrls;
-  String? uid;
+  // String? uid;
 
   PostScreenTile({
     super.key,

@@ -21,7 +21,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
   final _scrollController = ScrollController();
   late String uid;
 
-
   @override
   void initState() {
     super.initState();
@@ -55,7 +54,21 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 builder: (context, state) {
                   // print('userName: ${state.userName}');
                   // print('profileImageUrl: ${state.profileImageUrl}');
-                  return PersonalTile(profileImageUrl: state.profileImageUrl, userName: state.userName);
+
+                  if (state is ProfileUpdated && state.user != null) {
+                    return PersonalTile(
+                      profileImageUrl: state.user!.profileImageUrl,
+                      userName: state.user!.userName,
+                    );
+                  } else if (state is ProfileFailure) {
+                    return Center(
+                      child: Text('프로필을 불러올 수 없습니다'),
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
                 },
               ),
               SizedBox(height: 30),

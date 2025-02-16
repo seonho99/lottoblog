@@ -16,7 +16,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           // print('userName: ${userModel.userName}');
           // print('profileImageUrl: ${userModel.profileImageUrl}');
 
-          emit(ProfileUpdated(userModel.userName, userModel.profileImageUrl));
+          emit(ProfileUpdated(userModel));
         }
       } catch (e) {
         ProfileFailure(errorMessage: e.toString());

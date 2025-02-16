@@ -52,7 +52,10 @@ class _PostTileState extends State<PostTile> {
 
     context.read<ReadPostsBloc>().add(
           LikePostEvent(
-              isLiked: !isLiked, likeCount: likeCount, postId: widget.postId),
+            isLiked: !isLiked,
+            likeCount: likeCount,
+            postId: widget.postId,
+          ),
         );
   }
 
@@ -88,8 +91,11 @@ class _PostTileState extends State<PostTile> {
                     Expanded(
                       child: Text(
                         widget.title,
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(height: 1.6,fontWeight: FontWeight.w600),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                                height: 1.6, fontWeight: FontWeight.w600),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -99,8 +105,7 @@ class _PostTileState extends State<PostTile> {
                 ),
               ),
             ),
-            BlocBuilder<LoginBloc, LoginState>(
-                builder: (context, state) {
+            BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
               bool isLiked = widget.initialLiked.contains(state.user?.uid);
               bool likeEnabled = true;
               if (state.user?.uid == null) {

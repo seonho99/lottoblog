@@ -1,26 +1,21 @@
-import 'package:lottoblog/models/user_model.dart';
+import '../../../models/user_model.dart';
 
-sealed class ProfileState{
-  String userName;
-  String profileImageUrl;
+sealed class ProfileState {
+  UserModel? user;
 
-  ProfileState({required this.userName,required this.profileImageUrl});
+  ProfileState({required this.user});
 }
 
-final class ProfileInitial extends ProfileState{
-
-  ProfileInitial() : super(userName: '',profileImageUrl: '');
+final class ProfileInitial extends ProfileState {
+  ProfileInitial() : super(user: null);
 }
 
-final class ProfileUpdated extends ProfileState{
-  ProfileUpdated(String userName,String profileImageUrl) :
-  super(userName: userName,profileImageUrl: profileImageUrl);
+final class ProfileUpdated extends ProfileState {
+  ProfileUpdated(UserModel user) : super(user: user);
 }
 
-final class ProfileFailure extends ProfileState{
+final class ProfileFailure extends ProfileState {
   final String errorMessage;
-  ProfileFailure({required this.errorMessage}):
-  super(userName: '',profileImageUrl: '');
+
+  ProfileFailure({required this.errorMessage}) : super(user: null);
 }
-
-

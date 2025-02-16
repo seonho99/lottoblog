@@ -147,15 +147,15 @@ class FirestoreService {
     try {
       DocumentSnapshot userDoc = await _fs.collection('users').doc(uid).get();
       if (userDoc.exists) {
-        String userName = userDoc['userName'];
-        String profileImageUrl = userDoc['profileImageUrl'];
-        // print('userModel:${UserModel(userName: userName,profileImageUrl: profileImageUrl,email: '')}');
+        // String userName = userDoc['userName'];
+        // String profileImageUrl = userDoc['profileImageUrl'];
 
-        return UserModel(
-          userName: userName,
-          profileImageUrl: profileImageUrl,
-          email: '',
-        );
+        return UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+          // UserModel(
+          // userName: userName,
+          // profileImageUrl: profileImageUrl,
+          // email: '',
+        // );
       } else {
         return null;
       }

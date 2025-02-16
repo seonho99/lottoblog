@@ -19,7 +19,6 @@ class MainhomeScreen extends StatefulWidget {
 class _MainhomeScreenState extends State<MainhomeScreen> {
   final _scrollController = ScrollController();
 
-
   @override
   void initState() {
     super.initState();
@@ -27,8 +26,6 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
     context.read<ReadPostsBloc>().add(FetchAllPostsEvent());
     _scrollController.addListener(_onScroll);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
