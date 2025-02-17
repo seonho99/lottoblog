@@ -13,11 +13,13 @@ import 'post_screen_tile.dart';
 
 class PostScreen extends StatefulWidget {
   String postId;
-  String uid;
+
+  // String uid;
 
   PostScreen({
-    super.key, required this.postId,
-    required this.uid,
+    super.key,
+    required this.postId,
+    // required this.uid,
   });
 
   @override
@@ -25,12 +27,11 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-      context.read<PostUserBloc>().add(UpdateUserEvent(uid: widget.uid));
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //     context.read<PostUserBloc>().add(UpdateUserEvent(uid: widget.uid));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -42,66 +43,46 @@ class _PostScreenState extends State<PostScreen> {
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BlocBuilder<ProfileBloc, ProfileState>(
-                    builder: (context, state) {
-                      print('PostScreenUser: uid=${state.user?.uid ?? ''}, '
-                          'profileImageUrl=${state.user?.profileImageUrl ?? ''}, '
-                          'userName=${state.user?.userName ?? ''}');
-
-                        return PostScreenUser(
-                        uid: state.user?.uid ?? '',
-                        profileImageUrl: state.user!.profileImageUrl,
-                        userName: state.user!.userName,
-                      );
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Divider(
-                    color: Colors.grey.shade300,
-                    thickness: 1.0,
-                  ),
-                  SizedBox(height: 30),
-                  BlocBuilder<PostScreenBloc, PostScreenState>(
-                    builder: (context, state) {
-                      final post = state.selectedPost.firstWhere(
-                            (p) => p.postId == widget.postId,
-                        orElse: () =>
-                            PostModel(
-                              postId: 'defaultId',
-                              title: 'Default Post',
-                              content: 'No content available.',
-                              imageUrls: [],
-                              uid: '',
-                              // uid: '',
-                            ),
-                      );
-                      return Column(
-                        children: [
-                          PostScreenUser(uid: post.uid ?? '',
-                          profileImageUrl: '',
-                          userName: '',),
-                          PostScreenTile(
-                            postId: widget.postId,
-                            title: post.title,
-                            content: post.content,
-                            imageUrls: post.imageUrls,
-                            // uid: post.uid,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
+        child: BlocBuilder<PostScreenBloc, PostScreenState>(
+          builder: (context, state) {
+            final post = state.selectedPost.firstWhere(
+              (p) => p.postId == widget.postId,
+              orElse: () => PostModel(
+                postId: 'defaultId',
+                title: 'Default Post',
+                content: 'No content available.',
+                imageUrls: [],
+                uid: '',
+                // uid: '',
               ),
-            ),
-          ),
+            );
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PostScreenUser(uid: post.uid ?? ''),
+                      SizedBox(height: 20),
+                      Divider(
+                        color: Colors.grey.shade300,
+                        thickness: 1.0,
+                      ),
+                      SizedBox(height: 30),
+                      PostScreenTile(
+                        postId: widget.postId,
+                        title: post.title,
+                        content: post.content,
+                        imageUrls: post.imageUrls,
+                        // uid: post.uid,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -1,21 +1,21 @@
 import '../../../models/user_model.dart';
 
 sealed class PostUserState {
-  UserModel? user;
+  List<UserModel> user;
 
   PostUserState({required this.user});
 }
 
 final class PostUserInitial extends PostUserState {
-  PostUserInitial() : super(user: null);
+  PostUserInitial() : super(user: []);
 }
 
 final class PostUserUpdated extends PostUserState {
-  PostUserUpdated(UserModel user) : super(user: user);
+  PostUserUpdated(List<UserModel> user) : super(user: user);
 }
 
 final class PostUserFailure extends PostUserState {
   final String errorMessage;
 
-  PostUserFailure({required this.errorMessage}) : super(user: null);
+  PostUserFailure({required this.errorMessage}) : super(user: []);
 }

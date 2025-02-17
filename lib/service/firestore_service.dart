@@ -118,6 +118,15 @@ class FirestoreService {
     }
   }
 
+  Future<List<UserModel>> fetchPostScreenUid(String uid) async {
+    QuerySnapshot uidSnapshot = await _fs.collection('users').where('uid', isEqualTo: uid).get();
+    try {
+      return uidSnapshot.docs.map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw Exception('Error fetching uid: $e');
+    }
+  }
+
   // 자신의 포스트
   Future<List<PostModel>> fetchUserPosts() async {
     final postCollection = _fs.collection('posts');
