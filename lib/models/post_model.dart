@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// PostModel 객체 추가 시 화면이 안나옴
-// firestore collection 삭제 후
-// create에 PostModel 객체 추가 재작성 시 성공
-
 final class PostModel {
   String? postId; // 포스트 ID
   String title; // 글 제목
@@ -12,8 +8,9 @@ final class PostModel {
   DateTime createdAt; // 작성 시간
   String? uid; // 작성자 ID
   List<String> likePostUid;
-  int likeCount; // 좋아요 개수
-  int reportCount; // 신고 횟수
+  int likePostCount; // 좋아요 개수
+  List<String> reportUserUid;
+  int reportUserCount; // 신고 횟수
 
   PostModel({
     this.postId,
@@ -22,12 +19,11 @@ final class PostModel {
     this.imageUrls = const [],
     this.uid,
     this.likePostUid = const [],
-    this.likeCount = 0,
-    this.reportCount = 0,
+    this.likePostCount = 0,
+    this.reportUserUid = const [],
+    this.reportUserCount = 0,
     createdAt,
-  }):createdAt=createdAt??DateTime.now();
-
-
+  }) : createdAt = createdAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -37,8 +33,9 @@ final class PostModel {
       'createdAt': createdAt,
       'uid': uid,
       'likePostUid': likePostUid,
-      'likeCount': likeCount,
-      'reportCount': reportCount,
+      'likePostCount': likePostCount,
+      'reportUserUid': reportUserUid,
+      'reportUserCount': reportUserCount,
       'postId': postId,
     };
   }
@@ -52,12 +49,14 @@ final class PostModel {
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       uid: map['uid'],
       likePostUid: List<String>.from(map['likePostUid'] as List),
-      likeCount: map['likeCount'] ?? 0,
-      reportCount: map['reportCount'] ?? 0,
+      likePostCount: map['likePostCount'] ?? 0,
+      reportUserUid: List<String>.from(map['reportUserUid'] as List),
+      reportUserCount: map['reportUserCount'] ?? 0,
     );
   }
+
   @override
   String toString() {
-    return 'PostModel(postId: $postId, title: $title, content: $content, imageUrls: $imageUrls, createdAt: $createdAt, uid: $uid, likePostUid: $likePostUid ,likeCount: $likeCount, reportCount: $reportCount)';
+    return 'PostModel(postId: $postId, title: $title, content: $content, imageUrls: $imageUrls, createdAt: $createdAt, uid: $uid, likePostUid: $likePostUid ,likePostCount: $likePostCount,reportUserUid: $reportUserUid, reportUserCount: $reportUserCount,)';
   }
 }

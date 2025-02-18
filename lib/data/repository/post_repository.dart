@@ -27,17 +27,17 @@ class PostRepository {
     }
   }
 
-  Future<int> likeCount({required postId}) async {
+  Future<int> likePostCount({required String postId}) async {
     try {
-      return await _firestoreService.likeCount(postId: postId);
+      return await _firestoreService.likePostCount(postId: postId);
     } catch (e) {
       throw Exception('좋아요 수를 못 읽어왔습니다.: $e');
     }
   }
 
-  Future<int> likePost({required postId, required uid}) async {
+  Future<int> likePostUid({required String postId, required String uid}) async {
     try {
-      return await _firestoreService.likePost(postId: postId, uid: uid);
+      return await _firestoreService.likePostUid(postId: postId, uid: uid);
     } catch (e) {
       throw Exception('좋아요를 실패 했습니다.: $e');
     }

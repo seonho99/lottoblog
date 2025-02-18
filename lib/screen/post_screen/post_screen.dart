@@ -13,7 +13,6 @@ import 'post_screen_tile.dart';
 
 class PostScreen extends StatefulWidget {
   String postId;
-
   // String uid;
 
   PostScreen({
@@ -27,11 +26,15 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+
+
   // @override
   // void initState() {
   //   super.initState();
-  //     context.read<PostUserBloc>().add(UpdateUserEvent(uid: widget.uid));
+  //   final uid = context.read<PostScreenBloc>().state;
   // }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,8 @@ class _PostScreenState extends State<PostScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      PostScreenUser(uid: post.uid ?? ''),
+                      PostScreenUser(uid: post.uid??''),
+
                       SizedBox(height: 20),
                       Divider(
                         color: Colors.grey.shade300,

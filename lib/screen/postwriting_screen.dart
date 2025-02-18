@@ -131,8 +131,9 @@ class _PostwritingScreenState extends State<PostwritingScreen> {
       createdAt: DateTime.now(),
       uid: uid,
       likePostUid: [],
-      likeCount: 0,
-      reportCount: 0,
+      likePostCount: 0,
+      reportUserUid: [],
+      reportUserCount: 0,
       postId: '',
     );
 

@@ -40,6 +40,7 @@ class FirebaseAuthService {
           email: email,
           profileImageUrl: '',
           createdAt: DateTime.now(),
+          reportPostId: const [],
         );
 
         await _fs.collection('users').doc(user.uid).set(userModel.toMap());

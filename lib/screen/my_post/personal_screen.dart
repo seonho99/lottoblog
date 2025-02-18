@@ -29,7 +29,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
     if (user != null) {
       uid = user.uid;
-      print('uid:$uid');
+      // print('uid:$uid');
       context.read<ProfileBloc>().add(UpdateProfileEvent(
             uid: uid,
             // userName: userName,
@@ -45,7 +45,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -136,7 +136,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                 imageUrl: state.myPosts[index].imageUrls[0],
                                 title: state.myPosts[index].title,
                                 postId: state.myPosts[index].postId ?? '',
-                                likeCount: state.myPosts[index].likeCount,
+                                likePostCount: state.myPosts[index].likePostCount,
                               ),
                               Padding(
                                 padding:

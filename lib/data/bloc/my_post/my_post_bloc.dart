@@ -22,7 +22,7 @@ class MyPostBloc extends Bloc<MyPostEvent,MyPostState>{
       // String? uid = await authRepository.getUid();
 
       try {
-        await postRepository.likeCount(postId: event.postId);
+        await postRepository.likePostCount(postId: event.postId);
       } catch (e){
         emit(MyPostSuccess(state.myPosts));
       }

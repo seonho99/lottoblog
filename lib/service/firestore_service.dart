@@ -32,7 +32,7 @@ class FirestoreService {
   //       .toList();
   // }
 
-  Future<int> likeCount({required String postId}) async {
+  Future<int> likePostCount({required String postId}) async {
     final postRef = _fs.collection('posts').doc(postId);
 
     DocumentSnapshot postSnapshot = await postRef.get();
@@ -40,14 +40,14 @@ class FirestoreService {
     if (postSnapshot.exists) {
       Map<String, dynamic> postData =
           postSnapshot.data() as Map<String, dynamic>;
-      int likeCount = postData['likeCount'] ?? 0;
-      return likeCount;
+      int likePostCount = postData['likePostCount'] ?? 0;
+      return likePostCount;
     } else {
       return 0;
     }
   }
 
-  Future<int> likePost({required String postId, required String uid}) async {
+  Future<int> likePostUid({required String postId, required String uid}) async {
     final postRef = _fs.collection('posts').doc(postId);
     // final userCollection = _fs.collection('users');
 
@@ -72,10 +72,10 @@ class FirestoreService {
     DocumentSnapshot<Map<String, dynamic>> updatedDoc = await postRef.get();
     final updatedData = updatedDoc.data() as Map<String, dynamic>;
 
-    int likeCount = (updatedData['likePostUid'] as List<dynamic>?)?.length ?? 0;
-    await postRef.update({'likeCount': likeCount});
+    int likePostCount = (updatedData['likePostUid'] as List<dynamic>?)?.length ?? 0;
+    await postRef.update({'likePostCount': likePostCount});
 
-    return likeCount;
+    return likePostCount;
   }
 
   Future<PostModel> readPost(String postId) async {

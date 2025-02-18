@@ -4,7 +4,7 @@ import 'package:lottoblog/data/bloc/post_user/post_user_event.dart';
 import 'package:lottoblog/data/bloc/post_user/post_user_state.dart';
 
 import '../../data/bloc/post_user/post_user_bloc.dart';
-import '../../widget/popupmenubotton_widget.dart';
+import '../home/report_popupmenu_widget.dart';
 
 class PostScreenUser extends StatefulWidget {
   String uid;
@@ -94,7 +94,6 @@ class _PostScreenUserState extends State<PostScreenUser> {
                 ),
               ),
             ),
-            PopupmenubottonWidget(),
           ],
         );
       }

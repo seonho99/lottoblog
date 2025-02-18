@@ -5,20 +5,20 @@ import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_event.dart';
 
 
-import '../../widget/popupmenubotton_widget.dart';
+import '../home/report_popupmenu_widget.dart';
 
 class MyPostTile extends StatefulWidget {
   String? imageUrl;
   String title;
   String postId;
-  int likeCount;
+  int likePostCount;
 
   MyPostTile({
     super.key,
     this.imageUrl,
     required this.title,
     required this.postId,
-    this.likeCount=0,
+    this.likePostCount=0,
     // required this.userName,
   });
 
@@ -27,15 +27,15 @@ class MyPostTile extends StatefulWidget {
 }
 
 class _MyPostTileState extends State<MyPostTile> {
-  late int likeCount;
+  late int likePostCount;
 
   @override
   void initState() {
     super.initState();
 
-    likeCount = widget.likeCount;
+    likePostCount = widget.likePostCount;
 
-    context.read<MyPostBloc>().add(MyLikeCountEvent(likeCount: likeCount, postId: widget.postId));
+    context.read<MyPostBloc>().add(MyLikeCountEvent(likePostCount: likePostCount, postId: widget.postId));
   }
 
   @override
@@ -85,7 +85,7 @@ class _MyPostTileState extends State<MyPostTile> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      PopupmenubottonWidget(),
+                      ReportPopMenuWidget(),
                     ],
                   ),
                 ),
@@ -101,7 +101,7 @@ class _MyPostTileState extends State<MyPostTile> {
                   ),
                   const SizedBox(width: 14,),
                   Text(
-                    '$likeCount',
+                    '$likePostCount',
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge

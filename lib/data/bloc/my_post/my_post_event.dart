@@ -3,9 +3,9 @@ sealed class MyPostEvent {}
 final class FetchMyPostsEvent extends MyPostEvent {}
 
 final class MyLikeCountEvent extends MyPostEvent{
-  final int likeCount;
+  final int likePostCount;
   final String postId;
 
-  MyLikeCountEvent({required this.likeCount,required this.postId});
+  MyLikeCountEvent({required this.likePostCount,required this.postId});
 }
 

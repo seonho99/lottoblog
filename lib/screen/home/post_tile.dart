@@ -7,7 +7,7 @@ import 'package:lottoblog/data/bloc/login/login_state.dart';
 import '../../data/bloc/post/post_bloc.dart';
 import '../../data/bloc/read_posts/read_posts_bloc.dart';
 import '../../data/bloc/read_posts/read_posts_event.dart';
-import '../../widget/popupmenubotton_widget.dart';
+import 'report_popupmenu_widget.dart';
 
 class PostTile extends StatefulWidget {
   final String? imageUrl;
@@ -32,28 +32,28 @@ class PostTile extends StatefulWidget {
 }
 
 class _PostTileState extends State<PostTile> {
-  late int likeCount;
+  late int likePostCount;
 
   @override
   void initState() {
     super.initState();
-
-    likeCount = widget.initialLikeCount;
+    print('postId, uid: ${widget.postId},${widget.uid}');
+    likePostCount = widget.initialLikeCount;
   }
 
   void toggleLike(bool isLiked) {
     setState(() {
       if (isLiked) {
-        likeCount--;
+        likePostCount--;
       } else {
-        likeCount++;
+        likePostCount++;
       }
     });
 
     context.read<ReadPostsBloc>().add(
           LikePostEvent(
             isLiked: !isLiked,
-            likeCount: likeCount,
+            likePostCount: likePostCount,
             postId: widget.postId,
           ),
         );
@@ -100,7 +100,9 @@ class _PostTileState extends State<PostTile> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    PopupmenubottonWidget(),
+                    ReportPopMenuWidget(postId: widget.postId,uid:.uid,
+
+                    ),
                   ],
                 ),
               ),
@@ -131,7 +133,7 @@ class _PostTileState extends State<PostTile> {
                           ),
                   ),
                   Text(
-                    '$likeCount',
+                    '$likePostCount',
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge

@@ -68,8 +68,9 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                                   imageUrl: state.readAllPosts[index].imageUrls[0],
                                   title: state.readAllPosts[index].title,
                                   initialLiked: state.readAllPosts[index].likePostUid,
-                                  initialLikeCount: state.readAllPosts[index].likeCount,
+                                  initialLikeCount: state.readAllPosts[index].likePostCount,
                                   postId: state.readAllPosts[index].postId!,
+                                  uid: state.readAllPosts[index].uid,
                                   // userName: state.,
                                 ),
                                 Padding(
