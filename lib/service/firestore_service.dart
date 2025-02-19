@@ -72,10 +72,46 @@ class FirestoreService {
     DocumentSnapshot<Map<String, dynamic>> updatedDoc = await postRef.get();
     final updatedData = updatedDoc.data() as Map<String, dynamic>;
 
-    int likePostCount = (updatedData['likePostUid'] as List<dynamic>?)?.length ?? 0;
+    int likePostCount =
+        (updatedData['likePostUid'] as List<dynamic>?)?.length ?? 0;
     await postRef.update({'likePostCount': likePostCount});
 
     return likePostCount;
+  }
+
+  Future<void> reportPost(String postId) async {
+    String? currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return;
+
+    try {
+      DocumentReference postRef = _fs.collection('posts').doc(postId);
+
+      await _fs.runTransaction((transaction) async {
+        DocumentSnapshot postSnapshot = await transaction.get(postRef);
+
+        if (!postSnapshot.exists) {
+          throw Exception("Post does not exist!");
+        }
+
+        List<String> reportUserUid =
+        List<String>.from(postSnapshot['reportUserUid'] ?? []);
+        int reportUserCount = postSnapshot['reportUserCount'] ?? 0;
+
+        if (!reportUserUid.contains(currentUserId)) {
+          reportUserUid.add(currentUserId);
+          reportUserCount += 1;
+
+          transaction.update(postRef, {
+            'reportUserUid': reportUserUid,
+            'reportUserCount': reportUserCount,
+          });
+        }
+      });
+
+      print("Post reported successfully!");
+    } catch (e) {
+      print("Error reporting post: $e");
+    }
   }
 
   Future<PostModel> readPost(String postId) async {
@@ -108,20 +144,52 @@ class FirestoreService {
     }
   }
 
-  Future<List<PostModel>> fetchPostId(String postId) async {
-    QuerySnapshot querySnapshot = await _fs.collection('posts').where('postId', isEqualTo: postId).get();
+  Future<List<PostModel>> fetchSafePosts() async {
+    String? currentUserId = _auth.currentUser?.uid;
 
     try {
-      return querySnapshot.docs.map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+      QuerySnapshot querySnapshot = await _fs
+          .collection('posts')
+          .where('reportUserCount', isLessThanOrEqualTo: 5)
+          .get();
+
+      List<PostModel> allPosts = querySnapshot.docs
+          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      if(currentUserId != null){
+        allPosts = allPosts.where((post) {
+          return !post.reportUserUid.contains(currentUserId);
+        }).toList();
+      }
+
+      return allPosts;
+    } catch (e) {
+      print("Error fetching posts: $e");
+      return [];
+    }
+  }
+
+  Future<List<PostModel>> fetchPostId(String postId) async {
+    QuerySnapshot querySnapshot =
+        await _fs.collection('posts').where('postId', isEqualTo: postId).get();
+
+    try {
+      return querySnapshot.docs
+          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       throw Exception("Error fetching posts: $e");
     }
   }
 
   Future<List<UserModel>> fetchPostScreenUid(String uid) async {
-    QuerySnapshot uidSnapshot = await _fs.collection('users').where('uid', isEqualTo: uid).get();
+    QuerySnapshot uidSnapshot =
+        await _fs.collection('users').where('uid', isEqualTo: uid).get();
     try {
-      return uidSnapshot.docs.map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+      return uidSnapshot.docs
+          .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       throw Exception('Error fetching uid: $e');
     }
@@ -160,10 +228,10 @@ class FirestoreService {
         // String profileImageUrl = userDoc['profileImageUrl'];
 
         return UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
-          // UserModel(
-          // userName: userName,
-          // profileImageUrl: profileImageUrl,
-          // email: '',
+        // UserModel(
+        // userName: userName,
+        // profileImageUrl: profileImageUrl,
+        // email: '',
         // );
       } else {
         return null;

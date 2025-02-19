@@ -4,13 +4,12 @@ import 'package:lottoblog/data/bloc/report/report_event.dart';
 
 import '../../data/bloc/report/report_bloc.dart';
 
-enum SampleItem {itemOne, itemTwo}
+enum SampleItem { itemOne, itemTwo }
 
 class ReportPopMenuWidget extends StatefulWidget {
-  String uid;
-  String postId;
+  final String postId; // postId to report
 
-  ReportPopMenuWidget({super.key, required this.uid,required this.postId});
+  ReportPopMenuWidget({super.key, required this.postId});
 
   @override
   State<ReportPopMenuWidget> createState() => _ReportPopMenuWidgetState();
@@ -23,39 +22,33 @@ class _ReportPopMenuWidgetState extends State<ReportPopMenuWidget> {
   Widget build(BuildContext context) {
     return PopupMenuButton<SampleItem>(
       color: Colors.white,
-      icon: Container(
-        child: Column(
-          children: [
-            Icon(Icons.circle, size: 6),
-            Icon(Icons.circle, size: 6),
-            Icon(Icons.circle, size: 6),
-          ],
-        ),
+      icon: Column(
+        children: [
+          Icon(Icons.circle, size: 6),
+          Icon(Icons.circle, size: 6),
+          Icon(Icons.circle, size: 6),
+        ],
       ),
       initialValue: selectedItem,
       onSelected: (SampleItem item) {
-        setState(
-          () {
-            selectedItem = item;
-          },
-        );
+        setState(() {
+          selectedItem = item;
+        });
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
         PopupMenuItem<SampleItem>(
           value: SampleItem.itemOne,
           child: TextButton(
-            onPressed: (){
-              context.read<ReportBloc>().add(ReportPostEvent(widget.uid, widget.postId));
+            onPressed: () {
+              context.read<ReportBloc>().add(ReportPostEvent(postId: widget.postId));
+
+              Navigator.of(context).pop();
             },
             child: Text(
               '신고하기',
               style: TextStyle(color: Colors.black),
             ),
           ),
-          // Text(
-          //   '신고하기',
-          //   style: TextStyle(color: Colors.black),
-          // ),
         ),
       ],
     );

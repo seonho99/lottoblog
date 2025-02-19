@@ -70,7 +70,7 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                                   initialLiked: state.readAllPosts[index].likePostUid,
                                   initialLikeCount: state.readAllPosts[index].likePostCount,
                                   postId: state.readAllPosts[index].postId!,
-                                  uid: state.readAllPosts[index].uid,
+                                  uid: state.readAllPosts[index].uid!,
                                   // userName: state.,
                                 ),
                                 Padding(

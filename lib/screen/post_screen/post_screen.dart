@@ -66,6 +66,7 @@ class _PostScreenState extends State<PostScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // postId가 들어가면 코드 로작애 uid가 아닌 postId를 넣어서 문제가 생김
                       PostScreenUser(uid: post.uid??''),
 
                       SizedBox(height: 20),

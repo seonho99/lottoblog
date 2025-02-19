@@ -75,6 +75,22 @@ class PostRepository {
     }
   }
 
+  Future<void> reportPost(String postId) async {
+     try {
+       await _firestoreService.reportPost(postId);
+     } catch (e){
+       throw Exception('게시글 신고를 실패했습니다.: $e');
+     }
+  }
+
+    Future<List<PostModel>> fetchSafePosts() async {
+    try {
+      return await _firestoreService.fetchSafePosts();
+    } catch (e) {
+      throw Exception('게시글 목록을 읽어오는데 실패했습니다. :$e');
+    }
+  }
+
   Future<List<PostModel>> fetchUserPosts() async {
     try {
       return await _firestoreService.fetchUserPosts();

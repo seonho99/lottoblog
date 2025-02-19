@@ -9,7 +9,9 @@ class ReportBloc extends Bloc<ReportEvent,ReportState>{
   ReportBloc(this.postRepository) : super(ReportInitial()){
     on<ReportPostEvent>((event, emit) async {
       try{
-
+        await postRepository.reportPost(event.postId);
+        final updatedPosts = await postRepository.fetchSafePosts();
+        emit(ReportSuccess(updatedPosts));
       }catch(e){
         emit(ReportFailure(errorMassage: e.toString()));
       }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/login/login_bloc.dart';
 import 'package:lottoblog/data/bloc/login/login_state.dart';
+import 'package:lottoblog/data/bloc/report/report_event.dart';
 
-import '../../data/bloc/post/post_bloc.dart';
 import '../../data/bloc/read_posts/read_posts_bloc.dart';
 import '../../data/bloc/read_posts/read_posts_event.dart';
+import '../../data/bloc/report/report_bloc.dart';
+import '../../data/bloc/report/report_state.dart';
 import 'report_popupmenu_widget.dart';
 
 class PostTile extends StatefulWidget {
@@ -16,6 +17,7 @@ class PostTile extends StatefulWidget {
   final int initialLikeCount;
   final VoidCallback? onTap;
   final String postId;
+  final String uid;
 
   PostTile({
     super.key,
@@ -25,6 +27,7 @@ class PostTile extends StatefulWidget {
     this.initialLikeCount = 0,
     this.onTap,
     required this.postId,
+    required this.uid,
   });
 
   @override
@@ -39,6 +42,7 @@ class _PostTileState extends State<PostTile> {
     super.initState();
     print('postId, uid: ${widget.postId},${widget.uid}');
     likePostCount = widget.initialLikeCount;
+
   }
 
   void toggleLike(bool isLiked) {
@@ -100,9 +104,7 @@ class _PostTileState extends State<PostTile> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    ReportPopMenuWidget(postId: widget.postId,uid:.uid,
-
-                    ),
+                    ReportPopMenuWidget(postId: widget.postId)
                   ],
                 ),
               ),

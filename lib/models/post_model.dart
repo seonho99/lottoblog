@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final class PostModel {
-  String? postId; // 포스트 ID
+  String postId; // 포스트 ID
   String title; // 글 제목
   String content; // 글 내용
   List<String> imageUrls; // 이미지 URL 목록
@@ -13,7 +13,7 @@ final class PostModel {
   int reportUserCount; // 신고 횟수
 
   PostModel({
-    this.postId,
+    required this.postId,
     required this.title,
     required this.content,
     this.imageUrls = const [],
