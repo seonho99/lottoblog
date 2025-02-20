@@ -13,6 +13,7 @@ class ReportBloc extends Bloc<ReportEvent,ReportState>{
         final updatedPosts = await postRepository.fetchSafePosts();
         emit(ReportSuccess(updatedPosts));
       }catch(e){
+
         emit(ReportFailure(errorMassage: e.toString()));
       }
     });
