@@ -12,9 +12,9 @@ final class ReadPostsInitial extends ReadPostsState{
 }
 
 // 공개 게시글 상태
-final class ReadAllPostsState extends ReadPostsState {
+final class ReadAllPostsSuccess extends ReadPostsState {
 
-  ReadAllPostsState(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
+  ReadAllPostsSuccess(List<PostModel> readAllPosts) : super(readAllPosts : readAllPosts);
 }
 
 

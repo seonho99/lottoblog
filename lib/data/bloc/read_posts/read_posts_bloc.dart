@@ -8,28 +8,37 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
   final PostRepository postRepository;
   final AuthRepository authRepository;
 
-
-  ReadPostsBloc(this.postRepository,this.authRepository) : super(ReadPostsInitial()) {
+  ReadPostsBloc(this.postRepository, this.authRepository)
+      : super(ReadPostsInitial()) {
     on<FetchAllPostsEvent>((event, emit) async {
       try {
         // final readAllPosts = await postRepository.readAllPosts();
         // emit(ReadAllPostsState(readAllPosts));
         final fetchSafePosts = await postRepository.fetchSafePosts();
-        emit(ReadAllPostsState(fetchSafePosts));
+        emit(ReadAllPostsSuccess(fetchSafePosts));
+      } catch (e) {
+        emit(ReadPostsFailure(errorMessage: e.toString()));
+      }
+    });
+
+    on<LikeAllPostsEvent>((event, emit) async {
+      try {
+        final likeAllPosts = await postRepository.likeAllPosts();
+        emit(ReadAllPostsSuccess(likeAllPosts));
       } catch (e) {
         emit(ReadPostsFailure(errorMessage: e.toString()));
       }
     });
 
     on<LikePostEvent>((event, emit) async {
-      String? uid=await authRepository.getUid();
+      String? uid = await authRepository.getUid();
 
       try {
-        if(uid==null) throw Exception('login 필요');
+        if (uid == null) throw Exception('login 필요');
         //db update
-        await postRepository.likePostUid(postId: event.postId, uid:uid);
-        for(var element in state.readAllPosts){
-          if(element.postId==event.postId) {
+        await postRepository.likePostUid(postId: event.postId, uid: uid);
+        for (var element in state.readAllPosts) {
+          if (element.postId == event.postId) {
             if (element.likePostUid.contains(uid)) {
               element.likePostUid.remove(uid);
               element.likePostCount--;
@@ -39,7 +48,17 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
             }
           }
         }
-        emit(ReadAllPostsState(state.readAllPosts));
+        emit(ReadAllPostsSuccess(state.readAllPosts));
+      } catch (e) {
+        emit(ReadPostsFailure(errorMessage: "좋아요 업데이트 실패: $e"));
+      }
+    });
+
+    on<ReportPostEvent>((event, emit) async {
+      try {
+        await postRepository.reportPost(event.postId);
+        final updatedPosts = await postRepository.fetchSafePosts();
+        emit(ReadAllPostsSuccess(updatedPosts));
       } catch (e) {
         emit(ReadPostsFailure(errorMessage: "좋아요 업데이트 실패: $e"));
       }

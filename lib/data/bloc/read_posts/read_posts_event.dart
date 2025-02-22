@@ -14,3 +14,13 @@ final class LikePostEvent extends ReadPostsEvent {
     required this.postId,
   });
 }
+
+final class ReportPostEvent extends ReadPostsEvent{
+  String postId;
+
+  ReportPostEvent({
+    required this.postId,
+  });
+}
+
+final class LikeAllPostsEvent extends ReadPostsEvent{}

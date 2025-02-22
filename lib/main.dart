@@ -10,7 +10,6 @@ import 'package:lottoblog/data/bloc/post_screen/post_screen_bloc.dart';
 import 'package:lottoblog/data/bloc/post_user/post_user_bloc.dart';
 import 'package:lottoblog/data/bloc/profile/profile_bloc.dart';
 import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
-import 'package:lottoblog/data/bloc/report/report_bloc.dart';
 import 'package:lottoblog/data/bloc/tab_navigation/tab_navigation_bloc.dart';
 import 'package:lottoblog/data/repository/auth_repository.dart';
 import 'package:lottoblog/data/repository/post_repository.dart';
@@ -26,7 +25,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // debugPaintSizeEnabled = true;
+  debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
@@ -44,7 +43,6 @@ class MyApp extends StatelessWidget {
   final ProfileBloc profileBloc;
   final PostScreenBloc postScreenBloc;
   final PostUserBloc postUserBloc;
-  final ReportBloc reportBloc;
 
   MyApp({
     super.key,
@@ -60,7 +58,6 @@ class MyApp extends StatelessWidget {
     ProfileBloc? profileBloc,
     PostScreenBloc? postScreenBloc,
     PostUserBloc? postUserBloc,
-    ReportBloc? reportBloc,
   })  : authRepository =
             authRepository ?? AuthRepository(FirebaseAuthService()),
         postBloc = postBloc ??
@@ -86,9 +83,9 @@ class MyApp extends StatelessWidget {
             PostScreenBloc(
                 postRepository ?? PostRepository(FirestoreService())),
         postUserBloc = postUserBloc ??
-            PostUserBloc(userRepo ?? UserRepo(FirestoreService())),
-        reportBloc =
-            reportBloc ?? ReportBloc(PostRepository(FirestoreService()));
+            PostUserBloc(userRepo ?? UserRepo(FirestoreService()))
+
+  ;
 
   @override
   Widget build(BuildContext context) {
@@ -133,9 +130,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<PostUserBloc>(
             create: (context) => postUserBloc,
           ),
-          BlocProvider<ReportBloc>(
-            create: (context) => reportBloc,
-          ),
+
         ],
         child: MaterialApp.router(
           routerConfig: router,

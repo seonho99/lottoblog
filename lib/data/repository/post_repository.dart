@@ -43,29 +43,13 @@ class PostRepository {
     }
   }
 
-  // Future<PostModel?> likeState(String postId) async{
-  //   try {
-  //     return await _firestoreService.likeState(postId);
-  //   } catch (e) {
-  //     throw Exception('좋아요 기능을 실패했습니다.: $e');
-  //   }
-  // }
-
-  // Future<List<String>> getAllPostIds(List<PostModel> posts) async {
-  //   try {
-  //     return await _firestoreService.getAllPostIds(posts);
-  //   } catch (e) {
-  //     throw Exception('포스트 아이디들을 읽어오는데 실패했습니다.: $e');
-  //   }
-  // }
-
-  // Future<List<PostModel>> readAllPosts({required String postId, int limit = 10, PostModel? lastPosts}) async {
-  //   try {
-  //     return await _firestoreService.readAllPost(postId: postId,limit: limit,lastPosts: lastPosts);
-  //   } catch (e) {
-  //     throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
-  //   }
-  // }
+  Future<List<PostModel>> likeAllPosts() async {
+    try {
+      return await _firestoreService.likeAllPosts();
+    } catch (e) {
+      throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
+    }
+  }
 
   Future<List<PostModel>> readAllPosts() async {
     try {
@@ -76,14 +60,14 @@ class PostRepository {
   }
 
   Future<void> reportPost(String postId) async {
-     try {
-       await _firestoreService.reportPost(postId);
-     } catch (e){
-       throw Exception('게시글 신고를 실패했습니다.: $e');
-     }
+    try {
+      await _firestoreService.reportPost(postId);
+    } catch (e) {
+      throw Exception('게시글 신고를 실패했습니다.: $e');
+    }
   }
 
-    Future<List<PostModel>> fetchSafePosts() async {
+  Future<List<PostModel>> fetchSafePosts() async {
     try {
       return await _firestoreService.fetchSafePosts();
     } catch (e) {

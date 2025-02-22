@@ -1,7 +1,7 @@
 // import 'dart:async';
 //
 // import 'package:flutter/material.dart';
-// import 'dayofweek_screen.dart';
+// import 'like_post_screen.dart';
 //
 // class DayofweekAnimated extends StatefulWidget {
 //   const DayofweekAnimated({super.key});

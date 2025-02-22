@@ -144,6 +144,23 @@ class FirestoreService {
     }
   }
 
+  Future<List<PostModel>> likeAllPosts() async {
+    try {
+      QuerySnapshot querySnapshot = await _fs
+          .collection('posts')
+          .where('likePostCount', isGreaterThanOrEqualTo: 5)
+          .get();
+
+      List<PostModel> allPosts = querySnapshot.docs
+          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+      return allPosts;
+    } catch (e) {
+      print("Error fetching posts: $e");
+      return [];
+    }
+  }
+
   Future<List<PostModel>> fetchSafePosts() async {
     String? currentUserId = _auth.currentUser?.uid;
 
@@ -162,6 +179,12 @@ class FirestoreService {
           return !post.reportUserUid.contains(currentUserId);
         }).toList();
       }
+
+      // if (currentUserId != null) {
+      //   allPosts = allPosts.where((post) {
+      //     return post.reportUserUid != null && !post.reportUserUid.contains(currentUserId);
+      //   }).toList();
+      // }
 
       return allPosts;
     } catch (e) {

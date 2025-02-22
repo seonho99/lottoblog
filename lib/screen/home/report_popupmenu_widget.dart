@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/report/report_event.dart';
+import 'package:lottoblog/data/bloc/read_posts/read_posts_bloc.dart';
+import 'package:lottoblog/data/bloc/read_posts/read_posts_event.dart';
 
-import '../../data/bloc/report/report_bloc.dart';
 
 enum SampleItem { itemOne, itemTwo }
 
@@ -22,12 +22,16 @@ class _ReportPopMenuWidgetState extends State<ReportPopMenuWidget> {
   Widget build(BuildContext context) {
     return PopupMenuButton<SampleItem>(
       color: Colors.white,
-      icon: Column(
-        children: [
-          Icon(Icons.circle, size: 6),
-          Icon(Icons.circle, size: 6),
-          Icon(Icons.circle, size: 6),
-        ],
+      icon: Container(
+        width: 10,
+        height: 20,
+        child: Column(
+          children: [
+            Icon(Icons.circle, size: 6),
+            Icon(Icons.circle, size: 6),
+            Icon(Icons.circle, size: 6),
+          ],
+        ),
       ),
       initialValue: selectedItem,
       onSelected: (SampleItem item) {
@@ -40,8 +44,7 @@ class _ReportPopMenuWidgetState extends State<ReportPopMenuWidget> {
           value: SampleItem.itemOne,
           child: TextButton(
             onPressed: () {
-              context.read<ReportBloc>().add(ReportPostEvent(postId: widget.postId));
-
+              context.read<ReadPostsBloc>().add(ReportPostEvent(postId: widget.postId));
               Navigator.of(context).pop();
             },
             child: Text(
