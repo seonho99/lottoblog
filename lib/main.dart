@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
+import 'package:lottoblog/data/bloc/like_post/like_post_bloc.dart';
 import 'package:lottoblog/data/bloc/login/login_bloc.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
 import 'package:lottoblog/data/bloc/post/post_bloc.dart';
@@ -25,7 +26,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  debugPaintSizeEnabled = true;
+  // debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
   final ProfileBloc profileBloc;
   final PostScreenBloc postScreenBloc;
   final PostUserBloc postUserBloc;
+  final LikePostBloc likePostBloc;
 
   MyApp({
     super.key,
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
     ProfileBloc? profileBloc,
     PostScreenBloc? postScreenBloc,
     PostUserBloc? postUserBloc,
+    LikePostBloc? likePostBloc,
   })  : authRepository =
             authRepository ?? AuthRepository(FirebaseAuthService()),
         postBloc = postBloc ??
@@ -83,9 +86,9 @@ class MyApp extends StatelessWidget {
             PostScreenBloc(
                 postRepository ?? PostRepository(FirestoreService())),
         postUserBloc = postUserBloc ??
-            PostUserBloc(userRepo ?? UserRepo(FirestoreService()))
-
-  ;
+            PostUserBloc(userRepo ?? UserRepo(FirestoreService())),
+        likePostBloc = likePostBloc ??
+            LikePostBloc(postRepository ?? PostRepository(FirestoreService()));
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +133,9 @@ class MyApp extends StatelessWidget {
           BlocProvider<PostUserBloc>(
             create: (context) => postUserBloc,
           ),
-
+          BlocProvider<LikePostBloc>(
+            create: (context) => likePostBloc,
+          ),
         ],
         child: MaterialApp.router(
           routerConfig: router,

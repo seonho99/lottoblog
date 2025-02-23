@@ -21,14 +21,6 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
       }
     });
 
-    on<LikeAllPostsEvent>((event, emit) async {
-      try {
-        final likeAllPosts = await postRepository.likeAllPosts();
-        emit(ReadAllPostsSuccess(likeAllPosts));
-      } catch (e) {
-        emit(ReadPostsFailure(errorMessage: e.toString()));
-      }
-    });
 
     on<LikePostEvent>((event, emit) async {
       String? uid = await authRepository.getUid();

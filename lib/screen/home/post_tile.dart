@@ -81,89 +81,88 @@ class _PostTileState extends State<PostTile> {
             ),
           ),
           const SizedBox(width: 16),
-          Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 200,
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 90,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        widget.title,
+          Container(
+            child: Column(
+              children: [
+                Container(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 220,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 80,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      widget.title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium
+                                          ?.copyWith(
+                                              height: 1.6,
+                                              fontWeight: FontWeight.w600),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  ReportPopMenuWidget(postId: widget.postId),
+                                ],
+                              ),
+                            ),
+                            BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                bool isLiked = widget.initialLiked
+                                    .contains(state.user?.uid);
+                                bool likeEnabled = true;
+                                if (state.user?.uid == null) {
+                                  likeEnabled = false;
+                                }
+                                return Container(
+                                  height: 30,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          if (likeEnabled) toggleLike(isLiked);
+                                        },
+                                        child: (likeEnabled)
+                                            ? Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                                size: 24,
+                                              )
+                                            : Icon(
+                                                Icons.favorite_border,
+                                                color: Colors.grey,
+                                                size: 24,
+                                              ),
+                                      ),
+                                      Text(
+                                        '$likePostCount',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headlineMedium
+                                            .titleLarge
                                             ?.copyWith(
-                                                height: 1.6,
                                                 fontWeight: FontWeight.w600),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                    ReportPopMenuWidget(postId: widget.postId),
-                                  ],
-                                ),
-                              ),
-                              BlocBuilder<LoginBloc, LoginState>(
-                                builder: (context, state) {
-                                  bool isLiked = widget.initialLiked
-                                      .contains(state.user?.uid);
-                                  bool likeEnabled = true;
-                                  if (state.user?.uid == null) {
-                                    likeEnabled = false;
-                                  }
-                                  return Container(
-                                    width: 30,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            if (likeEnabled) toggleLike(isLiked);
-                                          },
-                                          child: (likeEnabled)
-                                              ? Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                  size: 24,
-                                                )
-                                              : Icon(
-                                                  Icons.favorite_border,
-                                                  color: Colors.grey,
-                                                  size: 24,
-                                                ),
-                                        ),
-                                        Text(
-                                          '$likePostCount',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge
-                                              ?.copyWith(
-                                                  fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],

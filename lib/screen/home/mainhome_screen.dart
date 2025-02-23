@@ -38,7 +38,6 @@ class _MainhomeScreenState extends State<MainhomeScreen> {
                 return Container();
               } else if (state is ReadAllPostsSuccess) {
                 // print('ReadAllPosts: ${state.readAllPosts[1]}');
-
                 return Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

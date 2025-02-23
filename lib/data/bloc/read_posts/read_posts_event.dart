@@ -23,4 +23,3 @@ final class ReportPostEvent extends ReadPostsEvent{
   });
 }
 
-final class LikeAllPostsEvent extends ReadPostsEvent{}

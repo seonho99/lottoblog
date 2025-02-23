@@ -70,7 +70,7 @@ final GoRouter router = GoRouter(
           navigatorKey: _homeTabNavigatorKey,
           routes: [
             GoRoute(
-              path: '/dayofweek',
+              path: '/likePosts',
               builder: (context, state) {
                 return LikePostScreen();
               },

@@ -23,11 +23,33 @@ class LikePostTile extends StatelessWidget {
             fit: BoxFit.cover),
       ),
       child: Stack(
-        alignment: Alignment.bottomLeft,
         children: [
-          Text('$title',style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withAlpha(102),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
+              child: Text(
+                '$title',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w800, color: Colors.white,
+                ),
+                textAlign: TextAlign.start,
+              ),
+            ),
+          ),
         ],
-      )
+      ),
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/read_posts/read_posts_event.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/like_post/like_post_bloc.dart';
+import 'package:lottoblog/data/bloc/like_post/like_post_state.dart';
 import 'package:lottoblog/screen/like_post/like_post_tile.dart';
 
+import '../../data/bloc/like_post/like_post_event.dart';
 import '../../data/bloc/read_posts/read_posts_bloc.dart';
 
 class LikePostScreen extends StatefulWidget {
@@ -13,11 +16,10 @@ class LikePostScreen extends StatefulWidget {
 }
 
 class _LikePostScreenState extends State<LikePostScreen> {
-
   @override
   void initState() {
     super.initState();
-    // context.read<ReadPostsBloc>().add(LikeAllPostsEvent());
+    context.read<LikePostBloc>().add(LikeAllPostsEvent());
   }
 
   @override
@@ -27,38 +29,58 @@ class _LikePostScreenState extends State<LikePostScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Text(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   '인기목록',
                   style: Theme.of(context)
                       .textTheme
                       .headlineSmall
                       ?.copyWith(fontWeight: FontWeight.w800),
                 ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                  itemCount: 10,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1 / 1.6,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    // return
-                      // LikePostTile(
-                      // imageUrl: imageUrl,
-                      // title: title,
-                    // );
+                SizedBox(height: 30),
+                BlocBuilder<LikePostBloc, LikePostState>(
+                  builder: (context, state) {
+                    if (state is LikePostsInitial) {
+                      return Container();
+                    } else if (state is LikePostsSuccess) {
+                      return Expanded(
+                        child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 1 / 1.6,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                          ),
+                          itemCount: state.likePosts.length,
+                          itemBuilder: (context, index) {
+                            final post = state.likePosts[index];
+                            return GestureDetector(
+                              onTap: (){
+                                final postId = post.postId;
+                                context.go('/mainhome/post/$postId');
+                              },
+                              child: LikePostTile(
+                                imageUrl: state.likePosts[index].imageUrls[0],
+                                title: state.likePosts[index].title,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    } else if (state is LikePostsFailure){
+                      return Center(child: Text('실패: ${state.errorMessage}'),);
+                    }
+                    return Center(
+                      child: Text('데이터 불러오기 실패'),
+                    );
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
