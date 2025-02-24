@@ -6,7 +6,6 @@ import 'package:lottoblog/data/bloc/like_post/like_post_state.dart';
 import 'package:lottoblog/screen/like_post/like_post_tile.dart';
 
 import '../../data/bloc/like_post/like_post_event.dart';
-import '../../data/bloc/read_posts/read_posts_bloc.dart';
 
 class LikePostScreen extends StatefulWidget {
   LikePostScreen({super.key});
@@ -61,7 +60,7 @@ class _LikePostScreenState extends State<LikePostScreen> {
                             return GestureDetector(
                               onTap: (){
                                 final postId = post.postId;
-                                context.go('/mainhome/post/$postId');
+                                context.go('/likePosts/post/$postId');
                               },
                               child: LikePostTile(
                                 imageUrl: state.likePosts[index].imageUrls[0],

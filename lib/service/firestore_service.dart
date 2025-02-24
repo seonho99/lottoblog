@@ -94,7 +94,7 @@ class FirestoreService {
         }
 
         List<String> reportUserUid =
-        List<String>.from(postSnapshot['reportUserUid'] ?? []);
+            List<String>.from(postSnapshot['reportUserUid'] ?? []);
         int reportUserCount = postSnapshot['reportUserCount'] ?? 0;
 
         if (!reportUserUid.contains(currentUserId)) {
@@ -174,7 +174,7 @@ class FirestoreService {
           .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
-      if(currentUserId != null){
+      if (currentUserId != null) {
         allPosts = allPosts.where((post) {
           return !post.reportUserUid.contains(currentUserId);
         }).toList();
@@ -198,6 +198,8 @@ class FirestoreService {
         await _fs.collection('posts').where('postId', isEqualTo: postId).get();
 
     try {
+      // print("Firestore Query Snapshot: ${querySnapshot.docs.map((doc) => doc.data()).toList()}");
+
       return querySnapshot.docs
           .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
@@ -206,13 +208,27 @@ class FirestoreService {
     }
   }
 
-  Future<List<UserModel>> fetchPostScreenUid(String uid) async {
-    QuerySnapshot uidSnapshot =
-        await _fs.collection('users').where('uid', isEqualTo: uid).get();
+  // Future<List<UserModel>> fetchPostScreenUid({required String uid}) async {
+  //   QuerySnapshot uidSnapshot =
+  //       await _fs.collection('users').where('uid', isEqualTo: uid).get();
+  //   try {
+  //     return uidSnapshot.docs
+  //         .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  //   } catch (e) {
+  //     throw Exception('Error fetching uid: $e');
+  //   }
+  // }
+
+  Future<UserModel> fetchPostScreenUid({required String uid}) async {
     try {
-      return uidSnapshot.docs
-          .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      DocumentSnapshot uidSnapshot = await _fs.collection('users').doc(uid).get();
+
+      if (!uidSnapshot.exists) {
+        throw Exception("User not found");
+      }
+
+
+      return UserModel.fromMap(uidSnapshot.data() as Map<String, dynamic>);
     } catch (e) {
       throw Exception('Error fetching uid: $e');
     }

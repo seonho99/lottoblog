@@ -129,24 +129,31 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       child: ListView.builder(
                         itemCount: state.myPosts.length,
                         itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyPostTile(
-                                imageUrl: state.myPosts[index].imageUrls[0],
-                                title: state.myPosts[index].title,
-                                postId: state.myPosts[index].postId ?? '',
-                                likePostCount: state.myPosts[index].likePostCount,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Divider(
-                                  color: Colors.grey.shade300,
-                                  thickness: 1.0,
+                          final post = state.myPosts[index];
+                          return GestureDetector(
+                            onTap: (){
+                              final postId = post.postId;
+                              context.go('/personal/post/$postId');
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                MyPostTile(
+                                  imageUrl: state.myPosts[index].imageUrls[0],
+                                  title: state.myPosts[index].title,
+                                  postId: state.myPosts[index].postId ?? '',
+                                  likePostCount: state.myPosts[index].likePostCount,
                                 ),
-                              ),
-                            ],
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Divider(
+                                    color: Colors.grey.shade300,
+                                    thickness: 1.0,
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),

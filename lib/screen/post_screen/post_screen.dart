@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/post_user/post_user_event.dart';
 import 'package:lottoblog/screen/post_screen/post_screen_user.dart';
 
 import '../../data/bloc/post_screen/post_screen_bloc.dart';
 import '../../data/bloc/post_screen/post_screen_state.dart';
-import '../../data/bloc/post_user/post_user_bloc.dart';
-import '../../data/bloc/profile/profile_bloc.dart';
-import '../../data/bloc/profile/profile_state.dart';
+
 import '../../models/post_model.dart';
 import 'post_screen_tile.dart';
 
@@ -28,14 +25,6 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
 
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final uid = context.read<PostScreenBloc>().state;
-  // }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,28 +35,31 @@ class _PostScreenState extends State<PostScreen> {
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: BlocBuilder<PostScreenBloc, PostScreenState>(
-          builder: (context, state) {
-            final post = state.selectedPost.firstWhere(
-              (p) => p.postId == widget.postId,
-              orElse: () => PostModel(
-                postId: 'defaultId',
-                title: 'Default Post',
-                content: 'No content available.',
-                imageUrls: [],
-                uid: '',
-                // uid: '',
-              ),
-            );
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: BlocBuilder<PostScreenBloc, PostScreenState>(
+            builder: (context, state) {
+              final post = state.selectedPost.firstWhere(
+                (p) => p.postId == widget.postId,
+                orElse: () => PostModel(
+                  postId: 'defaultId',
+                  title: 'Default Post',
+                  content: 'No content available.',
+                  imageUrls: [],
+                  uid: '',
+                  // uid: '',
+                ),
+              );
+              // print("Post UID: ${post.uid}");
+
+              return SingleChildScrollView(
                 child: Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // postId가 들어가면 코드 로작애 uid가 아닌 postId를 넣어서 문제가 생김
-                      PostScreenUser(uid: post.uid??''),
+                      PostScreenUser(
+                          uid: post.uid ?? ''),
 
                       SizedBox(height: 20),
                       Divider(
@@ -85,9 +77,9 @@ class _PostScreenState extends State<PostScreen> {
                     ],
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

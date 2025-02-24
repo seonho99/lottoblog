@@ -4,7 +4,6 @@ sealed class PostScreenState{
   final List<PostModel> selectedPost;
 
   PostScreenState({required this.selectedPost});
-
 }
 
 final class PostScreenInitial extends PostScreenState{

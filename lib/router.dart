@@ -56,9 +56,9 @@ final GoRouter router = GoRouter(
                   builder: (context, state) {
                     final postId = state.uri.pathSegments.last;
                     // final uid = state.uri.pathSegments.last;
-                    return PostScreen(postId:postId,
+                    return PostScreen(
+                      postId: postId,
                       // uid: uid,
-
                     );
                   },
                 ),
@@ -80,7 +80,8 @@ final GoRouter router = GoRouter(
                   builder: (context, state) {
                     final postId = state.uri.pathSegments.last;
                     // final uid = state.uri.pathSegments.last;
-                    return PostScreen(postId:postId,
+                    return PostScreen(
+                      postId: postId,
                       // uid: uid,
                     );
                   },
@@ -116,6 +117,7 @@ final GoRouter router = GoRouter(
                         return EmailResetpasswordScreen();
                       },
                     ),
+
                   ],
                 ),
               ],
@@ -130,17 +132,26 @@ final GoRouter router = GoRouter(
               builder: (BuildContext context, GoRouterState state) {
                 return PersonalScreen();
               },
-
               routes: <RouteBase>[
                 GoRoute(
                     path: 'postwriting',
                     builder: (BuildContext context, GoRouterState state) {
                       return PostwritingScreen();
-                    }),
+                    },
+                ),
                 GoRoute(
                   path: 'editprofile',
                   builder: (BuildContext context, GoRouterState state) {
                     return EditProfileScreen();
+                  },
+                ),
+                GoRoute(
+                  path: '/post/:postId',
+                  builder: (context, state) {
+                    final postId = state.uri.pathSegments.last;
+                    return PostScreen(
+                      postId: postId,
+                    );
                   },
                 ),
               ],
@@ -162,14 +173,5 @@ final GoRouter router = GoRouter(
       return '/personal';
     }
 
-    // final loginState = BlocProvider.of<LoginBloc>(context).state;
-    //
-    // final bool loggedIn = loginState is LoginAuthenticated;
-    // final bool loggingIn = state.uri.path.contains('/login');
-    //
-    // if(!loggedIn && loggingIn){
-    //   return '/login';
-    // }
-    // return null;
   },
 );

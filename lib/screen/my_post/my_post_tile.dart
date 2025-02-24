@@ -40,79 +40,89 @@ class _MyPostTileState extends State<MyPostTile> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.go('/mainhome/post_screen/${widget.postId}');
-        //postId 이용 이동일듯,
-      },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(widget.imageUrl ?? ''),
-                fit: BoxFit.cover,
-                onError: (_, __) {
-                  //networkImage error처리
-                },
-              ),
-              border: Border.all(width: 1, color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(10),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: widget.imageUrl != null && widget.imageUrl!.isNotEmpty
+                  ? NetworkImage(widget.imageUrl!)
+                  : const AssetImage('') as ImageProvider,
+              fit: BoxFit.cover,
             ),
+            border: Border.all(width: 1, color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(10),
           ),
-          const SizedBox(width: 14),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+        ),
+        const SizedBox(width: 16),
+        Container(
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: Container(
-                  width:220,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
-                                  height: 1.6, fontWeight: FontWeight.w600),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+              Container(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 220,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 80,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    widget.title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(
+                                            height: 1.6, fontWeight: FontWeight.w600),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                ReportPopMenuWidget(postId: widget.postId),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 30,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  '$likePostCount',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      // ReportPopMenuWidget(),
-                    ],
-                  ),
+                    ),
+                    // ReportPopMenuWidget(),
+                  ],
                 ),
               ),
-              Row(
-                children: [
-                  // Expanded(child: Text(userName,
-                  // style: Theme.of(context).textTheme.titleMedium,),),
-                  Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                    size: 24,
-                  ),
-                  const SizedBox(width: 14,),
-                  Text(
-                    '$likePostCount',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

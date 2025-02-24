@@ -31,13 +31,3 @@ class MyPostBloc extends Bloc<MyPostEvent,MyPostState>{
 }
 
 
-
-// on<FetchMyPosts>((event, emit) async {
-// try {
-// final myPosts = await postRepository.fetchUserPosts();
-//
-// emit(MyPosts(myPosts));
-// } catch (e) {
-// emit(PostFailure(errorMessage: e.toString()));
-// }
-// });

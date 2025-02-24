@@ -4,11 +4,9 @@ import 'package:lottoblog/data/bloc/post_user/post_user_event.dart';
 import 'package:lottoblog/data/bloc/post_user/post_user_state.dart';
 
 import '../../data/bloc/post_user/post_user_bloc.dart';
-import '../home/report_popupmenu_widget.dart';
 
 class PostScreenUser extends StatefulWidget {
   String uid;
-
   // String userName;
   // String profileImageUrl;
 
@@ -27,76 +25,74 @@ class _PostScreenUserState extends State<PostScreenUser> {
   late String userName;
   late String profileImageUrl;
 
-
   @override
   void initState() {
     super.initState();
-    print(widget.uid);
+    // print('uid: ${widget.uid}');
     context.read<PostUserBloc>().add(UpdateUserEvent(uid: widget.uid));
-    // context.read<PostScreenBloc>().add(FetchTime(createdAt: widget.createdAt));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostUserBloc,PostUserState>(
-    builder: (context,state) {
-      if (state.user.isEmpty) {
-        return Center(child: Text('사용자 정보를 불러올 수 없습니다.'));
-      }
-
-      int? userIndex;
-      try {
-        userIndex = int.parse(widget.uid);
-      } catch (e) {
-        print('UID 변환 오류: $e');
-        return Center(child: Text("잘못된 UID 값입니다."));
-      }
-
-      if (userIndex < 0 || userIndex >= state.user.length) {
-        return Center(child: Text("잘못된 사용자 인덱스입니다."));
-      }
-
-      final user = state.user[userIndex];
-        return Row(
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(width: 1, color: Colors.grey.shade300),
-                image: DecorationImage(
-                  image: AssetImage(user.profileImageUrl),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Container(
-                width: 80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 12),
-                    Text(
-                      user.userName,
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+    return BlocBuilder<PostUserBloc, PostUserState>(
+      builder: (context, state) {
+        print('state: $state');
+        if (state is PostUserInitial) {
+          return Container();
+        } else if (state is PostUserUpdated) {
+          return Container(
+            child: Row(
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 1, color: Colors.grey.shade300),
+                    image: DecorationImage(
+                      image: NetworkImage(state.user!.profileImageUrl!),
+                      fit: BoxFit.cover,
                     ),
-                    SizedBox(height: 4),
-                    // Text(
-                    // widget.createdAt,
-                    // style: Theme.of(context).textTheme.titleMedium,
-                    // ),
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Container(
+                    width: 80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 12),
+                        Text(
+                          state.user?.userName??'',
+                          style:
+                              Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        SizedBox(height: 4),
+                        // Text(
+                        // widget.createdAt,
+                        // style: Theme.of(context).textTheme.titleMedium,
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          );
+        } else if (state is PostUserFailure) {
+          return Center(
+            child: Text('실패: ${state.errorMessage}'),
+          );
+        }
+        return Center(
+          child: Text('데이터 불러오기 실패'),
         );
-      }
+      },
     );
   }
 }

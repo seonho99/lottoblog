@@ -13,13 +13,22 @@ class PostUserBloc extends Bloc<PostUserEvent,PostUserState>{
   // PostRepository postRepository;
 
   PostUserBloc(this.userRepo) : super(PostUserInitial()){
+    // on<UpdateUserEvent>((event, emit) async {
+    //   try {
+    //     List<UserModel> uid = await userRepo.fetchPostScreenUid(uid: event.uid);
+    //     emit(PostUserUpdated(uid));
+    //   } catch (e){
+    //     PostUserFailure(errorMessage: e.toString());
+    //   }
+    // });
+    
     on<UpdateUserEvent>((event, emit) async {
-      try {
-        List<UserModel> uid = await userRepo.fetchPostScreenUid(event.uid);
+      try{
+        UserModel uid = await userRepo.fetchPostScreenUid(uid: event.uid);
         emit(PostUserUpdated(uid));
-      } catch (e){
+      }catch (e){
         PostUserFailure(errorMessage: e.toString());
       }
-    });
+    }); 
   }
 }
