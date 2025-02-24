@@ -1,22 +1,22 @@
 import '../../../models/post_model.dart';
 
 sealed class PostScreenState{
-  final List<PostModel> selectedPost;
+  PostModel? fetchPostScreen;
 
-  PostScreenState({required this.selectedPost});
+  PostScreenState({required this.fetchPostScreen});
 }
 
 final class PostScreenInitial extends PostScreenState{
-  PostScreenInitial() : super(selectedPost:[]);
+  PostScreenInitial() : super(fetchPostScreen: null);
 }
 
 final class PostScreenSuccess extends PostScreenState{
-  PostScreenSuccess(List<PostModel> selectedPost) : super(selectedPost: selectedPost);
+  PostScreenSuccess(PostModel? fetchPostScreen) : super(fetchPostScreen: fetchPostScreen);
 }
 
 
 final class PostScreenFailure extends PostScreenState{
   String errorMessage;
 
-  PostScreenFailure({required this.errorMessage}) : super(selectedPost: []);
+  PostScreenFailure({required this.errorMessage}) : super(fetchPostScreen: null);
 }

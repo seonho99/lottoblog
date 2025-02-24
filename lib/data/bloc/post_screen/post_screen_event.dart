@@ -1,21 +1,15 @@
 sealed class PostScreenEvent {}
 
-final class FetchPost extends PostScreenEvent {
+final class FetchPostEvent extends PostScreenEvent {
   String postId;
-  String title;
-  String content;
-  List<String> imageUrls;
+  // String title;
+  // String content;
+  // List<String> imageUrls;
 
-  FetchPost({
+  FetchPostEvent({
     required this.postId,
-    required this.title,
-    required this.content,
-    required this.imageUrls,
+    // required this.title,
+    // required this.content,
+    // required this.imageUrls,
   });
-}
-
-final class FetchTime extends PostScreenEvent{
-  String createdAt;
-
-  FetchTime({required this.createdAt});
 }

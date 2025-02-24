@@ -28,7 +28,7 @@ class _PostScreenUserState extends State<PostScreenUser> {
   @override
   void initState() {
     super.initState();
-    // print('uid: ${widget.uid}');
+    print('uid: ${widget.uid}');
     context.read<PostUserBloc>().add(UpdateUserEvent(uid: widget.uid));
   }
 

@@ -9,12 +9,10 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
   PostRepository postRepository;
 
   PostScreenBloc(this.postRepository) : super(PostScreenInitial()) {
-    on<FetchPost>(
-      (event, emit) async {
+    on<FetchPostEvent>((event, emit) async {
         try {
-          List<PostModel> posts =
-              await postRepository.fetchPostId(event.postId);
-          emit(PostScreenSuccess(posts));
+          PostModel? fetchPost = await postRepository.fetchPostScreen(event.postId);
+          emit(PostScreenSuccess(fetchPost));
         } catch (e) {
           emit(PostScreenFailure(errorMessage: e.toString()));
         }

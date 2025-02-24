@@ -114,20 +114,6 @@ class FirestoreService {
     }
   }
 
-  Future<PostModel> readPost(String postId) async {
-    final postCollection = _fs.collection('posts');
-    try {
-      final documentSnapshot = await postCollection.doc(postId).get();
-      if (!documentSnapshot.exists) {
-        throw Exception('해당 게시글을 찾을 수 없습니다.');
-      }
-      final mapData = documentSnapshot.data()!;
-      return PostModel.fromMap(mapData);
-    } catch (e) {
-      throw Exception('게시글을 읽어오는데 실패 했습니다.');
-    }
-  }
-
   Future<List<PostModel>> readAllPost() async {
     final _postCollection = _fs.collection('posts');
     try {
@@ -187,26 +173,27 @@ class FirestoreService {
       // }
 
       return allPosts;
-    } catch (e) {
+    } catch (e){
       print("Error fetching posts: $e");
       return [];
     }
   }
 
-  Future<List<PostModel>> fetchPostId(String postId) async {
-    QuerySnapshot querySnapshot =
-        await _fs.collection('posts').where('postId', isEqualTo: postId).get();
-
+  Future<PostModel?> fetchPostScreen(String postId) async {
     try {
-      // print("Firestore Query Snapshot: ${querySnapshot.docs.map((doc) => doc.data()).toList()}");
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await _fs.collection('posts').doc(postId).get();
 
-      return querySnapshot.docs
-          .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      if (!documentSnapshot.exists) {
+        throw Exception('해당 게시글을 찾을 수 없습니다.');
+      }
+      final mapData = documentSnapshot.data()!;
+      print('mapData: $mapData');
+      return PostModel.fromMap(mapData);
     } catch (e) {
-      throw Exception("Error fetching posts: $e");
+      throw Exception('게시글을 읽어오는데 실패 했습니다.');
     }
   }
+
 
   // Future<List<UserModel>> fetchPostScreenUid({required String uid}) async {
   //   QuerySnapshot uidSnapshot =
@@ -221,12 +208,12 @@ class FirestoreService {
 
   Future<UserModel> fetchPostScreenUid({required String uid}) async {
     try {
-      DocumentSnapshot uidSnapshot = await _fs.collection('users').doc(uid).get();
+      DocumentSnapshot uidSnapshot =
+          await _fs.collection('users').doc(uid).get();
 
       if (!uidSnapshot.exists) {
         throw Exception("User not found");
       }
-
 
       return UserModel.fromMap(uidSnapshot.data() as Map<String, dynamic>);
     } catch (e) {

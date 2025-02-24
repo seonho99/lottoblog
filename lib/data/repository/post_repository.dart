@@ -19,13 +19,7 @@ class PostRepository {
     }
   }
 
-  Future<PostModel> readPost(String postId) async {
-    try {
-      return await _firestoreService.readPost(postId);
-    } catch (e) {
-      throw Exception('게시글을 읽어오는데 실패했습니다.: $e');
-    }
-  }
+
 
   Future<int> likePostCount({required String postId}) async {
     try {
@@ -83,9 +77,9 @@ class PostRepository {
     }
   }
 
-  Future<List<PostModel>> fetchPostId(String postId) async {
+  Future<PostModel?> fetchPostScreen(String postId) async {
     try {
-      return await _firestoreService.fetchPostId(postId);
+      return await _firestoreService.fetchPostScreen(postId);
     } catch (e) {
       throw Exception('게시글 목록을 읽어오는데 실패했습니다.: $e');
     }

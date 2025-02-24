@@ -25,19 +25,11 @@ class PostScreenTile extends StatefulWidget {
 }
 
 class _PostScreenTileState extends State<PostScreenTile> {
-  @override
-  void initState() {
-    super.initState();
 
-    context.read<PostScreenBloc>().add(
-          FetchPost(
-            postId: widget.postId,
-            title: widget.title,
-            content: widget.content,
-            imageUrls: widget.imageUrls,
-          ),
-        );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //}
 
   @override
   Widget build(BuildContext context) {
