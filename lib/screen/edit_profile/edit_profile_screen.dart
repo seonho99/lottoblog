@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lottoblog/data/bloc/login/login_event.dart';
 import 'package:lottoblog/data/bloc/login/login_state.dart';
 import 'package:lottoblog/screen/edit_profile/edit_image_picker.dart';

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-class PostScreenTile extends StatefulWidget {
+class MyPostTile extends StatefulWidget {
   String postId;
   String title;
   String content;
   List<String> imageUrls;
+
   // String? uid;
 
-  PostScreenTile({
+  MyPostTile({
     super.key,
     required this.postId,
     required this.title,
@@ -19,11 +18,10 @@ class PostScreenTile extends StatefulWidget {
   });
 
   @override
-  State<PostScreenTile> createState() => _PostScreenTileState();
+  State<MyPostTile> createState() => _MyPostTileState();
 }
 
-class _PostScreenTileState extends State<PostScreenTile> {
-
+class _MyPostTileState extends State<MyPostTile> {
   // @override
   // void initState() {
   //   super.initState();
@@ -66,15 +64,6 @@ class _PostScreenTileState extends State<PostScreenTile> {
               }
             },
           ),
-          // ListView.builder(
-          //   itemCount: widget.imageUrls.length,
-          //   itemBuilder: (context, index) {
-          //     return Image(
-          //       image: NetworkImage(widget.imageUrls[index]),
-          //       fit: BoxFit.cover,
-          //     );
-          //   },
-          // ),
         ),
         SizedBox(height: 40),
         Text(

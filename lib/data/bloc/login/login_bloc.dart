@@ -41,18 +41,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     });
 
-    on<FetchUid>((event, emit) async {
-      try {
-        final uid = await _authRepository.getUid();
-        if (uid != null && state is LoginAuthenticated) {
-          final user = (state as LoginAuthenticated).user;
-          if (user != null) {
-            emit(LoginAuthenticated(user, uid: uid));
-          }
-        }
-      } catch (e) {
-        emit(LoginError(e.toString()));
-      }
-    });
+
   }
 }

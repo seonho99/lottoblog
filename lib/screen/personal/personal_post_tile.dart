@@ -3,17 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_event.dart';
+import 'package:lottoblog/screen/personal/delete_popup_widget.dart';
 
 
 import '../home/report_popupmenu_widget.dart';
 
-class MyPostTile extends StatefulWidget {
+class PersonalPostTile extends StatefulWidget {
   String? imageUrl;
   String title;
   String postId;
   int likePostCount;
 
-  MyPostTile({
+  PersonalPostTile({
     super.key,
     this.imageUrl,
     required this.title,
@@ -23,10 +24,10 @@ class MyPostTile extends StatefulWidget {
   });
 
   @override
-  State<MyPostTile> createState() => _MyPostTileState();
+  State<PersonalPostTile> createState() => _PersonalPostTileState();
 }
 
-class _MyPostTileState extends State<MyPostTile> {
+class _PersonalPostTileState extends State<PersonalPostTile> {
   late int likePostCount;
 
   @override
@@ -85,7 +86,7 @@ class _MyPostTileState extends State<MyPostTile> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                ReportPopMenuWidget(postId: widget.postId),
+                                DeletePopupWidget(postId: widget.postId),
                               ],
                             ),
                           ),

@@ -23,3 +23,9 @@ final class ReportPostEvent extends ReadPostsEvent{
   });
 }
 
+final class DeletePostEvent extends ReadPostsEvent{
+  String postId;
+
+  DeletePostEvent({required this.postId});
+}
+

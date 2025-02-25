@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/profile/profile_event.dart';
 import 'package:lottoblog/data/bloc/profile/profile_state.dart';
-import 'package:lottoblog/screen/my_post/personal_tile.dart';
 
 import '../../data/bloc/my_post/my_post_bloc.dart';
 import '../../data/bloc/my_post/my_post_event.dart';
 import '../../data/bloc/my_post/my_post_state.dart';
 import '../../data/bloc/profile/profile_bloc.dart';
-import 'my_post_tile.dart';
+import 'personal_post_tile.dart';
+import 'personal_tile.dart';
 
 class PersonalScreen extends StatefulWidget {
   @override
@@ -54,7 +54,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
                 builder: (context, state) {
                   // print('userName: ${state.userName}');
                   // print('profileImageUrl: ${state.profileImageUrl}');
-
                   if (state is ProfileUpdated && state.user != null) {
                     return PersonalTile(
                       profileImageUrl: state.user!.profileImageUrl,
@@ -138,7 +137,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MyPostTile(
+                                PersonalPostTile(
                                   imageUrl: state.myPosts[index].imageUrls[0],
                                   title: state.myPosts[index].title,
                                   postId: state.myPosts[index].postId ?? '',

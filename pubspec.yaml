@@ -88,7 +88,6 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/image_dummy/
     - assets/profile_dummy/
     - assets/logo/
 

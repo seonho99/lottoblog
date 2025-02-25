@@ -173,7 +173,7 @@ class FirestoreService {
       // }
 
       return allPosts;
-    } catch (e){
+    } catch (e) {
       print("Error fetching posts: $e");
       return [];
     }
@@ -181,7 +181,8 @@ class FirestoreService {
 
   Future<PostModel?> fetchPostScreen(String postId) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await _fs.collection('posts').doc(postId).get();
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await _fs.collection('posts').doc(postId).get();
 
       if (!documentSnapshot.exists) {
         throw Exception('해당 게시글을 찾을 수 없습니다.');
@@ -193,7 +194,6 @@ class FirestoreService {
       throw Exception('게시글을 읽어오는데 실패 했습니다.');
     }
   }
-
 
   // Future<List<UserModel>> fetchPostScreenUid({required String uid}) async {
   //   QuerySnapshot uidSnapshot =
@@ -280,12 +280,18 @@ class FirestoreService {
     }
   }
 
-  Future<void> deletePost(String postId) async {
-    final _postCollection = _fs.collection('posts');
-
+  Future<void> deletePost({required String postId}) async {
     try {
-      final documentReference = _postCollection.doc(postId);
-      await documentReference.delete();
+      DocumentReference<Map<String, dynamic>> postDoc =
+          _fs.collection('posts').doc(postId);
+
+      DocumentSnapshot snapshot = await postDoc.get();
+      if(!snapshot.exists){
+        throw Exception('게시글이 존재하지 않습니다.');
+      }
+
+      await postDoc.delete();
+      print('게시글 삭제 성공');
     } catch (e) {
       throw Exception('게시글 삭제에 실패했습니다.:$e');
     }

@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/post_screen/post_screen_event.dart';
-import 'package:lottoblog/screen/post_screen/post_screen_user.dart';
+import 'package:lottoblog/screen/my_post_screen/update_popup_widget.dart';
 
 import '../../data/bloc/post_screen/post_screen_bloc.dart';
+import '../../data/bloc/post_screen/post_screen_event.dart';
 import '../../data/bloc/post_screen/post_screen_state.dart';
+import 'my_post_title.dart';
+import 'my_post_user.dart';
 
-import '../../models/post_model.dart';
-import 'post_screen_tile.dart';
-
-class PostScreen extends StatefulWidget {
+class MyPostScreen extends StatefulWidget {
   String postId;
-
   // String uid;
 
-  PostScreen({
+  MyPostScreen({
     super.key,
     required this.postId,
     // required this.uid,
   });
 
   @override
-  State<PostScreen> createState() => _PostScreenState();
+  State<MyPostScreen> createState() => _MyPostScreenState();
 }
 
-class _PostScreenState extends State<PostScreen> {
+class _MyPostScreenState extends State<MyPostScreen> {
   @override
   void initState() {
     super.initState();
@@ -38,7 +36,14 @@ class _PostScreenState extends State<PostScreen> {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: UpdatePopupWidget(postId: widget.postId),
+          ),
+        ],
       ),
+
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
@@ -55,14 +60,15 @@ class _PostScreenState extends State<PostScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        PostScreenUser(uid: post.uid ?? ''),
+                        MyPostUser(uid: post.uid ?? ''),
+
                         SizedBox(height: 20),
                         Divider(
                           color: Colors.grey.shade300,
                           thickness: 1.0,
                         ),
                         SizedBox(height: 30),
-                        PostScreenTile(
+                        MyPostTile(
                           postId: widget.postId,
                           title: post.title,
                           content: post.content,

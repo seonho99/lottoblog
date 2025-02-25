@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/post_user/post_user_event.dart';
-import 'package:lottoblog/data/bloc/post_user/post_user_state.dart';
 
 import '../../data/bloc/post_user/post_user_bloc.dart';
+import '../../data/bloc/post_user/post_user_event.dart';
+import '../../data/bloc/post_user/post_user_state.dart';
 
-class PostScreenUser extends StatefulWidget {
+class MyPostUser extends StatefulWidget {
   String uid;
   // String userName;
   // String profileImageUrl;
 
-  PostScreenUser({
+  MyPostUser({
     super.key,
     required this.uid,
     // required this.userName,
@@ -18,10 +18,10 @@ class PostScreenUser extends StatefulWidget {
   });
 
   @override
-  State<PostScreenUser> createState() => _PostScreenUserState();
+  State<MyPostUser> createState() => _MyPostUserState();
 }
 
-class _PostScreenUserState extends State<PostScreenUser> {
+class _MyPostUserState extends State<MyPostUser> {
   late String userName;
   late String profileImageUrl;
 
@@ -36,7 +36,7 @@ class _PostScreenUserState extends State<PostScreenUser> {
   Widget build(BuildContext context) {
     return BlocBuilder<PostUserBloc, PostUserState>(
       builder: (context, state) {
-        // print('state: $state');
+        print('state: $state');
         if (state is PostUserInitial) {
           return Container();
         } else if (state is PostUserUpdated) {
@@ -50,7 +50,7 @@ class _PostScreenUserState extends State<PostScreenUser> {
                     shape: BoxShape.circle,
                     border: Border.all(width: 1, color: Colors.grey.shade300),
                     image: DecorationImage(
-                      image: NetworkImage(state.user!.profileImageUrl??''),
+                      image: NetworkImage(state.user!.profileImageUrl!),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -66,11 +66,11 @@ class _PostScreenUserState extends State<PostScreenUser> {
                       children: [
                         SizedBox(height: 12),
                         Text(
-                          state.user?.userName??'사용자',
+                          state.user?.userName??'',
                           style:
-                              Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         SizedBox(height: 4),
                         // Text(

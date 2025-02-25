@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/screen/my_post_screen/my_post_screen.dart';
 import 'package:lottoblog/screen/postwriting_screen.dart';
 
 import 'data/bloc/login/login_bloc.dart';
 import 'data/bloc/login/login_state.dart';
 
 import 'screen/like_post/like_post_screen.dart';
-import 'screen/edit_profile/editprofile_screen.dart';
+import 'screen/edit_profile/edit_profile_screen.dart';
 import 'screen/frame_screen.dart';
 import 'screen/landing_screen.dart';
 import 'screen/login/email/email_login_screen.dart';
@@ -15,7 +16,7 @@ import 'screen/login/email/signup_email_screen.dart';
 import 'screen/login/email/email_resetpassword_screen.dart';
 import 'screen/login/login_screen.dart';
 import 'screen/home/mainhome_screen.dart';
-import 'screen/my_post/personal_screen.dart';
+import 'screen/personal/personal_screen.dart';
 import 'screen/post_screen/post_screen.dart';
 
 final GlobalKey<NavigatorState> _rootTabNavigatorKey =
@@ -149,7 +150,7 @@ final GoRouter router = GoRouter(
                   path: '/post/:postId',
                   builder: (context, state) {
                     final postId = state.uri.pathSegments.last;
-                    return PostScreen(
+                    return MyPostScreen(
                       postId: postId,
                     );
                   },

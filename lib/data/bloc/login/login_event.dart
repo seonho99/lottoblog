@@ -18,4 +18,3 @@ final class SignUpEmail extends LoginEvent{
 
 final class Logout extends LoginEvent {}
 
-final class FetchUid extends LoginEvent {}

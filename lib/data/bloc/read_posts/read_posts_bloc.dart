@@ -55,5 +55,14 @@ class ReadPostsBloc extends Bloc<ReadPostsEvent, ReadPostsState> {
         emit(ReadPostsFailure(errorMessage: "좋아요 업데이트 실패: $e"));
       }
     });
+
+    on<DeletePostEvent>((event, emit) async{
+      try {
+        await postRepository.deletePost(postId: event.postId);
+        emit(ReadAllPostsSuccess([]));
+      } catch (e){
+        emit(ReadPostsFailure(errorMessage: "post 삭제 실패: $e"));
+      }
+    });
   }
 }
