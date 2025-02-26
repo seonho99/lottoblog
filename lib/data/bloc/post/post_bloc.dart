@@ -15,11 +15,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<CreatePost>((event, emit) async {
       try {
         await postRepository.createPost(event.posts);
-        emit(PostsSuccess(state.posts));
       } catch(e) {
         emit(PostFailure(errorMessage: e.toString()));
       }
     });
-
   }
 }

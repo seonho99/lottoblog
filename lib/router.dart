@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/screen/my_post_screen/my_post_screen.dart';
-import 'package:lottoblog/screen/postwriting_screen.dart';
+import 'package:lottoblog/screen/post_writing_screen.dart';
 
 import 'data/bloc/login/login_bloc.dart';
 import 'data/bloc/login/login_state.dart';
@@ -137,7 +137,7 @@ final GoRouter router = GoRouter(
                 GoRoute(
                     path: 'postwriting',
                     builder: (BuildContext context, GoRouterState state) {
-                      return PostwritingScreen();
+                      return PostWritingScreen();
                     },
                 ),
                 GoRoute(

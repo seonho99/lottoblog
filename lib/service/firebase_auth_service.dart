@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/user_model.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth;
-  final FirebaseFirestore _fs = FirebaseFirestore.instance;
+  final _fs = FirebaseFirestore.instance;
 
   FirebaseAuthService() : _auth = FirebaseAuth.instance {
     _auth.setLanguageCode('kr');
@@ -14,20 +13,19 @@ class FirebaseAuthService {
 
   User? get user => _auth.currentUser;
 
-  final storageRef = FirebaseStorage.instance.ref();
-
-
-
   // 회원가입 코드
   Future<void> signUpWithEmail({
     required String email,
     required String password,
-    String? name,
+    required String name,
   }) async {
     String? errorMessage;
     try {
       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
+
       User? user = _auth.currentUser;
 
       if (user != null) {
@@ -36,7 +34,7 @@ class FirebaseAuthService {
 
         UserModel userModel = UserModel(
           uid: user.uid,
-          userName: name ?? '',
+          userName: name ?? '사용자',
           email: email,
           profileImageUrl: '',
           createdAt: DateTime.now(),
@@ -67,11 +65,6 @@ class FirebaseAuthService {
     }
   }
 
-  // 로그인 확인
-  bool isLoggedIn() {
-    return _auth.currentUser != null;
-  }
-
   Future<String?> getUid() async {
     try {
       final currentUser = _auth.currentUser;
@@ -85,14 +78,27 @@ class FirebaseAuthService {
     }
   }
 
+  // 로그인 확인
+  bool isLoggedIn() {
+    return _auth.currentUser != null;
+  }
+
   // 로그인
-  Future<void> signInWithEmail({
+  Future<User?> signInWithEmail({
     required String email,
     required String password,
   }) async {
     String? errorMessage;
+
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      User? user = userCredential.user;
+
+      return user;
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'user-not-found':
@@ -179,8 +185,6 @@ class FirebaseAuthService {
       throw Exception('수정 실패:$e');
     }
   }
-
-
 
   // 유저 사진 변경
   Future<void> updatePhotoUrl(String? url) async {

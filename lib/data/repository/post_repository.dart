@@ -6,10 +6,6 @@ class PostRepository {
 
   PostRepository(this._firestoreService);
 
-  String? getCurrentUserUid() {
-    return _firestoreService.getCurrentUserUid();
-  }
-
   // 게시글 생성
   Future<void> createPost(PostModel posts) async {
     try {

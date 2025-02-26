@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottoblog/data/bloc/email_reset_password/email_reset_password_bloc.dart';
 import 'package:lottoblog/data/bloc/like_post/like_post_bloc.dart';
 import 'package:lottoblog/data/bloc/login/login_bloc.dart';
 import 'package:lottoblog/data/bloc/my_post/my_post_bloc.dart';
@@ -36,7 +35,7 @@ class MyApp extends StatelessWidget {
   final UserRepo userRepo;
 
   final LoginBloc loginBloc;
-  final EmailResetPasswordBloc emailResetPasswordBloc;
+  // final EmailResetPasswordBloc emailResetPasswordBloc;
   final PostBloc postBloc;
   final ReadPostsBloc readPostsBloc;
   final TabNavigationBloc tabNavigationBloc;
@@ -52,7 +51,7 @@ class MyApp extends StatelessWidget {
     PostRepository? postRepository,
     UserRepo? userRepo,
     LoginBloc? loginBloc,
-    EmailResetPasswordBloc? emailResetPasswordBloc,
+    // EmailResetPasswordBloc? emailResetPasswordBloc,
     PostBloc? postBloc,
     ReadPostsBloc? readPostsBloc,
     TabNavigationBloc? tabNavigationBloc,
@@ -69,9 +68,9 @@ class MyApp extends StatelessWidget {
         userRepo = userRepo ?? UserRepo(FirestoreService()),
         loginBloc = loginBloc ??
             LoginBloc(authRepository ?? AuthRepository(FirebaseAuthService())),
-        emailResetPasswordBloc = emailResetPasswordBloc ??
-            EmailResetPasswordBloc(
-                authRepository ?? AuthRepository(FirebaseAuthService())),
+        // emailResetPasswordBloc = emailResetPasswordBloc ??
+        //     EmailResetPasswordBloc(
+        //         authRepository ?? AuthRepository(FirebaseAuthService())),
         postRepository = postRepository ?? PostRepository(FirestoreService()),
         readPostsBloc = readPostsBloc ??
             ReadPostsBloc(postRepository ?? PostRepository(FirestoreService()),
@@ -109,9 +108,9 @@ class MyApp extends StatelessWidget {
           BlocProvider<LoginBloc>(
             create: (context) => loginBloc,
           ),
-          BlocProvider<EmailResetPasswordBloc>(
-            create: (context) => emailResetPasswordBloc,
-          ),
+          // BlocProvider<EmailResetPasswordBloc>(
+          //   create: (context) => emailResetPasswordBloc,
+          // ),
           BlocProvider<PostBloc>(
             create: (context) => postBloc,
           ),

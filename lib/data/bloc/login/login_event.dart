@@ -1,19 +1,19 @@
-sealed class LoginEvent {
-  const LoginEvent();
+sealed class LoginEvent {}
+
+
+final class SignUpEmail extends LoginEvent{
+  String email;
+  String password;
+  String name;
+
+  SignUpEmail({required this.email, required this.password, required this.name});
 }
 
 final class LoginWithEmail extends LoginEvent {
-  final String email;
-  final String password;
+  String email;
+  String password;
 
   LoginWithEmail(this.email, this.password);
-}
-
-final class SignUpEmail extends LoginEvent{
-  final String email;
-  final String password;
-
-  SignUpEmail({required this.email, required this.password});
 }
 
 final class Logout extends LoginEvent {}

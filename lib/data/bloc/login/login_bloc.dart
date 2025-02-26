@@ -11,25 +11,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this._authRepository) : super(LoginUnAuthenticated()) {
     on<SignUpEmail>((event, emit) async {
       try {
-        final user = await _authRepository.signUpWithEmail(
-            email: event.email, password: event.password);
-        if (user != null) {
-          emit(LoginAuthenticated(user, uid: user.uid));
-        }
+        await _authRepository.signUpWithEmail(
+          email: event.email,
+          password: event.password,
+          name: event.name,
+        );
       } catch (e) {
-        emit(LoginError(e.toString()));
+        emit(LoginFailure(e.toString()));
       }
     });
 
     on<LoginWithEmail>((event, emit) async {
       try {
         User? user = await _authRepository.signInWithEmail(
-            email: event.email, password: event.password);
+          email: event.email,
+          password: event.password,
+        );
         if (user != null) {
-          emit(LoginAuthenticated(user, uid: user.uid));
+          emit(LoginAuthenticated(user));
+        } else {
+          emit(LoginFailure("User not found"));
         }
       } catch (e) {
-        emit(LoginError(e.toString()));
+        emit(LoginFailure(e.toString()));
       }
     });
 
@@ -40,7 +44,5 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginUnAuthenticated());
       }
     });
-
-
   }
 }

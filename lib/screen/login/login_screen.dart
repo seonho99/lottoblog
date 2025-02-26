@@ -11,30 +11,27 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // 로고 이미지
-              Container(
-                width: 300,
-                height: 300,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/logo/lottoblog_300_300.jpeg'),
-                    fit: BoxFit.cover,
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 300,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/logo/lottoblog_300_300.jpeg'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-
-              GestureDetector(
-                onTap: () {
-                  context.go('/login/email_login');
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                GestureDetector(
+                  onTap: () {
+                    context.go('/login/email_login');
+                  },
                   child: Container(
-                    width: double.infinity, // 전체 너비 차지
-                    height: 50,
+                    width: double.infinity,
+                    height: 55,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -43,10 +40,11 @@ class LoginScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(Icons.mail, size: 20),
+                        Icon(
+                          Icons.mail,
+                          size: 20,
                         ),
+                        SizedBox(width: 16),
                         Text(
                           'Email 로그인',
                           style: Theme.of(context).textTheme.titleMedium,
@@ -55,76 +53,78 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+                SizedBox(height: 16),
 
-              // Google 로그인 버튼
-              GestureDetector(
-                onTap: () {
-                  context.go('');
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    width: double.infinity, // 전체 너비 차지
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: Colors.grey),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Container(
-                            width: 18,
-                            height: 18,
-                            child: Image(
-                              image: AssetImage('assets/logo/google_logo.png'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Google 로그인',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                // GestureDetector(
+                //   onTap: () {
+                //     context.go('');
+                //   },
+                //   child: Container(
+                //     width: double.infinity, // 전체 너비 차지
+                //     height: 55,
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius: BorderRadius.circular(10),
+                //       border: Border.all(width: 1, color: Colors.grey),
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Container(
+                //           width: 20,
+                //           height: 20,
+                //           child: Image(
+                //             image: AssetImage('assets/logo/google_logo.png'),
+                //             fit: BoxFit.cover,
+                //           ),
+                //         ),
+                //         SizedBox(
+                //           width: 16,
+                //         ),
+                //         Text(
+                //           'Google 로그인',
+                //           style: Theme.of(context).textTheme.titleMedium,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 16,
+                // ),
 
-              // Apple 로그인 버튼
-              GestureDetector(
-                onTap: () {
-                  context.go('');
-                },
-                child: Container(
-                  width: double.infinity, // 전체 너비 차지
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(width: 1, color: Colors.grey),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(Icons.apple, color: Colors.black),
-                      ),
-                      Text(
-                        'Apple 로그인',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+                // GestureDetector(
+                //   onTap: () {
+                //     context.go('');
+                //   },
+                //   child: Container(
+                //     width: double.infinity, // 전체 너비 차지
+                //     height: 55,
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius: BorderRadius.circular(10),
+                //       border: Border.all(width: 1, color: Colors.grey),
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         Icon(
+                //           Icons.apple,
+                //           color: Colors.black,
+                //         ),
+                //         SizedBox(
+                //           width: 16,
+                //         ),
+                //         Text(
+                //           'Apple 로그인',
+                //           style: Theme.of(context).textTheme.titleMedium,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
           ),
         ),
       ),

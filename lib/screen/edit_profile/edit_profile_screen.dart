@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -43,8 +44,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text(
           '프로필 수정',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
@@ -173,7 +174,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         if (state is LoginUnAuthenticated) {
                           context.go('/login');
                         }
-                        if (state is LoginError) {
+                        if (state is LoginFailure) {
                           showSnackBar(context, state.message);
                         }
                       },

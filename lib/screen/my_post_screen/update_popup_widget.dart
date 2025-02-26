@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:lottoblog/screen/postwriting_screen.dart';
-
+import 'package:lottoblog/screen/post_writing_screen.dart';
 
 
 enum SampleItem {itemOne}
@@ -44,7 +42,7 @@ class _UpdatePopupWidgetState extends State<UpdatePopupWidget> {
           child: TextButton(
             onPressed: () {
               // context.read<PostBloc>().add(UpdatePostEvent(postId: widget.postId));
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const PostwritingScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const PostWritingScreen()));
             },
             child: Text(
               '수정하기',

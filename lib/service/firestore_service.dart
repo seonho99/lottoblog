@@ -5,32 +5,20 @@ import '../models/post_model.dart';
 import '../models/user_model.dart';
 
 class FirestoreService {
-  final FirebaseFirestore _fs = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final user = FirebaseAuth.instance.currentUser;
+  final _fs = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
-  String? getCurrentUserUid() {
-    return user?.uid;
-  }
 
   // 게시글 생성
-  Future<void> createPost(PostModel postModel) async {
+  Future<void> createPost(PostModel posts) async {
     final postCollection = _fs.collection('posts');
     try {
-      final docRef = await postCollection.add(postModel.toMap());
+      final docRef = await postCollection.add(posts.toMap());
       await docRef.update({'postId': docRef.id});
     } catch (e) {
       throw Exception('저장 실패 : $e');
     }
   }
-
-  // Future<List<PostModel>> getPostList() async {
-  //   final postCollection = _fs.collection('posts');
-  //   QuerySnapshot snapshot = await postCollection.get();
-  //   return snapshot.docs
-  //       .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
-  //       .toList();
-  // }
 
   Future<int> likePostCount({required String postId}) async {
     final postRef = _fs.collection('posts').doc(postId);

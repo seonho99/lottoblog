@@ -1,7 +1,5 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottoblog/service/firebase_auth_service.dart';
-
 
 class AuthRepository {
   final FirebaseAuthService _firebaseAuthService;
@@ -16,12 +14,18 @@ class AuthRepository {
     }
   }
 
-
-  Future<User?> signUpWithEmail({required String email, required String password, String? name}) async {
+  Future<void> signUpWithEmail({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
     try {
       await _firebaseAuthService.signUpWithEmail(
-          email: email, password: password, name: name);
-    } catch (e){
+        email: email,
+        password: password,
+        name: name,
+      );
+    } catch (e) {
       rethrow;
     }
   }
@@ -29,18 +33,18 @@ class AuthRepository {
   bool isLoggedIn() {
     try {
       return _firebaseAuthService.user != null;
-    } catch (e){
+    } catch (e) {
       rethrow;
     }
   }
 
-  Future<User?> signInWithEmail({required String email,required String password}) async {
+  Future<User?> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
     try {
-      await _firebaseAuthService.signInWithEmail(
-          email: email,
-          password: password);
-
-      return _firebaseAuthService.user;
+      User? user = await _firebaseAuthService.signInWithEmail(email: email, password: password);
+      return user;
     } catch (e) {
       rethrow;
     }
@@ -49,8 +53,6 @@ class AuthRepository {
   Future<void> signOut() async {
     await _firebaseAuthService.signOut();
   }
-
-
 
   Future<void> resetPassword(String email) async {
     await _firebaseAuthService.resetPassword(email: email);

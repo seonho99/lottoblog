@@ -1,7 +1,7 @@
 import '../../../models/post_model.dart';
 
 sealed class PostState {
-  final List<PostModel> posts;
+  PostModel? posts;
 
   PostState({required this.posts});
 
@@ -13,7 +13,7 @@ sealed class PostState {
 
 // 초기 상태
 final class PostInitial extends PostState {
-  PostInitial() : super(posts: []);
+  PostInitial() : super(posts: null);
 
   // @override
   // String toString() {
@@ -21,20 +21,11 @@ final class PostInitial extends PostState {
   // }
 }
 
-// 사용자 게시글 상태
-// final class MyPosts extends PostState {
-//   MyPosts(List<PostModel> posts) : super(posts: posts);
-
-  // @override
-  // String toString() {
-  //   return 'MyPosts(myPosts: ${myPosts.map((post) => post.toMap()).toList()})';
-  // }
-// }
 
 
 // 게시글 갱신 상태
 final class PostsSuccess extends PostState {
-  PostsSuccess(List<PostModel> posts) : super(posts: posts);
+  PostsSuccess(PostModel posts) : super(posts: posts);
 
   // @override
   // String toString() {
@@ -46,5 +37,5 @@ final class PostsSuccess extends PostState {
 final class PostFailure extends PostState {
   final String errorMessage;
 
-  PostFailure({required this.errorMessage}) : super (posts: []);
+  PostFailure({required this.errorMessage}) : super (posts: null);
 }

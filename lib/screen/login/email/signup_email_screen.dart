@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/login/login_event.dart';
 
-
 import '../../../data/bloc/login/login_bloc.dart';
 import '../../../data/bloc/login/login_state.dart';
 import '../../../show_snackbar.dart';
@@ -29,18 +28,26 @@ class SignUpEmailScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: Text('회원가입을 위해\n정보를 입력해주세요',style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800,height: 1.5),),
-                  ),
-                  // 이름 입력
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: TextFormField(
+            child: Container(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      '회원가입을 위해\n정보를 입력해주세요',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displaySmall
+                          ?.copyWith(fontWeight: FontWeight.w800, height: 1.5),
+                    ),
+                    // 이름 입력
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         labelText: '이름',
@@ -57,12 +64,12 @@ class SignUpEmailScreen extends StatelessWidget {
                       onSaved: (value) {
                         name = value;
                       },
+                    ), // 이름
+                    // 이메일 입력
+                    SizedBox(
+                      height: 20,
                     ),
-                  ), // 이름
-                  // 이메일 입력
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: TextFormField(
+                    TextFormField(
                       decoration: InputDecoration(
                         labelText: '이메일',
                         labelStyle: Theme.of(context).textTheme.headlineSmall,
@@ -82,12 +89,12 @@ class SignUpEmailScreen extends StatelessWidget {
                       onSaved: (value) {
                         email = value;
                       },
+                    ), // 이메일
+                    // 비밀번호 입력
+                    SizedBox(
+                      height: 20,
                     ),
-                  ), // 이메일
-                  // 비밀번호 입력
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: TextFormField(
+                    TextFormField(
                       keyboardType: TextInputType.text,
                       controller: _passwordController,
                       decoration: InputDecoration(
@@ -112,67 +119,82 @@ class SignUpEmailScreen extends StatelessWidget {
                         password = value;
                       },
                     ),
-                  ),
-                  // 비밀번호 확인
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: TextFormField(
+                    // 비밀번호 확인
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
                       keyboardType: TextInputType.text,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: '비밀번호 확인',
-                        labelStyle:  Theme.of(context).textTheme.headlineSmall,
+                        labelStyle: Theme.of(context).textTheme.headlineSmall,
                         hintText: '비밀번호를 한번 더 입력해주세요.',
                         border: UnderlineInputBorder(),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
-                      validator: (value){
-                        if (value == null || value.isEmpty){
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return '비밀번호를 다시 한번 입력하세요.';
-                        } else if (value != _passwordController.text){
+                        } else if (value != _passwordController.text) {
                           return '비밀번호가 일치하지 않습니다.';
                         }
                         return null;
                       },
                     ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // 회원가입 이벤트 발생
-                          context.read<LoginBloc>().add(SignUpEmail(email: email!, password: password!));
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          backgroundColor: Color(0xFF1d2228),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          )),
-                      child: Text('가입하기',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(color: Colors.white),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            // 회원가입 이벤트 발생
+                            context.read<LoginBloc>().add(
+                                  SignUpEmail(
+                                    name: name!,
+                                    email: email!,
+                                    password: password!,
+                                  ),
+                                );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            backgroundColor: Color(0xFF1d2228),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                        child: Text(
+                          '가입하기',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
                       ),
                     ),
-                  ),
-                  BlocListener<LoginBloc, LoginState>(
-                    listener: (context, state) {
-                      if (state is SignUpEmail) {
-                        showSnackBar(context, '회원가입이 완료되었습니다.');
-                        context.go('/login/email_login');
-                      }
-                      if (state is LoginError) {
-                        showSnackBar(context, state.message);
-                      }
-                    },
-                    child: Container(),
-                  ),
-                ],
+                    BlocListener<LoginBloc, LoginState>(
+                      listener: (context, state) {
+                        if (state is LoginUnAuthenticated) {
+                          CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.grey),
+                            strokeWidth: 6.0, // 원의 두께 설정
+                          );
+                        } else if (state is LoginAuthenticated) {
+                          showSnackBar(context, '회원가입이 완료되었습니다.');
+                          context.go('/login/email_login');
+                        } else if (state is LoginFailure) {
+                          showSnackBar(context, state.message);
+                        } else {
+                          return showSnackBar(context, '회원가입을 실패했습니다.');
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

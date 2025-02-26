@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/bloc/email_reset_password/email_reset_password_bloc.dart';
-import '../../../data/bloc/email_reset_password/email_reset_password_event.dart';
-import '../../../data/bloc/email_reset_password/email_reset_password_state.dart';
-import '../../../data/repository/auth_repository.dart';
-import '../../../show_snackbar.dart';
+
+
 
 
 class EmailResetpasswordScreen extends StatelessWidget {
@@ -22,17 +19,17 @@ class EmailResetpasswordScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: BlocProvider(
-          create: (_) => EmailResetPasswordBloc(context.read<AuthRepository>()),
-          child: BlocListener<EmailResetPasswordBloc, EmailResetPasswordState>(
-            listener: (context, state) {
-              if (state is EmailResetPasswordSuccess) {
-                showSnackBar(context, state.message);
-                Navigator.pop(context);
-              } else if (state is EmailResetPasswordError) {
-                showSnackBar(context, state.message);
-              }
-            },
+        // child: BlocProvider(
+        //   create: (_) => EmailResetPasswordBloc(context.read<AuthRepository>()),
+        //   child: BlocListener<EmailResetPasswordBloc, EmailResetPasswordState>(
+        //     listener: (context, state) {
+        //       if (state is EmailResetPasswordSuccess) {
+        //         showSnackBar(context, state.message);
+        //         Navigator.pop(context);
+        //       } else if (state is EmailResetPasswordError) {
+        //         showSnackBar(context, state.message);
+        //       }
+        //     },
             child: Form(
               key: _formKey,
               child: Column(
@@ -82,7 +79,7 @@ class EmailResetpasswordScreen extends StatelessWidget {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            context.read<EmailResetPasswordBloc>().add(ResetPasswordEmail(email!));
+                            // context.read<EmailResetPasswordBloc>().add(ResetPasswordEmail(email!));
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -106,8 +103,6 @@ class EmailResetpasswordScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ),
       ),
     );
   }
