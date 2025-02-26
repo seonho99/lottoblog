@@ -159,16 +159,7 @@ class EmailLoginScreen extends StatelessWidget {
                         showSnackBar(context, state.message);
                       }
                     },
-                    child: BlocBuilder<LoginBloc, LoginState>(
-                      builder: (context, state) {
-                        if (state is LoginUnAuthenticated) {
-                          return Center(
-                            child: Text('로그인에 실패했습니다.'),
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
+                    child: Container(),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

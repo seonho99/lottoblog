@@ -14,17 +14,18 @@ class AuthRepository {
     }
   }
 
-  Future<void> signUpWithEmail({
+  Future<User?> signUpWithEmail({
     required String email,
     required String password,
     required String name,
   }) async {
     try {
-      await _firebaseAuthService.signUpWithEmail(
+      User? user = await _firebaseAuthService.signUpWithEmail(
         email: email,
         password: password,
         name: name,
       );
+      return user;
     } catch (e) {
       rethrow;
     }
@@ -43,7 +44,8 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      User? user = await _firebaseAuthService.signInWithEmail(email: email, password: password);
+      User? user = await _firebaseAuthService.signInWithEmail(
+          email: email, password: password);
       return user;
     } catch (e) {
       rethrow;

@@ -9,12 +9,13 @@ final class SignUpEmail extends LoginEvent{
   SignUpEmail({required this.email, required this.password, required this.name});
 }
 
-final class LoginWithEmail extends LoginEvent {
+final class LoginWithEmail extends LoginEvent{
   String email;
   String password;
 
   LoginWithEmail(this.email, this.password);
 }
 
-final class Logout extends LoginEvent {}
+final class SignOut extends LoginEvent{}
 
+final class SignEdit extends LoginEvent{}

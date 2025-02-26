@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,7 +25,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? email;
   String? profileImageURL;
 
-
   @override
   void initState() {
     super.initState();
@@ -44,8 +42,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text(
           '프로필 수정',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         centerTitle: true,
         elevation: 0,
@@ -144,41 +142,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 // 로그아웃/회원탈퇴
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        context.read<LoginBloc>().add(Logout());
-                      },
-                      child: Text('로그아웃',
-                          style: Theme.of(context).textTheme.titleSmall),
-                    ),
-                    Text('|'),
-                    TextButton(
-                      onPressed: () async {
-                        try {
-                          await auth.deleteAccount();
-                          showSnackBar(context, '탈퇴처리가 완료되었습니다.');
-                          context.go('/login');
-                        } catch (e) {
-                          showSnackBar(context, e.toString());
-                        }
-                      },
-                      child: Text(
-                        '회원탈퇴',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ),
                     BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
-                        if (state is LoginUnAuthenticated) {
+                        if (state is LoginAuthenticated) {
+                          showSnackBar(context, '로그아웃 되었습니다.');
                           context.go('/login');
-                        }
-                        if (state is LoginFailure) {
+                        } else if (state is LoginFailure) {
                           showSnackBar(context, state.message);
                         }
                       },
-                      child: Container(),
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<LoginBloc>().add(SignOut());  // 로그아웃 이벤트 발생
+                        },
+                        child: Text(
+                          '로그아웃',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                    ),
+                    Text('|'),
+                    BlocListener<LoginBloc, LoginState>(
+                      listener: (context, state) {
+                        if (state is LoginAuthenticated) {
+                          showSnackBar(context, '로그아웃 되었습니다.');
+                          context.go('/login');
+                        } else if (state is LoginFailure) {
+                          showSnackBar(context, state.message);
+                        }
+                      },
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<LoginBloc>().add(SignOut());  // 로그아웃 이벤트 발생
+                        },
+                        child: Text(
+                          '로그아웃',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
                     ),
                   ],
                 ),

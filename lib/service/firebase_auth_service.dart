@@ -14,7 +14,7 @@ class FirebaseAuthService {
   User? get user => _auth.currentUser;
 
   // 회원가입 코드
-  Future<void> signUpWithEmail({
+  Future<User?> signUpWithEmail({
     required String email,
     required String password,
     required String name,
@@ -42,6 +42,8 @@ class FirebaseAuthService {
         );
 
         await _fs.collection('users').doc(user.uid).set(userModel.toMap());
+
+        return user;
       }
     } on FirebaseAuthException catch (error) {
       switch (error.code) {

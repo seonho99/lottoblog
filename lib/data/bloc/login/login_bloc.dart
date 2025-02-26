@@ -11,11 +11,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this._authRepository) : super(LoginUnAuthenticated()) {
     on<SignUpEmail>((event, emit) async {
       try {
-        await _authRepository.signUpWithEmail(
+        User? user = await _authRepository.signUpWithEmail(
           email: event.email,
           password: event.password,
           name: event.name,
         );
+        if (user != null) {
+          emit(LoginAuthenticated(user));
+        } else {
+          emit(LoginFailure('회원가입에 실패했습니다.'));
+        }
       } catch (e) {
         emit(LoginFailure(e.toString()));
       }
@@ -37,11 +42,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     });
 
-    on<Logout>((event, emit) async {
+    on<SignOut>((event, emit) async {
       try {
         await _authRepository.signOut();
-      } catch (e) {
         emit(LoginUnAuthenticated());
+      } catch (e) {
+        emit(LoginFailure(e.toString()));
       }
     });
   }
