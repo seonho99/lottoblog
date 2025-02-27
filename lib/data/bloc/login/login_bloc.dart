@@ -11,15 +11,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this._authRepository) : super(LoginUnAuthenticated()) {
     on<SignUpEmail>((event, emit) async {
       try {
-        User? user = await _authRepository.signUpWithEmail(
+        await _authRepository.signUpWithEmail(
           email: event.email,
           password: event.password,
           name: event.name,
         );
-        if (user != null) {
+        User? user = _authRepository.user;
+        if(user!= null){
           emit(LoginAuthenticated(user));
         } else {
-          emit(LoginFailure('회원가입에 실패했습니다.'));
+          emit(LoginFailure('회원가입 실패'));
         }
       } catch (e) {
         emit(LoginFailure(e.toString()));
@@ -28,14 +29,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     on<LoginWithEmail>((event, emit) async {
       try {
-        User? user = await _authRepository.signInWithEmail(
+        await _authRepository.signInWithEmail(
           email: event.email,
           password: event.password,
         );
+        User? user = _authRepository.user;
         if (user != null) {
           emit(LoginAuthenticated(user));
         } else {
-          emit(LoginFailure("User not found"));
+          emit(LoginFailure('로그인 실패'));
         }
       } catch (e) {
         emit(LoginFailure(e.toString()));
@@ -45,7 +47,33 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<SignOut>((event, emit) async {
       try {
         await _authRepository.signOut();
-        emit(LoginUnAuthenticated());
+        User? user = _authRepository.user;
+        // print('state: $user');
+        if(user == null){
+          emit(LoginUnAuthenticated());
+        } else {
+          emit(LoginFailure('로그인 실패'));
+        }
+      } catch (e) {
+        emit(LoginFailure(e.toString()));
+      }
+    });
+
+    on<DeleteAccount>((event, emit) async {
+      try {
+        await _authRepository.deleteAccount();
+        User? user = _authRepository.user;
+        if(user == null){
+          emit(LoginUnAuthenticated());
+        }
+      } catch (e) {
+        emit(LoginFailure(e.toString()));
+      }
+    });
+
+    on<ResetPassword>((event, emit) async {
+      try {
+        await _authRepository.resetPassword(email: event.email);
       } catch (e) {
         emit(LoginFailure(e.toString()));
       }

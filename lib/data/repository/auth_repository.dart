@@ -6,6 +6,8 @@ class AuthRepository {
 
   AuthRepository(this._firebaseAuthService);
 
+  User? get user => _firebaseAuthService.user;
+
   Future<String?> getUid() async {
     try {
       return await _firebaseAuthService.getUid();
@@ -14,18 +16,17 @@ class AuthRepository {
     }
   }
 
-  Future<User?> signUpWithEmail({
+  Future<void> signUpWithEmail({
     required String email,
     required String password,
     required String name,
   }) async {
     try {
-      User? user = await _firebaseAuthService.signUpWithEmail(
+      await _firebaseAuthService.signUpWithEmail(
         email: email,
         password: password,
         name: name,
       );
-      return user;
     } catch (e) {
       rethrow;
     }
@@ -39,14 +40,13 @@ class AuthRepository {
     }
   }
 
-  Future<User?> signInWithEmail({
+  Future<void> signInWithEmail({
     required String email,
     required String password,
   }) async {
     try {
-      User? user = await _firebaseAuthService.signInWithEmail(
+      await _firebaseAuthService.signInWithEmail(
           email: email, password: password);
-      return user;
     } catch (e) {
       rethrow;
     }
@@ -56,11 +56,16 @@ class AuthRepository {
     await _firebaseAuthService.signOut();
   }
 
-  Future<void> resetPassword(String email) async {
+  Future<void> resetPassword({required String email}) async {
     await _firebaseAuthService.resetPassword(email: email);
   }
 
   Future<void> deleteAccount() async {
     await _firebaseAuthService.deleteAccount();
   }
+
+  Future<void> updateName(String? name) async {
+    await _firebaseAuthService.updateName(name);
+  }
+
 }

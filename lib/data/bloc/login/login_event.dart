@@ -18,4 +18,11 @@ final class LoginWithEmail extends LoginEvent{
 
 final class SignOut extends LoginEvent{}
 
-final class SignEdit extends LoginEvent{}
+final class DeleteAccount extends LoginEvent{}
+
+
+final class ResetPassword extends LoginEvent{
+  final String email;
+
+  ResetPassword({required this.email});
+}

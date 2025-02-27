@@ -14,7 +14,7 @@ class FirebaseAuthService {
   User? get user => _auth.currentUser;
 
   // 회원가입 코드
-  Future<User?> signUpWithEmail({
+  Future<void> signUpWithEmail({
     required String email,
     required String password,
     required String name,
@@ -43,7 +43,6 @@ class FirebaseAuthService {
 
         await _fs.collection('users').doc(user.uid).set(userModel.toMap());
 
-        return user;
       }
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
@@ -86,7 +85,7 @@ class FirebaseAuthService {
   }
 
   // 로그인
-  Future<User?> signInWithEmail({
+  Future<void> signInWithEmail({
     required String email,
     required String password,
   }) async {
@@ -98,9 +97,7 @@ class FirebaseAuthService {
         password: password,
       );
 
-      User? user = userCredential.user;
 
-      return user;
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'user-not-found':
@@ -122,26 +119,6 @@ class FirebaseAuthService {
       throw Exception(errorMessage);
     }
   }
-
-  // Future<Map<String, dynamic>?> getUserData() async {
-  //   try {
-  //     final user = _auth.currentUser;
-  //     if (user == null) {
-  //       throw Exception('로그인된 사용자가 없습니다.');
-  //     }
-  //
-  //     DocumentSnapshot docSnapshot = await _fs.collection('users').doc(user.uid)
-  //         .get();
-  //
-  //     if (docSnapshot.exists) {
-  //       return docSnapshot.data() as Map<String, dynamic>?;
-  //     } else {
-  //       throw Exception('사용자 정보가 Firestore에 없습니다.');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('사용자 데이터를 가져오는 데 실패했습니다: ${e.toString()}');
-  //   }
-  // }
 
   // 로그아웃
   Future<void> signOut() async {
@@ -197,7 +174,6 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> loginWithEmail() async {}
 
   // 유저 사진 삭제
   Future<void> deletePhotoUrl() async {
@@ -222,10 +198,17 @@ class FirebaseAuthService {
 
   // 계정 삭제
   Future<void> deleteAccount() async {
-    try {
+    try{
       await _auth.currentUser?.delete();
-    } catch (e) {
-      throw Exception('탈퇴 과정에 문제가 있습니다. ${e.toString()}');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        rethrow;
+      } else {
+        throw Exception('탈퇴과정에 문제가 있습니다. ${e.toString()}');
+      }
+    }catch(e){
+      print(e);
+      throw Exception('탈퇴과정에 문제가 있습니다. ${e.toString()}');
     }
   }
 }

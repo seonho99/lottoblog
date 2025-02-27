@@ -88,19 +88,19 @@ class EmailLoginScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          context.go('');
-                        },
-                        child: Text(
-                          '이메일 찾기',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Text('|'),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     context.go('');
+                      //   },
+                      //   child: Text(
+                      //     '이메일 찾기',
+                      //     style: Theme.of(context).textTheme.titleMedium,
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 5),
+                      //   child: Text('|'),
+                      // ),
                       TextButton(
                         onPressed: () {
                           context.go('/login/email_login/email_resetpassword');
@@ -119,8 +119,8 @@ class EmailLoginScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        _emailController.text = 'pandapad10@naver.com';
-                        _passwordController.text = '11111111';
+                        // _emailController.text = 'pandapad10@naver.com';
+                        // _passwordController.text = '11111111';
                         if (_formKey.currentState?.validate() ?? false) {
                           final email = _emailController.text;
                           final password = _passwordController.text;

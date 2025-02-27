@@ -53,139 +53,141 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           padding: EdgeInsets.all(16),
           child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                EditImagePicker(),
-                TextFormField(
-                  initialValue: name,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter your name',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '이름을 입력하세요';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    name = value;
-                  },
-                ),
-                TextFormField(
-                  enabled: false,
-                  initialValue: email,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'example@example.com',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('이메일 인증을 아직 안하셨나요?',
-                        style: Theme.of(context).textTheme.titleSmall),
-                    TextButton(
-                      onPressed: () {
-                        if (auth.user?.emailVerified ?? false) {
-                          showSnackBar(context, '이미 인증된 사용자입니다.');
-                          return;
-                        }
-                        try {
-                          auth.sendVerificationEmail();
-                          showSnackBar(context, '인증 이메일이 다시 전송되었습니다.');
-                        } catch (e) {
-                          showSnackBar(context, e.toString());
-                        }
-                      },
-                      child: Text(
-                        'Send Email',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  EditImagePicker(),
+                  TextFormField(
+                    initialValue: name,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Enter your name',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
                     ),
-                  ],
-                ),
-                // 수정 버튼
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        _formKey.currentState?.save();
-                        auth.updateName(name).then((_) {
-                          showSnackBar(context, '수정 되었습니다.');
-                        }).catchError((e) {
-                          showSnackBar(context, e.toString());
-                        });
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '이름을 입력하세요';
                       }
+                      return null;
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Color(0xff1d2228),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      '수정',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(color: Colors.white),
+                    onSaved: (value) {
+                      name = value;
+                    },
+                  ),
+                  TextFormField(
+                    enabled: false,
+                    initialValue: email,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'example@example.com',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.email),
                     ),
                   ),
-                ),
-                // 로그아웃/회원탈퇴
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BlocListener<LoginBloc, LoginState>(
-                      listener: (context, state) {
-                        if (state is LoginAuthenticated) {
-                          showSnackBar(context, '로그아웃 되었습니다.');
-                          context.go('/login');
-                        } else if (state is LoginFailure) {
-                          showSnackBar(context, state.message);
-                        }
-                      },
-                      child: TextButton(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('이메일 인증을 아직 안하셨나요?',
+                          style: Theme.of(context).textTheme.titleSmall),
+                      TextButton(
                         onPressed: () {
-                          context.read<LoginBloc>().add(SignOut());  // 로그아웃 이벤트 발생
+                          if (auth.user?.emailVerified ?? false) {
+                            showSnackBar(context, '이미 인증된 사용자입니다.');
+                            return;
+                          }
+                          try {
+                            auth.sendVerificationEmail();
+                            showSnackBar(context, '인증 이메일이 다시 전송되었습니다.');
+                          } catch (e) {
+                            showSnackBar(context, e.toString());
+                          }
                         },
                         child: Text(
-                          '로그아웃',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          'Send Email',
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ),
-                    ),
-                    Text('|'),
-                    BlocListener<LoginBloc, LoginState>(
-                      listener: (context, state) {
-                        if (state is LoginAuthenticated) {
-                          showSnackBar(context, '로그아웃 되었습니다.');
-                          context.go('/login');
-                        } else if (state is LoginFailure) {
-                          showSnackBar(context, state.message);
+                    ],
+                  ),
+                  // 수정 버튼
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          _formKey.currentState?.save();
+                          auth.updateName(name).then((_) {
+                            showSnackBar(context, '수정 되었습니다.');
+                          }).catchError((e) {
+                            showSnackBar(context, e.toString());
+                          });
                         }
                       },
-                      child: TextButton(
-                        onPressed: () {
-                          context.read<LoginBloc>().add(SignOut());  // 로그아웃 이벤트 발생
-                        },
-                        child: Text(
-                          '로그아웃',
-                          style: Theme.of(context).textTheme.titleMedium,
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        backgroundColor: Color(0xff1d2228),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      child: Text(
+                        '수정',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: Colors.white),
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  // 로그아웃/회원탈퇴
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      BlocListener<LoginBloc, LoginState>(
+                        listener: (context, state) {
+                          if (state is LoginAuthenticated) {
+                            showSnackBar(context, '로그아웃 되었습니다.');
+                            context.go('/login');
+                          } else if (state is LoginFailure) {
+                            showSnackBar(context, state.message);
+                          }
+                        },
+                        child: TextButton(
+                          onPressed: () {
+                            context.read<LoginBloc>().add(SignOut());  // 로그아웃 이벤트 발생
+                          },
+                          child: Text(
+                            '로그아웃',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ),
+                      Text('|'),
+                      BlocListener<LoginBloc, LoginState>(
+                        listener: (context, state) {
+                          if (state is LoginUnAuthenticated) {
+                            showSnackBar(context, '회원탈퇴 되었습니다.');
+                            context.go('/login');
+                          } else if (state is LoginFailure) {
+                            showSnackBar(context, state.message);
+                          }
+                        },
+                        child: TextButton(
+                          onPressed: () {
+                            context.read<LoginBloc>().add(DeleteAccount());  // 로그아웃 이벤트 발생
+                          },
+                          child: Text(
+                            '회원탈퇴',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
