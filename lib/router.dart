@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottoblog/data/bloc/post_user/post_user_state.dart';
 import 'package:lottoblog/screen/my_post_screen/my_post_screen.dart';
+import 'package:lottoblog/screen/my_post_screen/post_update_screen.dart';
 import 'package:lottoblog/screen/post_writing_screen.dart';
 
 import 'data/bloc/login/login_bloc.dart';
 import 'data/bloc/login/login_state.dart';
 
 import 'screen/like_post/like_post_screen.dart';
-import 'screen/edit_profile/edit_profile_screen.dart';
+import 'screen/edit_profile_screen.dart';
 import 'screen/frame_screen.dart';
 import 'screen/landing_screen.dart';
 import 'screen/login/email/email_login_screen.dart';
@@ -118,7 +120,6 @@ final GoRouter router = GoRouter(
                         return EmailResetpasswordScreen();
                       },
                     ),
-
                   ],
                 ),
               ],
@@ -135,10 +136,20 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                    path: 'postwriting',
-                    builder: (BuildContext context, GoRouterState state) {
-                      return PostWritingScreen();
-                    },
+                  path: 'postwriting',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return PostWritingScreen();
+                  },
+                  routes: <RouteBase>[
+                    GoRoute(
+                        path: 'update_post',
+                        builder: (context, state) {
+                          final postId = state.uri.pathSegments.last;
+                          return PostUpdateScreen(
+                            postId: postId,
+                          );
+                        }),
+                  ],
                 ),
                 GoRoute(
                   path: 'editprofile',
@@ -173,6 +184,5 @@ final GoRouter router = GoRouter(
         state.uri.path.contains('/login')) {
       return '/personal';
     }
-
   },
 );

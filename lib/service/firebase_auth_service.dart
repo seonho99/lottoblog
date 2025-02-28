@@ -92,7 +92,7 @@ class FirebaseAuthService {
     String? errorMessage;
 
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );

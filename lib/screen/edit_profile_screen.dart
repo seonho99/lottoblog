@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottoblog/data/bloc/login/login_event.dart';
 import 'package:lottoblog/data/bloc/login/login_state.dart';
-import 'package:lottoblog/screen/edit_profile/edit_image_picker.dart';
 import 'package:lottoblog/service/firebase_auth_service.dart';
 import 'package:lottoblog/service/firebase_storage_service.dart';
 import 'package:lottoblog/show_snackbar.dart';
 
-import '../../data/bloc/login/login_bloc.dart';
+import '../data/bloc/login/login_bloc.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -21,6 +21,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final auth = FirebaseAuthService();
   final storage = FirebaseStorageService();
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
+  bool _isUploading = false;
   String? name;
   String? email;
   String? profileImageURL;
@@ -31,6 +33,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     name = auth.user?.displayName;
     email = auth.user?.email;
     profileImageURL = auth.user?.photoURL;
+  }
+
+
+
+  Future<void> _pickImage() async {
+    setState(() {
+      _isUploading = true;
+    });
+
+    String? downloadURL;
+
+    try {
+      XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        downloadURL = await storage.uploadProfileImage(
+            await pickedFile.readAsBytes(), pickedFile.path, auth.user?.uid);
+      }
+
+      setState(() {
+        profileImageURL = downloadURL;
+      });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+
+    setState(() {
+      _isUploading = false;
+    });
   }
 
   @override
@@ -57,7 +87,64 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  EditImagePicker(),
+                  Flexible(
+                    child: Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: profileImageURL != null
+                                ? NetworkImage(profileImageURL!)
+                                : const AssetImage(
+                                    'assets/profile_dummy/profile_01.png'),
+                            child: _isUploading
+                                ? CircularProgressIndicator()
+                                : Icon(Icons.camera_alt,
+                                    size: 30, color: Colors.white),
+                            onBackgroundImageError: (_, __) {
+                              setState(() {
+                                profileImageURL = null;
+                              });
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            height: 35,
+                            width: 35,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () async {
+                                  try {
+                                    await auth.deletePhotoUrl();
+                                    await storage
+                                        .deleteProfileImage(auth.user?.uid);
+                                  } catch (e) {
+                                    showSnackBar(context, e.toString());
+                                  }
+                                  setState(() {
+                                    profileImageURL = null;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   TextFormField(
                     initialValue: name,
                     decoration: InputDecoration(
@@ -134,10 +221,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       child: Text(
                         '수정',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: Colors.white),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  color: Colors.white,
+                                ),
                       ),
                     ),
                   ),
@@ -156,7 +243,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         },
                         child: TextButton(
                           onPressed: () {
-                            context.read<LoginBloc>().add(SignOut());  // 로그아웃 이벤트 발생
+                            context
+                                .read<LoginBloc>()
+                                .add(SignOut()); // 로그아웃 이벤트 발생
                           },
                           child: Text(
                             '로그아웃',
@@ -176,7 +265,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         },
                         child: TextButton(
                           onPressed: () {
-                            context.read<LoginBloc>().add(DeleteAccount());  // 로그아웃 이벤트 발생
+                            context
+                                .read<LoginBloc>()
+                                .add(DeleteAccount()); // 로그아웃 이벤트 발생
                           },
                           child: Text(
                             '회원탈퇴',

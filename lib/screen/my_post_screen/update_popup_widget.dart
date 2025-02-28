@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottoblog/screen/post_writing_screen.dart';
 
 
@@ -41,8 +42,7 @@ class _UpdatePopupWidgetState extends State<UpdatePopupWidget> {
         PopupMenuItem<SampleItem>(
           child: TextButton(
             onPressed: () {
-              // context.read<PostBloc>().add(UpdatePostEvent(postId: widget.postId));
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const PostWritingScreen()));
+              context.go('/personal/editprofile/post/:postId/update_post');
             },
             child: Text(
               '수정하기',
