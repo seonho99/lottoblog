@@ -119,8 +119,8 @@ class EmailLoginScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // _emailController.text = 'pandapad10@naver.com';
-                        // _passwordController.text = '11111111';
+                        _emailController.text = 'pandapad10@naver.com';
+                        _passwordController.text = '11111111';
                         if (_formKey.currentState?.validate() ?? false) {
                           final email = _emailController.text;
                           final password = _passwordController.text;

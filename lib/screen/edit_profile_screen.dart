@@ -22,6 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final storage = FirebaseStorageService();
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
+
   bool _isUploading = false;
   String? name;
   String? email;
@@ -35,29 +36,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     profileImageURL = auth.user?.photoURL;
   }
 
-
-
   Future<void> _pickImage() async {
     setState(() {
       _isUploading = true;
     });
 
-    String? downloadURL;
-
     try {
       XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
       if (pickedFile != null) {
+        String? downloadURL;
+
         downloadURL = await storage.uploadProfileImage(
             await pickedFile.readAsBytes(), pickedFile.path, auth.user?.uid);
-      }
 
-      setState(() {
-        profileImageURL = downloadURL;
-      });
+        await auth.updatePhotoUrl(downloadURL);
+
+        setState(() {
+          profileImageURL = downloadURL;
+        });
+      }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-
     setState(() {
       _isUploading = false;
     });
@@ -283,6 +284,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<String?> _showDeleteDialog() {
+    final TextEditingController passwordController = TextEditingController();
+
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Password 확인'),
+          content: TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Enter your password',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, null);
+              },
+              child: Text(
+                '취소',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await auth.showDeleteDialog(passwordController.text);
+                  await auth.deleteAccount();
+                  showSnackBar(context, '탈퇴처리가 완료되었습니다.');
+                  context.go('/login');
+                } catch (e){
+                  showSnackBar(context, e.toString());
+                }
+                Navigator.pop(context);
+              },
+              child: Text('탈퇴하기'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

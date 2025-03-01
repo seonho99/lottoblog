@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
@@ -7,6 +8,7 @@ import 'package:flutter/foundation.dart';
 class FirebaseStorageService {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final storageRef = FirebaseStorage.instance.ref();
+  final _fs = FirebaseFirestore.instance;
 
 
   Future<String> uploadProfileImage(Uint8List bytes, String path, String? uid) async {
@@ -17,9 +19,25 @@ class FirebaseStorageService {
         contentType: 'image/png',
         customMetadata: {'picked-file-path': path},
       );
-      profileRef.putData(bytes, metadata);
-      final downloadUrl = await profileRef.getDownloadURL();
-      return downloadUrl;
+     await profileRef.putData(bytes, metadata);
+
+     final downloadUrl = await profileRef.getDownloadURL();
+
+     final userDocRef = _fs.collection('users').doc(uid);
+     final docSnapshot = await userDocRef.get();
+
+     if(!docSnapshot.exists){
+       await userDocRef.set({
+         'profileImageUrl': downloadUrl,
+       });
+       print("New user document created with profile image.");
+     } else {
+       await userDocRef.update({
+         'profileImageUrl': downloadUrl,
+       });
+       print("User document updated with new profile image.");
+     }
+     return downloadUrl;
     } catch (e) {
       throw Exception('upload 실패');
     }

@@ -34,7 +34,7 @@ class FirebaseAuthService {
 
         UserModel userModel = UserModel(
           uid: user.uid,
-          userName: name ?? '사용자',
+          userName: name,
           email: email,
           profileImageUrl: '',
           createdAt: DateTime.now(),
@@ -42,7 +42,6 @@ class FirebaseAuthService {
         );
 
         await _fs.collection('users').doc(user.uid).set(userModel.toMap());
-
       }
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
@@ -96,8 +95,6 @@ class FirebaseAuthService {
         email: email,
         password: password,
       );
-
-
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'user-not-found':
@@ -198,7 +195,7 @@ class FirebaseAuthService {
 
   // 계정 삭제
   Future<void> deleteAccount() async {
-    try{
+    try {
       await _auth.currentUser?.delete();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
@@ -206,9 +203,37 @@ class FirebaseAuthService {
       } else {
         throw Exception('탈퇴과정에 문제가 있습니다. ${e.toString()}');
       }
-    }catch(e){
+    } catch (e) {
       print(e);
       throw Exception('탈퇴과정에 문제가 있습니다. ${e.toString()}');
     }
   }
+
+  Future<void> showDeleteDialog(String password) async {
+    String? errorMessage;
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: _auth.currentUser!.email!,
+        password: password,
+      );
+      await _auth.currentUser?.reauthenticateWithCredential(credential);
+      await _auth.currentUser?.delete();
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        errorMessage='해당 이메일에 해당하는 사용자를 찾을 수 없습니다.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage='잘못된 비밀번호입니다.';
+      } else {
+        errorMessage='재인증 중 오류 발생: ${e.message}';
+      }
+    } catch (e) {
+      errorMessage='탈퇴과정에 문제가 있습니다.';
+    }
+
+    if(errorMessage !=null){
+      throw Exception(errorMessage);
+    }
+  }
+
 }
