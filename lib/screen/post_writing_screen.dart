@@ -9,6 +9,7 @@ import 'package:lottoblog/models/post_model.dart';
 
 import '../data/bloc/post/post_bloc.dart';
 import '../data/bloc/post/post_event.dart';
+import '../service/firebase_storage_service.dart';
 
 class PostWritingScreen extends StatefulWidget {
   const PostWritingScreen({super.key});
@@ -23,6 +24,7 @@ class _PostwritingScreenState extends State<PostWritingScreen> {
   List<File> selectedImages = [];
   TextEditingController _textControllerTitle = TextEditingController();
   TextEditingController _textControllerContents = TextEditingController();
+  final _storageService = FirebaseStorageService();
 
   void _onChangedTitle(String text) {
     if (text.length > 30) {
@@ -59,6 +61,7 @@ class _PostwritingScreenState extends State<PostWritingScreen> {
       selectedImages.removeAt(index);
     });
   }
+
 
   Widget _imageGallery() {
     return GridView.builder(
@@ -104,8 +107,13 @@ class _PostwritingScreenState extends State<PostWritingScreen> {
     });
   }
 
+  Future<List<String>> uploadImages() async {
+    List<String> imageUrls = await _storageService.uploadImages(selectedImages);
+    return imageUrls;
+  }
   void _submitPost() async {
     String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    List<String> imageUrls = await uploadImages();
 
     if (_textControllerTitle.text.trim().isEmpty ||
         _textControllerContents.text.trim().isEmpty) {
@@ -117,12 +125,12 @@ class _PostwritingScreenState extends State<PostWritingScreen> {
       return;
     }
 
-    List<String> imagePaths = selectedImages.map((e) => e.path).toList();
+    // List<String> imagePaths = selectedImages.map((e) => e.path).toList();
 
     final posts = PostModel(
       title: _textControllerTitle.text.trim(),
       content: _textControllerContents.text.trim(),
-      imageUrls: imagePaths,
+      imageUrls: imageUrls,
       createdAt: DateTime.now(),
       uid: uid,
       likePostUid: [],
@@ -201,8 +209,8 @@ class _PostwritingScreenState extends State<PostWritingScreen> {
                             .textTheme
                             .headlineLarge
                             ?.copyWith(
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w800),
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w800),
                         border: InputBorder.none,
                         floatingLabelBehavior: FloatingLabelBehavior.always),
                   ),
@@ -227,8 +235,8 @@ class _PostwritingScreenState extends State<PostWritingScreen> {
                             .textTheme
                             .titleLarge
                             ?.copyWith(
-                                color: Colors.black54,
-                                fontWeight: FontWeight.w600),
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w600),
                         border: InputBorder.none,
                         floatingLabelBehavior: FloatingLabelBehavior.always),
                   ),
