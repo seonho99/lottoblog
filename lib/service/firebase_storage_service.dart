@@ -62,9 +62,7 @@ class FirebaseStorageService {
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('post_images')
-            .child('${DateTime
-            .now()
-            .millisecondsSinceEpoch}.jpg');
+            .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
         await storageRef.putFile(file);
 

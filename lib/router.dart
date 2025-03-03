@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottoblog/data/bloc/post_user/post_user_state.dart';
 import 'package:lottoblog/screen/my_post_screen/my_post_screen.dart';
-import 'package:lottoblog/screen/my_post_screen/post_update_screen.dart';
+import 'package:lottoblog/screen/post_update_screen.dart';
 import 'package:lottoblog/screen/post_writing_screen.dart';
 
 import 'data/bloc/login/login_bloc.dart';
@@ -135,20 +135,20 @@ final GoRouter router = GoRouter(
                 return PersonalScreen();
               },
               routes: <RouteBase>[
-                GoRoute(
-                  path: 'postwriting',
-                  builder: (BuildContext context, GoRouterState state) {
-                    return PostWritingScreen();
-                  },
-                  routes: <RouteBase>[
-                    GoRoute(
-                        path: 'update_post',
-                        builder: (context, state) {
-                          final postId = state.uri.pathSegments.last;
-                          return PostUpdateScreen(
-                            postId: postId,
-                          );
-                        }),
+                // GoRoute(
+                //   path: 'postwriting',
+                //   builder: (BuildContext context, GoRouterState state) {
+                //     return PostWritingScreen();
+                //   },
+                //   routes: <RouteBase>[
+                //     GoRoute(
+                //         path: 'update_post',
+                //         builder: (context, state) {
+                //           final postId = state.uri.pathSegments.last;
+                //           return PostUpdateScreen(
+                //             postId: postId,
+                //           );
+                //         }),
                   ],
                 ),
                 GoRoute(
