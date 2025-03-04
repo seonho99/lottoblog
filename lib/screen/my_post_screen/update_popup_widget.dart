@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottoblog/screen/post_writing_screen.dart';
 
 
 enum SampleItem {itemOne}
@@ -42,7 +41,8 @@ class _UpdatePopupWidgetState extends State<UpdatePopupWidget> {
         PopupMenuItem<SampleItem>(
           child: TextButton(
             onPressed: () {
-              context.go('/personal/editprofile/post/:postId/update_post');
+              final postId = widget.postId;
+              context.go('/personal/post/$postId/update_post');
             },
             child: Text(
               '수정하기',

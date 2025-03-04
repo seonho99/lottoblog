@@ -88,7 +88,6 @@ class MyApp extends StatelessWidget {
             PostUserBloc(userRepo ?? UserRepo(FirestoreService())),
         likePostBloc = likePostBloc ??
             LikePostBloc(postRepository ?? PostRepository(FirestoreService()));
-
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -135,6 +134,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<LikePostBloc>(
             create: (context) => likePostBloc,
           ),
+
         ],
         child: MaterialApp.router(
           routerConfig: router,
