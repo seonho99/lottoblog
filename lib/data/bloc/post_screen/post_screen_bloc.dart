@@ -16,7 +16,9 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
         } catch (e) {
           emit(PostScreenFailure(errorMessage: e.toString()));
         }
-      },
-    );
+      });
+    on<UpdatePostEvent>((event, emit) async {
+
+    });
   }
 }
