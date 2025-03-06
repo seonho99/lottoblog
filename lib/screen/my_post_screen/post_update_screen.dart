@@ -1,196 +1,18 @@
-// import 'dart:io';
-//
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:lottoblog/data/bloc/post/post_state.dart';
-//
-// import '../../data/bloc/post/post_bloc.dart';
-// import '../../service/firebase_storage_service.dart';
-//
-// class PostUpdateScreen extends StatefulWidget {
-//   String postId;
-//
-//   PostUpdateScreen({super.key, required this.postId});
-//
-//   @override
-//   State<PostUpdateScreen> createState() => _PostUpdateScreenState();
-// }
-//
-// class _PostUpdateScreenState extends State<PostUpdateScreen> {
-//   ImagePicker picker = ImagePicker();
-//   File? selectedImage;
-//   List<File> selectedImages = [];
-//   TextEditingController _textControllerTitle = TextEditingController();
-//   TextEditingController _textControllerContents = TextEditingController();
-//   final _storageService = FirebaseStorageService();
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     if (widget.postId.isNotEmpty) {
-//       _textControllerTitle.text = 'Existing Post Content';
-//       _textControllerContents.text = 'Existing Post Content';
-//       selectedImages.add(File('path_to_existing_image'));
-//     }
-//   }
-//
-
-//
-
-//
-//   void _savePost() {
-//     if (widget.postId.isNotEmpty) {
-//       print('Updateing post with ID: ${widget.postId}');
-//     } else {
-//       print('Creating a new post');
-//     }
-//     Navigator.pop(context);
-//   }
-//
-//   Widget _imageGallery() {
-//     return GridView.builder(
-//       shrinkWrap: true,
-//       physics: NeverScrollableScrollPhysics(),
-//       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 1,
-//         crossAxisSpacing: 1.0,
-//         mainAxisSpacing: 1.0,
-//       ),
-//       itemCount: selectedImages.length,
-//       itemBuilder: (context, index) {
-//         return Stack(
-//           children: [
-//             Container(
-//               color: Colors.black,
-//               width: double.infinity,
-//               height: MediaQuery.of(context).size.width * 0.8,
-//               child: Image.file(
-//                 selectedImages[index],
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//             Positioned(
-//               right: 5,
-//               top: 5,
-//               child: IconButton(
-//                 onPressed: () => _removeImage(index),
-//                 icon: Icon(
-//                   Icons.delete,
-//                   color: Colors.grey,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         scrolledUnderElevation: 0,
-//         title: Row(
-//           mainAxisAlignment: MainAxisAlignment.end,
-//           children: [
-//             IconButton(
-//               onPressed: () {},
-//               icon: Icon(
-//                 Icons.add_a_photo_outlined,
-//                 size: 45,
-//               ),
-//             ),
-//             SizedBox(width: 20),
-//             ElevatedButton(
-//               onPressed: () {},
-//               style: ElevatedButton.styleFrom(
-//                 backgroundColor: Color(0xff05D686),
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(10),
-//                 ),
-//               ),
-//               child: Text(
-//                 '수정하기',
-//                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-//                     color: Colors.white, fontWeight: FontWeight.w800),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//       resizeToAvoidBottomInset: true,
-//       backgroundColor: Colors.white,
-//       body: SafeArea(
-//         child: Padding(
-//           padding: EdgeInsets.all(16),
-//           child: Container(
-//             child: SingleChildScrollView(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
-//                   TextField(
-//                     controller: _textControllerTitle,
-//                     decoration: InputDecoration(
-//                       labelText: 'Title',
-//                       hintText: 'Enter title here',
-//                     ),
-//                     maxLength: 30,
-//                   ),
-//                   SizedBox(
-//                     height: 20,
-//                   ),
-//                   TextField(
-//                     controller: _textControllerContents,
-//                     decoration: InputDecoration(
-//                       labelText: 'Contents',
-//                       hintText: 'Enter contents here',
-//                     ),
-//                     maxLength: 200,
-//                     maxLines: 14,
-//                   ),
-//                   SizedBox(
-//                     height: 20,
-//                   ),
-//                   _imageGallery(),
-//                   ElevatedButton(
-//                     onPressed: _savePost,
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: Color(0xff05D686),
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                       ),
-//                     ),
-//                     child: Text(
-//                       widget.postId.isEmpty ? "Create Post" : "Update Post",
-//                       style: TextStyle(
-//                         color: Colors.white,
-//                         fontWeight: FontWeight.w800,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottoblog/screen/my_post_screen/post_update_tile.dart';
+import 'package:lottoblog/service/firebase_auth_service.dart';
 
+import '../../data/bloc/post/post_bloc.dart';
+import '../../data/bloc/post/post_event.dart';
 import '../../data/bloc/post_screen/post_screen_bloc.dart';
 import '../../data/bloc/post_screen/post_screen_event.dart';
 import '../../data/bloc/post_screen/post_screen_state.dart';
+import '../../models/post_model.dart';
 import '../../service/firebase_storage_service.dart';
 import 'my_post_title.dart';
 import 'my_post_user.dart';
@@ -198,12 +20,9 @@ import 'my_post_user.dart';
 class PostUpdateScreen extends StatefulWidget {
   String postId;
 
-  // String uid;
-
   PostUpdateScreen({
     super.key,
     required this.postId,
-    // required this.uid,
   });
 
   @override
@@ -224,31 +43,48 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
     context.read<PostScreenBloc>().add(FetchPostEvent(postId: widget.postId));
   }
 
+  Future<List<String>> uploadImages() async {
+    List<String> imageUrls = await _storageService.uploadImages(selectedImages);
+    return imageUrls;
+  }
+
+  void _submitPost() async {
+    String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    if (_textControllerTitle.text.trim().isEmpty || _textControllerContent.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('제목과 내용을 입력해주세요.')),
+      );
+      return;
+    }
+
+    List<String> imageUrls = await uploadImages();
+
+    final post = PostModel(
+      title: _textControllerTitle.text.trim(),
+      content: _textControllerContent.text.trim(),
+      imageUrls: imageUrls,
+      uid: uid,
+      postId: widget.postId,
+    );
+
+    context.read<PostBloc>().add(CreatePost(posts: post));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('게시물이 수정되었습니다.')),
+    );
+  }
+
+
   Future<void> pickImageFromGallery() async {
     var image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        selectedImage = File(image.path);
-        selectedImages.add(selectedImage!);
+        selectedImages.add(File(image.path));
       });
     }
   }
 
-  void _removeImage(int index) {
-    setState(() {
-      selectedImages.removeAt(index);
-    });
-  }
-
-  void _updatePost() {
-    String updateTitle = _textControllerTitle.text;
-    String updateContent = _textControllerContent.text;
-
-
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('글 수정이 완료되었습니다.')));
-    Navigator.pop(context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +104,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
             ),
             SizedBox(width: 20),
             ElevatedButton(
-              onPressed: _updatePost,
+              onPressed: _submitPost,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black54,
                 shape: RoundedRectangleBorder(
@@ -296,8 +132,8 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                 final post = state.fetchPostScreen!;
                 _textControllerTitle.text = post.title;
                 _textControllerContent.text = post.content;
-                selectedImages =
-                    post.imageUrls.map((url) => File(url)).toList();
+                
+
                 // print('post: ${state.fetchPostScreen}');
                 return Container(
                   child: SingleChildScrollView(
@@ -311,9 +147,11 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                           thickness: 1.0,
                         ),
                         SizedBox(height: 30),
+                        // PostUpdateTile(postId: widget.postId, title: post.title,imageUrls: post.imageUrls ,content: post.content, )
                         TextField(
                           controller: _textControllerTitle,
                           maxLength: 30,
+                          style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         SizedBox(
                           height: 30,
@@ -335,13 +173,13 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                                   selectedImages[index],
                                   fit: BoxFit.cover,
                                   height: 100,
-                                  width: double.infinity,
+                                  width: 100,
                                 ),
                                 Positioned(
                                   top: 5,
                                   right: 5,
                                   child: IconButton(
-                                    onPressed: () => _removeImage(index),
+                                    onPressed: (){},
                                     icon: Icon(
                                       Icons.delete,
                                       color: Colors.white,
@@ -359,7 +197,10 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                         TextField(
                           controller: _textControllerContent,
                           maxLength: 200,
-                          maxLines: 15,
+                          maxLines: 10,
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(height: 2
+                          ),
                         ),
                       ],
                     ),
