@@ -35,6 +35,16 @@ class FirestoreService {
     }
   }
 
+  Future<String> deleteImageUrl({required String postId}) async {
+    DocumentReference<Map<String, dynamic>> postRef = _fs.collection('post').doc(postId);
+
+    DocumentSnapshot postSnapshot = await postRef.get();
+
+    final postData = postSnapshot.data() as Map<String, dynamic>;
+    List<String> imageUrls = List<String>.from(postData['imageUrls'] ?? []);
+
+  }
+
   Future<int> likePostUid({required String postId, required String uid}) async {
     final postRef = _fs.collection('posts').doc(postId);
     // final userCollection = _fs.collection('users');

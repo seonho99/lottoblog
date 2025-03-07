@@ -10,15 +10,29 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
 
   PostScreenBloc(this.postRepository) : super(PostScreenInitial()) {
     on<FetchPostEvent>((event, emit) async {
-        try {
-          PostModel? fetchPost = await postRepository.fetchPostScreen(event.postId);
-          emit(PostScreenSuccess(fetchPost));
-        } catch (e) {
-          emit(PostScreenFailure(errorMessage: e.toString()));
-        }
-      });
-    on<UpdatePostEvent>((event, emit) async {
+      try {
+        PostModel? fetchPost =
+            await postRepository.fetchPostScreen(event.postId);
+        emit(PostScreenSuccess(fetchPost));
+      } catch (e) {
+        emit(PostScreenFailure(errorMessage: e.toString()));
+      }
+    });
 
+    on<DeleteImageUrlEvent>((event, emit) async {
+      try {
+
+      } catch (e) {
+        emit(PostScreenFailure(errorMessage: e.toString()));
+      }
+    });
+
+    on<UpdatePostEvent>((event, emit) async {
+      try {
+
+      } catch (e) {
+        emit(PostScreenFailure(errorMessage: e.toString()));
+      }
     });
   }
 }

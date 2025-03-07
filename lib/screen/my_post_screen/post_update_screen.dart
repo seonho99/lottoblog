@@ -1,11 +1,8 @@
 import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottoblog/screen/my_post_screen/post_update_tile.dart';
-import 'package:lottoblog/service/firebase_auth_service.dart';
+
 
 import '../../data/bloc/post/post_bloc.dart';
 import '../../data/bloc/post/post_event.dart';
@@ -20,10 +17,7 @@ import 'my_post_user.dart';
 class PostUpdateScreen extends StatefulWidget {
   String postId;
 
-  PostUpdateScreen({
-    super.key,
-    required this.postId,
-  });
+  PostUpdateScreen({required this.postId});
 
   @override
   State<PostUpdateScreen> createState() => _MyPostScreenState();
@@ -33,6 +27,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
   ImagePicker picker = ImagePicker();
   File? selectedImage;
   List<File> selectedImages = [];
+  List<String> imageUrlList = [];
   TextEditingController _textControllerTitle = TextEditingController();
   TextEditingController _textControllerContent = TextEditingController();
   final _storageService = FirebaseStorageService();
@@ -48,8 +43,13 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
     return imageUrls;
   }
 
+  void _removeImage(int index){
+    setState(() {
+      imageUrlList.removeAt(index);
+    });
+  }
+
   void _submitPost() async {
-    String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
     if (_textControllerTitle.text.trim().isEmpty || _textControllerContent.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,7 +64,6 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
       title: _textControllerTitle.text.trim(),
       content: _textControllerContent.text.trim(),
       imageUrls: imageUrls,
-      uid: uid,
       postId: widget.postId,
     );
 
@@ -72,6 +71,42 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('게시물이 수정되었습니다.')),
+    );
+  }
+
+  Widget _imageGallery() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1, crossAxisSpacing: 1.0, mainAxisSpacing: 1.0),
+      itemCount: selectedImages.length,
+      itemBuilder: (context, index) {
+        return Stack(
+          children: [
+            Container(
+              color: Colors.black,
+              width: double.infinity,
+              height: MediaQuery.of(context).size.width * 0.8,
+              child: Image.file(
+                selectedImages[index],
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              right: 5,
+              top: 5,
+              child: IconButton(
+                onPressed: () => _removeImage(index),
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -84,6 +119,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
       });
     }
   }
+
 
 
   @override
@@ -132,7 +168,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                 final post = state.fetchPostScreen!;
                 _textControllerTitle.text = post.title;
                 _textControllerContent.text = post.content;
-                
+                imageUrlList = post.imageUrls;
 
                 // print('post: ${state.fetchPostScreen}');
                 return Container(
@@ -147,7 +183,6 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                           thickness: 1.0,
                         ),
                         SizedBox(height: 30),
-                        // PostUpdateTile(postId: widget.postId, title: post.title,imageUrls: post.imageUrls ,content: post.content, )
                         TextField(
                           controller: _textControllerTitle,
                           maxLength: 30,
@@ -165,21 +200,23 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                             crossAxisSpacing: 1,
                             mainAxisSpacing: 1,
                           ),
-                          itemCount: selectedImages.length,
+                          itemCount: imageUrlList.length,
                           itemBuilder: (context, index) {
                             return Stack(
                               children: [
-                                Image.file(
-                                  selectedImages[index],
+                                Image.network(
+                                  imageUrlList[index],
+                                  height: 1024,
+                                  width: 1024,
                                   fit: BoxFit.cover,
-                                  height: 100,
-                                  width: 100,
                                 ),
                                 Positioned(
                                   top: 5,
                                   right: 5,
                                   child: IconButton(
-                                    onPressed: (){},
+                                    onPressed: (){
+                                      context.read<PostScreenBloc>().add(DeleteImageUrlEvent(postId: widget.postId));
+                                    },
                                     icon: Icon(
                                       Icons.delete,
                                       color: Colors.white,
@@ -191,6 +228,10 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                             );
                           },
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _imageGallery(),
                         SizedBox(
                           height: 30,
                         ),

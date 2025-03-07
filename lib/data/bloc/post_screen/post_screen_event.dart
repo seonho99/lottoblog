@@ -8,9 +8,12 @@ final class FetchPostEvent extends PostScreenEvent {
 
 final class UpdatePostEvent extends PostScreenEvent {
   String postId;
-  String title;
-  String content;
-  List<String> images;
 
-  UpdatePostEvent(this.postId, this.title, this.content, this.images);
+  UpdatePostEvent({required this.postId});
+}
+
+final class DeleteImageUrlEvent extends PostScreenEvent {
+  String postId;
+
+  DeleteImageUrlEvent({required this.postId});
 }
