@@ -191,7 +191,8 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                         SizedBox(
                           height: 30,
                         ),
-                        GridView.builder(
+
+                    GridView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
@@ -202,6 +203,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                           ),
                           itemCount: imageUrlList.length,
                           itemBuilder: (context, index) {
+                            print('selectedImages ${imageUrlList[index]}');
                             return Stack(
                               children: [
                                 Image.network(
@@ -215,7 +217,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                                   right: 5,
                                   child: IconButton(
                                     onPressed: (){
-                                      context.read<PostScreenBloc>().add(DeleteImageUrlEvent(postId: widget.postId));
+                                      context.read<PostScreenBloc>().add(DeleteImageUrlEvent(postId: widget.postId, imageUrls : imageUrlList[index]));
                                     },
                                     icon: Icon(
                                       Icons.delete,

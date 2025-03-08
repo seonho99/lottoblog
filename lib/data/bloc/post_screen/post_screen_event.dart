@@ -14,6 +14,7 @@ final class UpdatePostEvent extends PostScreenEvent {
 
 final class DeleteImageUrlEvent extends PostScreenEvent {
   String postId;
+  String imageUrls;
 
-  DeleteImageUrlEvent({required this.postId});
+  DeleteImageUrlEvent({required this.postId, required this.imageUrls});
 }

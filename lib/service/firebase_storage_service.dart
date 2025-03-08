@@ -76,52 +76,15 @@ class FirebaseStorageService {
     return imageUrls;
   }
 
-  // Future<List<String>> uploadPostImages(
-  //     List<Uint8List> bytesList, List<String> paths, String? postId) async {
-  //   if (postId == null) throw Exception('잘못된 접근 입니다');
-  //
-  //   List<String> downloadUrls = [];
-  //
-  //   try {
-  //     for (int i = 0; i < bytesList.length; i++) {
-  //       final imageBytes = bytesList[i];
-  //       final imagePath = paths[i];
-  //
-  //       final profileRef =
-  //       storageRef.child('post_profiles/${postId}_profile_image_${i}.jpg');
-  //       final metadata = SettableMetadata(
-  //         contentType: 'image/png',
-  //         customMetadata: {'picked-file-path': imagePath},
-  //       );
-  //
-  //       await profileRef.putData(imageBytes, metadata);
-  //
-  //       final downloadUrl = await profileRef.getDownloadURL();
-  //       downloadUrls.add(downloadUrl);
-  //
-  //       print("Image uploaded: $downloadUrl");
-  //     }
-  //
-  //     final postDocRef = _fs.collection('posts').doc(postId);
-  //     final docSnapshot = await postDocRef.get();
-  //
-  //     if (!docSnapshot.exists) {
-  //       await postDocRef.set({
-  //         'imageUrls': downloadUrls,
-  //       });
-  //
-  //       print("New post document created with images.");
-  //
-  //     } else {
-  //       await postDocRef.update({
-  //         'imageUrls': downloadUrls,
-  //       });
-  //
-  //       print("Post document updated with new images.");
-  //     }
-  //     return downloadUrls;
-  //   } catch (e) {
-  //     throw Exception('upload 실패');
-  //   }
-  // }
+  Future<void> deleteProfileImage(String? postId) async {
+    if (postId == null) throw Exception('잘못된 접근입니다');
+    try {
+      final profileRef =
+      storageRef.child('post_images/${postId}_profile_image.jpg');
+      await profileRef.delete();
+    } catch (e) {
+      throw Exception('upload 실패');
+    }
+  }
+
 }
