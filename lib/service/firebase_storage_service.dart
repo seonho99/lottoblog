@@ -76,15 +76,15 @@ class FirebaseStorageService {
     return imageUrls;
   }
 
-  Future<void> deleteProfileImage(String? postId) async {
-    if (postId == null) throw Exception('잘못된 접근입니다');
-    try {
-      final profileRef =
-      storageRef.child('post_images/${postId}_profile_image.jpg');
-      await profileRef.delete();
-    } catch (e) {
-      throw Exception('upload 실패');
-    }
-  }
+  // Future<void> deleteProfileImage(String? postId) async {
+  //   if (postId == null) throw Exception('잘못된 접근입니다');
+  //   try {
+  //     final profileRef =
+  //     storageRef.child('post_images/${postId}_profile_image.jpg');
+  //     await profileRef.delete();
+  //   } catch (e) {
+  //     throw Exception('upload 실패');
+  //   }
+  // }
 
 }
