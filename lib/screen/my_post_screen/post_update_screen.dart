@@ -1,8 +1,8 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 import '../../data/bloc/post/post_bloc.dart';
 import '../../data/bloc/post/post_event.dart';
@@ -24,13 +24,14 @@ class PostUpdateScreen extends StatefulWidget {
 }
 
 class _MyPostScreenState extends State<PostUpdateScreen> {
+  final _storageService = FirebaseStorageService();
+
   ImagePicker picker = ImagePicker();
   File? selectedImage;
   List<File> selectedImages = [];
   List<String> imageUrlList = [];
   TextEditingController _textControllerTitle = TextEditingController();
   TextEditingController _textControllerContent = TextEditingController();
-  final _storageService = FirebaseStorageService();
 
   @override
   void initState() {
@@ -43,15 +44,15 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
     return imageUrls;
   }
 
-  void _removeImage(int index){
+  void _removeImage(int index) {
     setState(() {
       imageUrlList.removeAt(index);
     });
   }
 
   void _submitPost() async {
-
-    if (_textControllerTitle.text.trim().isEmpty || _textControllerContent.text.trim().isEmpty) {
+    if (_textControllerTitle.text.trim().isEmpty ||
+        _textControllerContent.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('제목과 내용을 입력해주세요.')),
       );
@@ -110,7 +111,6 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
     );
   }
 
-
   Future<void> pickImageFromGallery() async {
     var image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -119,8 +119,6 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
       });
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +189,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                         SizedBox(
                           height: 30,
                         ),
-
-                    GridView.builder(
+                        GridView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
@@ -203,7 +200,7 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                           ),
                           itemCount: imageUrlList.length,
                           itemBuilder: (context, index) {
-                            print('selectedImages ${imageUrlList[index]}');
+                            // print('selectedImages ${imageUrlList[index]}');
                             return Stack(
                               children: [
                                 Image.network(
@@ -216,8 +213,44 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                                   top: 5,
                                   right: 5,
                                   child: IconButton(
-                                    onPressed: (){
-                                      context.read<PostScreenBloc>().add(DeleteImageUrlEvent(postId: widget.postId, imageUrls : imageUrlList[index]));
+                                    // onPressed: () async {
+                                    //   var storage = await _storageService
+                                    //       .storageRef.storage
+                                    //       .refFromURL(imageUrlList[index]);
+                                    //   try {
+                                    //     await storage.delete();
+                                    //   } catch (e) {
+                                    //     FirebaseFirestore.instance
+                                    //         .collection('posts')
+                                    //         .doc(widget.postId)
+                                    //         .update({
+                                    //       'imageUrls': FieldValue.arrayRemove(
+                                    //           [imageUrlList[index]])
+                                    //     });
+                                    //   }
+                                    // },
+                                    onPressed: () async {
+                                      var imageUrl = imageUrlList[index];
+
+                                      var storage = await _storageService
+                                          .storageRef.storage
+                                          .refFromURL(imageUrl);
+
+                                      try {
+                                        await storage.delete();
+
+                                        await FirebaseFirestore.instance.collection('posts').doc(widget.postId).update({
+                                          'imageUrls': FieldValue.arrayRemove([imageUrl]),
+                                        });
+
+                                        setState(() {
+                                          imageUrlList.removeAt(index);
+                                        });
+
+                                      } catch (e) {
+                                        print("Error deleting image: $e");
+
+                                      }
                                     },
                                     icon: Icon(
                                       Icons.delete,
@@ -225,7 +258,9 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20,),
+                                SizedBox(
+                                  height: 20,
+                                ),
                               ],
                             );
                           },
@@ -241,9 +276,10 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
                           controller: _textControllerContent,
                           maxLength: 200,
                           maxLines: 10,
-                          style: Theme.of(context).textTheme.headlineLarge
-                              ?.copyWith(height: 2
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(height: 2),
                         ),
                       ],
                     ),
