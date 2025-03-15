@@ -9,9 +9,9 @@ final class CreatePost extends PostEvent {
   CreatePost({required this.posts});
 }
 
-final class UpdatePostEvent extends PostEvent {
-  String postId;
-
-  UpdatePostEvent({required this.postId});
-}
+// final class UpdatePostEvent extends PostEvent {
+//   PostModel updatePost;
+//
+//   UpdatePostEvent({required this.updatePost});
+// }
 

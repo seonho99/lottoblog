@@ -19,17 +19,9 @@ class PostScreenBloc extends Bloc<PostScreenEvent, PostScreenState> {
       }
     });
 
-    on<DeleteImageUrlEvent>((event, emit) async {
-      try {
-
-      } catch (e) {
-        emit(PostScreenFailure(errorMessage: e.toString()));
-      }
-    });
-
     on<UpdatePostEvent>((event, emit) async {
       try {
-
+        await postRepository.updatePost(event.updatePost);
       } catch (e) {
         emit(PostScreenFailure(errorMessage: e.toString()));
       }

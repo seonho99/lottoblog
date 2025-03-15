@@ -8,7 +8,6 @@ class FirestoreService {
   final _fs = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 
-
   // 게시글 생성
   Future<void> createPost(PostModel posts) async {
     final postCollection = _fs.collection('posts');
@@ -19,6 +18,7 @@ class FirestoreService {
       throw Exception('저장 실패 : $e');
     }
   }
+
 
   Future<int> likePostCount({required String postId}) async {
     final postRef = _fs.collection('posts').doc(postId);
@@ -286,7 +286,7 @@ class FirestoreService {
           _fs.collection('posts').doc(postId);
 
       DocumentSnapshot snapshot = await postDoc.get();
-      if(!snapshot.exists){
+      if (!snapshot.exists) {
         throw Exception('게시글이 존재하지 않습니다.');
       }
 

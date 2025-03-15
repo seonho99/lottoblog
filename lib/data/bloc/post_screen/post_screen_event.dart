@@ -1,3 +1,5 @@
+import 'package:lottoblog/models/post_model.dart';
+
 sealed class PostScreenEvent {}
 
 final class FetchPostEvent extends PostScreenEvent {
@@ -7,9 +9,9 @@ final class FetchPostEvent extends PostScreenEvent {
 }
 
 final class UpdatePostEvent extends PostScreenEvent {
-  String postId;
+  PostModel updatePost;
 
-  UpdatePostEvent({required this.postId});
+  UpdatePostEvent({required this.updatePost});
 }
 
 final class DeleteImageUrlEvent extends PostScreenEvent {

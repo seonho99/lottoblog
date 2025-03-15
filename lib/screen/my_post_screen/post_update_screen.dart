@@ -61,14 +61,14 @@ class _MyPostScreenState extends State<PostUpdateScreen> {
 
     List<String> imageUrls = await uploadImages();
 
-    final post = PostModel(
+    final updatePost = PostModel(
       title: _textControllerTitle.text.trim(),
       content: _textControllerContent.text.trim(),
       imageUrls: imageUrls,
       postId: widget.postId,
     );
 
-    context.read<PostBloc>().add(CreatePost(posts: post));
+    context.read<PostScreenBloc>().add(UpdatePostEvent(updatePost: updatePost));
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('게시물이 수정되었습니다.')),

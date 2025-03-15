@@ -11,13 +11,20 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final AuthRepository authRepository;
 
   PostBloc(this.postRepository, this.authRepository) : super(PostInitial()) {
-
     on<CreatePost>((event, emit) async {
       try {
         await postRepository.createPost(event.posts);
-      } catch(e) {
+      } catch (e) {
         emit(PostFailure(errorMessage: e.toString()));
       }
     });
+
+    // on<UpdatePostEvent>((event, emit) async {
+    //   try {
+    //
+    //   } catch {
+    //
+    //   }
+    // });
   }
 }
