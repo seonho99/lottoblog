@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 16) ,
 
                 // GestureDetector(
                 //   onTap: () {
