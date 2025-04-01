@@ -1,6 +1,6 @@
 ![Thumbnail_github](https://github.com/user-attachments/assets/84619edd-8d3b-4a96-82f6-c9727b874f20)
 -----------------
-1
+
 ## 목차
 - [프로젝트 소개](#프로젝트-소개)
 - [기술 스택](#기술-스택) 
